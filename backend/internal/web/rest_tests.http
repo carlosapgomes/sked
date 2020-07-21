@@ -1,0 +1,65 @@
+### Login as Carlos
+
+POST https://localhost/api/login HTTP/1.1
+Header: Content-type: application-json
+
+{
+  "email":"carlos@example.com",
+  "password":"test1234"
+}
+
+### Login as Bob (admin user)
+
+POST https://localhost/api/users/login HTTP/1.1
+Header: Content-type: application-json
+
+{
+  "email":"bob@example.com",
+  "password":"test1234"
+}
+
+### Get User data
+GET https://localhost/api/getUserByEmail?email=carlos%40example.com HTTP/1.1
+
+
+###
+
+POST https://localhost/api/logout HTTP/1.1
+
+
+### Add Maria
+
+POST https://localhost/api/users HTTP/1.1
+Header: Content-type: application-json
+
+{
+  "email":"capgomes@gmail.com",
+  "name":"Carlos A P Gomes"
+}
+
+
+### Login as Maria (common user)
+
+POST https://localhost/api/login HTTP/1.1
+Header: Content-type: application-json
+
+{
+  "email":"maria@example.com",
+  "password":"test1234"
+}
+
+###
+
+GET https://localhost/api/users/f1d5aefb-7953-4eb7-9907-74b47e48bf7c/name HTTP/1.1
+
+### Try to add a new user (while logged in as Maria)
+
+POST https://localhost/api/adduser HTTP/1.1
+Header: Content-type: application-json
+
+{
+  "email":"jose@example.com",
+  "password":"test1234",
+  "name":"José da Silva"
+}
+
