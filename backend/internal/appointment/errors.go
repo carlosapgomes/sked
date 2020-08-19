@@ -5,7 +5,7 @@ import "errors"
 // ErrNoRecord flags user not found
 var ErrNoRecord = errors.New("appointments: no matching record found")
 
-// ErrDuplicateField flags use of duplicate email
+// ErrDuplicateField flags use of duplicate
 var ErrDuplicateField = errors.New("appointments: duplicate field")
 
 // ErrInvalidInputSyntax flags text format errors (uuid for example)
