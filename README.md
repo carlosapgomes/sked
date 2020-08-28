@@ -69,7 +69,7 @@ Tables:
 
 ### Client side rendering
 
-#### Lit-element pages:
+#### Lit-element pages
 
 - home/login page
 - add/edit appointment
