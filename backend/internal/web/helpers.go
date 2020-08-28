@@ -11,7 +11,7 @@ import (
 	"runtime/debug"
 	"strings"
 
-	"carlosapgomes.com/gobackend/internal/user"
+	"carlosapgomes.com/sked/internal/user"
 	"github.com/golang/gddo/httputil/header"
 	uuid "github.com/satori/go.uuid"
 )

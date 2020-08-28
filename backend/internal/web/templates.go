@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"html/template"
 
-	"carlosapgomes.com/gobackend/internal/user"
+	"carlosapgomes.com/sked/internal/user"
 )
 
 type templateData struct {

@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"carlosapgomes.com/gobackend/internal/storage"
-	"carlosapgomes.com/gobackend/internal/token"
+	"carlosapgomes.com/sked/internal/storage"
+	"carlosapgomes.com/sked/internal/token"
 )
 
 // TestFindByID tests finding a token by its ID

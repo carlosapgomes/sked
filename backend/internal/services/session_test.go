@@ -3,9 +3,9 @@ package services_test
 import (
 	"testing"
 
-	"carlosapgomes.com/gobackend/internal/mocks"
-	"carlosapgomes.com/gobackend/internal/services"
-	"carlosapgomes.com/gobackend/internal/session"
+	"carlosapgomes.com/sked/internal/mocks"
+	"carlosapgomes.com/sked/internal/services"
+	"carlosapgomes.com/sked/internal/session"
 	uuid "github.com/satori/go.uuid"
 )
 

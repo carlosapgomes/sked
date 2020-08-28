@@ -3,7 +3,7 @@ package services
 import (
 	"time"
 
-	"carlosapgomes.com/gobackend/internal/session"
+	"carlosapgomes.com/sked/internal/session"
 	uuid "github.com/satori/go.uuid"
 )
 

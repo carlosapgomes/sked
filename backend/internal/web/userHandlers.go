@@ -13,9 +13,9 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"carlosapgomes.com/gobackend/internal/session"
-	"carlosapgomes.com/gobackend/internal/token"
-	"carlosapgomes.com/gobackend/internal/user"
+	"carlosapgomes.com/sked/internal/session"
+	"carlosapgomes.com/sked/internal/token"
+	"carlosapgomes.com/sked/internal/user"
 )
 
 type userData struct {

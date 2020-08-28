@@ -3,9 +3,9 @@ package services_test
 import (
 	"testing"
 
-	"carlosapgomes.com/gobackend/internal/mocks"
-	"carlosapgomes.com/gobackend/internal/services"
-	"carlosapgomes.com/gobackend/internal/token"
+	"carlosapgomes.com/sked/internal/mocks"
+	"carlosapgomes.com/sked/internal/services"
+	"carlosapgomes.com/sked/internal/token"
 )
 
 func TestTokenNew(t *testing.T) {

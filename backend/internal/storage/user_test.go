@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"carlosapgomes.com/gobackend/internal/storage"
-	"carlosapgomes.com/gobackend/internal/user"
+	"carlosapgomes.com/sked/internal/storage"
+	"carlosapgomes.com/sked/internal/user"
 	"golang.org/x/crypto/bcrypt"
 )
 

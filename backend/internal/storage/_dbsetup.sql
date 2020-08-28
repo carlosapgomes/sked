@@ -1,6 +1,6 @@
 /* This is the setup script for Gobackend Database
  run this script with the following command:
- psql -U gobackend -d gobackend -a -f _dbsetup.sql
+ psql -U sked -d sked -a -f _dbsetup.sql
 */
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (

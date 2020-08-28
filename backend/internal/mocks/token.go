@@ -4,7 +4,7 @@ import (
 	"crypto/rand"
 	"time"
 
-	"carlosapgomes.com/gobackend/internal/token"
+	"carlosapgomes.com/sked/internal/token"
 )
 
 // Generates random string for a token ID

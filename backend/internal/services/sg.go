@@ -3,7 +3,7 @@ package services
 import (
 	"fmt"
 
-	"carlosapgomes.com/gobackend/internal/mailer"
+	"carlosapgomes.com/sked/internal/mailer"
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
 )

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"carlosapgomes.com/gobackend/internal/token"
+	"carlosapgomes.com/sked/internal/token"
 	"github.com/lib/pq"
 )
 

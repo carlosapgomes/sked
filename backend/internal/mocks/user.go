@@ -3,7 +3,7 @@ package mocks
 import (
 	"time"
 
-	"carlosapgomes.com/gobackend/internal/user"
+	"carlosapgomes.com/sked/internal/user"
 	"github.com/pkg/errors"
 )
 

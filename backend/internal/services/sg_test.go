@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"carlosapgomes.com/gobackend/internal/services"
+	"carlosapgomes.com/sked/internal/services"
 )
 
 func Test(t *testing.T) {
@@ -27,7 +27,7 @@ func Test(t *testing.T) {
 		{
 			desc:      "Valid email",
 			to:        "capgomes2015+sg@gmail.com",
-			from:      "gobackend.manager@gmail.com",
+			from:      "sked.manager@gmail.com",
 			msg:       "<h3>Hello</h3>",
 			wantError: nil,
 			wantCode:  http.StatusAccepted,
@@ -35,7 +35,7 @@ func Test(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
-			mailer := services.NewMailerService(sgKey, "gobackend.manager", tC.from)
+			mailer := services.NewMailerService(sgKey, "sked.manager", tC.from)
 			r, err := mailer.Send("Carlos", tC.to, "ts sg", tC.msg)
 			if err != tC.wantError {
 				t.Errorf("want \n%v\n; got \n%v\n", tC.wantError, err)

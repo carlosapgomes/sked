@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"carlosapgomes.com/gobackend/internal/session"
-	"carlosapgomes.com/gobackend/internal/storage"
+	"carlosapgomes.com/sked/internal/session"
+	"carlosapgomes.com/sked/internal/storage"
 	"github.com/pkg/errors"
 )
 

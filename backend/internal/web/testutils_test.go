@@ -11,8 +11,8 @@ import (
 	"strings"
 	"testing"
 
-	"carlosapgomes.com/gobackend/internal/mocks"
-	"carlosapgomes.com/gobackend/internal/web"
+	"carlosapgomes.com/sked/internal/mocks"
+	"carlosapgomes.com/sked/internal/web"
 )
 
 // MailerMock holds an instance of a mailer

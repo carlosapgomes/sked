@@ -13,7 +13,7 @@ import (
 // Establish a sql.DB connection pool for our test database.
 func newTestDB(t *testing.T) (*sql.DB, func()) {
 	// Initialise a new connection pool
-	db, err := sql.Open("postgres", "postgres://test_gobackend:test_gobackend@localhost/test_gobackend?sslmode=disable")
+	db, err := sql.Open("postgres", "postgres://test_sked:test_sked@localhost/test_sked?sslmode=disable")
 	if err != nil {
 		t.Fatal(err)
 	}

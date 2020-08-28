@@ -9,9 +9,9 @@ import (
 	"net/http"
 	"testing"
 
-	"carlosapgomes.com/gobackend/internal/mocks"
-	"carlosapgomes.com/gobackend/internal/user"
-	"carlosapgomes.com/gobackend/internal/web"
+	"carlosapgomes.com/sked/internal/mocks"
+	"carlosapgomes.com/sked/internal/user"
+	"carlosapgomes.com/sked/internal/web"
 )
 
 func TestIsSameUserOrAdmin(t *testing.T) {

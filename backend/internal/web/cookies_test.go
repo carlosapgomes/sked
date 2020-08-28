@@ -7,8 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"carlosapgomes.com/gobackend/internal/mocks"
-	"carlosapgomes.com/gobackend/internal/web"
+	"carlosapgomes.com/sked/internal/mocks"
+	"carlosapgomes.com/sked/internal/web"
 )
 
 func TestAddCookie(t *testing.T) {

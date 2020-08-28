@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"time"
 
-	"carlosapgomes.com/gobackend/internal/session"
+	"carlosapgomes.com/sked/internal/session"
 	"github.com/lib/pq"
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"

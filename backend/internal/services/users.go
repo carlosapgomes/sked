@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	"carlosapgomes.com/gobackend/internal/user"
+	"carlosapgomes.com/sked/internal/user"
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 )

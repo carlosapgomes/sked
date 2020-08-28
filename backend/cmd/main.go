@@ -9,9 +9,9 @@ import (
 	"strconv"
 	"time"
 
-	"carlosapgomes.com/gobackend/internal/services"
-	"carlosapgomes.com/gobackend/internal/storage"
-	"carlosapgomes.com/gobackend/internal/web"
+	"carlosapgomes.com/sked/internal/services"
+	"carlosapgomes.com/sked/internal/storage"
+	"carlosapgomes.com/sked/internal/web"
 )
 
 func main() {
@@ -23,7 +23,7 @@ func main() {
 
 	// First, set all the defaults:
 	addr := ":9000"
-	pgstr := "" // "postgres://gobackend:gobackendp@localhost/gobackend?sslmode=disable"
+	pgstr := "" // "postgres://sked:skedp@localhost/sked?sslmode=disable"
 	ckName := "sid"
 	ckSameSite := "strict" // Strict||Lax
 	ckSecure := true
@@ -32,7 +32,7 @@ func main() {
 	fromName := "Go Backend Manager"
 	// create this email and register it in sendgrid
 	// control panel as an authorized email sender
-	fromAddress := "gobackend.manager@gmail.com"
+	fromAddress := "sked.manager@gmail.com"
 	sgKey := ""
 
 	// Lookup all corresponding Env vars

@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"carlosapgomes.com/gobackend/internal/mocks"
-	"carlosapgomes.com/gobackend/internal/web"
+	"carlosapgomes.com/sked/internal/mocks"
+	"carlosapgomes.com/sked/internal/web"
 )
 
 // TestHealthz function implements health check (kind of unit test)

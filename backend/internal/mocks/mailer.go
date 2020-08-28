@@ -1,6 +1,6 @@
 package mocks
 
-import "carlosapgomes.com/gobackend/internal/mailer"
+import "carlosapgomes.com/sked/internal/mailer"
 
 // MailerMockSvc mocks a mailer
 type MailerMockSvc struct {
