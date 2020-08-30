@@ -19,11 +19,11 @@ import (
 )
 
 type userData struct {
-	ID       string `json:"id"`
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Phone    string `json:"phone"`
-	Password string `json:"password"`
+	ID       string `json:"ID,omitempty"`
+	Name     string `json:"Name"`
+	Email    string `json:"Email"`
+	Phone    string `json:"Phone"`
+	Password string `json:"Password"`
 }
 
 // validates request user data
@@ -357,12 +357,12 @@ func (app App) addUser() http.Handler {
 		// send to newUser.Email
 		s := "Validação de Email"
 		res, err := app.mailerService.Send(newUser.Name, newUser.Email, s, msg)
-		app.infoLog.Printf("Sent %v to %v\nResponse Code: %v\nMsg: %v\n",
-			s, newUser.Email, res.Code, res.Msg)
 		if err != nil {
 			app.serverError(w, err)
 			return
 		}
+		app.infoLog.Printf("Sent %v to %v\nResponse Code: %v\nMsg: %v\n",
+			s, newUser.Email, res.Code, res.Msg)
 		newUser.Password = ""
 		newUser.ID = *uid
 		output, err := json.Marshal(newUser)
@@ -567,10 +567,6 @@ func (app App) validateEmail() http.Handler {
 		if err != nil {
 			// no token or DB error
 			// TODO: redirect user to proper page
-			// msg := make(map[string]string)
-			// msg["Email validation"] = "No token"
-			// w.WriteHeader(http.StatusBadRequest)
-			// app.sendMsg(w, &msg)
 			app.clientError(w, http.StatusBadRequest)
 			return
 		}
@@ -580,20 +576,12 @@ func (app App) validateEmail() http.Handler {
 		if t.ExpiresAt.Before(now) {
 			// token has expired
 			// TODO: redirect user to proper page
-			// msg := make(map[string]string)
-			// msg["Email validation"] = "Expired token"
-			// w.WriteHeader(http.StatusBadRequest)
-			// app.sendMsg(w, &msg)
 			app.clientError(w, http.StatusBadRequest)
 			return
 		}
 		if t.Kind != token.ValidateEmail {
 			// improper token kind
 			// TODO: redirect user to proper page
-			// msg := make(map[string]string)
-			// msg["Email validation"] = "Invalid token"
-			// w.WriteHeader(http.StatusBadRequest)
-			// app.sendMsg(w, &msg)
 			app.clientError(w, http.StatusBadRequest)
 			return
 		}
@@ -945,9 +933,8 @@ func (app App) verifyResetPw() http.Handler {
 				// TODO: redirect user to proper page
 				msg := make(map[string]string)
 				msg["Email validation"] = "No token"
-				w.WriteHeader(http.StatusBadRequest)
-				app.sendMsg(w, &msg)
 				app.serverError(w, err)
+				app.sendMsg(w, &msg)
 				return
 			}
 			// validate token
@@ -957,9 +944,8 @@ func (app App) verifyResetPw() http.Handler {
 				// TODO: redirect user to proper page
 				msg := make(map[string]string)
 				msg["Email validation"] = "Expired token"
-				w.WriteHeader(http.StatusBadRequest)
-				app.sendMsg(w, &msg)
 				app.serverError(w, token.ErrInvalidInputSyntax)
+				app.sendMsg(w, &msg)
 				return
 			}
 			if t.Kind != token.PwReset {
@@ -967,9 +953,8 @@ func (app App) verifyResetPw() http.Handler {
 				// TODO: redirect user to proper page
 				msg := make(map[string]string)
 				msg["Email validation"] = "Invalid token"
-				w.WriteHeader(http.StatusBadRequest)
-				app.sendMsg(w, &msg)
 				app.serverError(w, token.ErrInvalidInputSyntax)
+				app.sendMsg(w, &msg)
 				return
 			}
 			// create session

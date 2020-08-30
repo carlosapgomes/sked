@@ -28,5 +28,9 @@ func (m MailerMockSvc) Send(toName, toEmail, subject, htmlContent string) (*mail
 		m.Rec.Email = toEmail
 		m.Rec.Name = toName
 	}
-	return nil, nil
+	res := &mailer.Response{
+		Code: 1,
+		Msg:  "ok",
+	}
+	return res, nil
 }

@@ -965,8 +965,9 @@ func TestAddUserByAdmin(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			reqBody := &postBody{Name: tt.userName,
 				Email:    tt.userEmail,
+				Phone:    tt.userPhone,
 				Password: tt.userPassword,
-				Phone:    tt.userPhone}
+			}
 			body, err := json.Marshal(reqBody)
 			if err != nil {
 				t.Log(err)
