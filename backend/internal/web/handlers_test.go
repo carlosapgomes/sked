@@ -172,9 +172,9 @@ func TestVerifyResetPw(t *testing.T) {
 	}{
 		{"Valid token", "7FXsSqU5UC6I9632BndMkSFDCDNO4i1Z83v9KGd2", http.MethodGet, http.StatusOK, []byte("/users/dcce1beb-aee6-4a4d-b724-94d470817323/password")},
 		{"Invalid method", "7FXsSqU5UC6I9632BndMkSFDCDNO4i1Z83v9KGd2", http.MethodPost, http.StatusBadRequest, []byte("")},
-		{"No token", "", http.MethodGet, http.StatusBadRequest, []byte("No token")},
-		{"Expired token", "U5UC7FXsSq6I9632BndMkSO4i1Z83v9KGd2FDCDN", http.MethodGet, http.StatusBadRequest, []byte("Expired token")},
-		{"Invalid token type/kind", "Sqi1Z86I9632BndMkS632BNO4i1Z83v9KGd27FXs", http.MethodGet, http.StatusBadRequest, []byte("Invalid token")},
+		{"No token", "", http.MethodGet, http.StatusInternalServerError, []byte("No token")},
+		{"Expired token", "U5UC7FXsSq6I9632BndMkSO4i1Z83v9KGd2FDCDN", http.MethodGet, http.StatusInternalServerError, []byte("Expired token")},
+		{"Invalid token type/kind", "Sqi1Z86I9632BndMkS632BNO4i1Z83v9KGd27FXs", http.MethodGet, http.StatusInternalServerError, []byte("Invalid token")},
 	}
 
 	for _, tt := range tests {
