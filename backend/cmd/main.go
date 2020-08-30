@@ -108,11 +108,14 @@ func main() {
 	// closed before the main() function exits.
 	defer db.Close()
 
+	// Initialize repositories instances (driven adapters)
 	userRepository := storage.NewPgUserRepository(db)
-	userService := services.NewUserService(userRepository)
 	sessionRepository := storage.NewPgSessionRepository(db)
 	tokenRepository := storage.NewPgTokenRepository(db)
 
+	// Initialize core services injecting its dependencies
+	// when neccessary
+	userService := services.NewUserService(userRepository)
 	sessionService := services.NewSessionService(ssLifeTime, sessionRepository)
 	mailerService := services.NewMailerService(sgKey, fromName, fromAddress)
 	tokenService := services.NewTokenService(tokenRepository)
@@ -122,6 +125,8 @@ func main() {
 		Secure:   ckSecure,
 		SameSite: ckSameSite,
 	}
+	// Initialize web adapter (driver adapter) injecting the
+	// core services as its dependencies
 	app := web.New(errorLog,
 		infoLog,
 		ckprops,
@@ -130,6 +135,7 @@ func main() {
 		mailerService,
 		tokenService)
 
+	// Run web adapter
 	srv := &http.Server{
 		Addr:     addr,
 		ErrorLog: errorLog,
