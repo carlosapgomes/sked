@@ -41,6 +41,12 @@ func startDatabase(tb testing.TB) *url.URL {
 		"POSTGRES_USER=" + pgURL.User.Username(),
 		"POSTGRES_PASSWORD=" + pw,
 		"POSTGRES_DB=" + pgURL.Path,
+		"LC_COLLATE=pt_BR.utf8",
+		"LC_CTYPE=pt_BR.utf8",
+		"ENCODING=UTF8",
+		"LC_MESSAGES=pt_BR.utf8",
+		"LC_MONETARY=pt_BR.utf8",
+		"LC_NUMERIC=pt_BR.utf8",
 	}
 
 	resource, err := pool.Run("postgres", "13-alpine", env)
