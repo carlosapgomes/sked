@@ -1,20 +1,21 @@
 # Sked(duler)
 
-This program will keep track of patients appointments for a specific
+This program will keep track of patients appointments/surgeries for a specific
 specialty/clinic.
 
 ## Use Cases
 
 - Only an admin can add a new user
 - A user can schedule a patient for any available date
+- A user can schedule a surgery
 - A user can insert a new patient
 - A user can modify a patient's phoneNumber
 - Only an admin can modify a patient's name
-- A user can mark an appointment as removed only until the scheduled date
-- A user can unmark an appointment as removed only until the scheduled date
-- A user can mark an appointment as complete only at its scheduled date
-- A user can unmark an appointment as complete only at its scheduled date
-- Nobody can change an appointment's date. A new appointment should be created.
+- A user can mark an appointment/surgery as removed only until the scheduled date
+- A user can unmark an appointment/surgery as removed only until the scheduled date
+- A user can mark an appointment/surgery as complete only at its scheduled date
+- A user can unmark an appointment/surgery as complete only at its scheduled date
+- Nobody can change an appointment/surgery's date. A new appointment/surgery should be created.
 
 ## Entities
 
@@ -27,28 +28,46 @@ specialty/clinic.
 - createdBy
 - updatedBy
 - createdAt
+- updatedAt
 
 ### Patients
 
 - id (uuidV4)
 - Name
-- PhoneNumber
+- PhoneNumbers
 - createdBy
 - updatedBy
 - createdAt
+- updatedAt
 
 ### Appointments
 
 - id (uuidV4)
 - Date/Time
-- Doctor
-- Patient
+- Doctor (uuidV4)
+- Patient (uuidV4)
 - Notes
 - isCancelled?
 - completed?
 - createdBy
 - updatedBy
 - createdAt
+- updatedAt
+
+### Surgeries
+
+- id (uuidV4)
+- Date/Time
+- Patient (uuidV4)
+- Doctor (uuidV4)
+- Notes
+- Proposed surgery 
+- Cancelled?
+- Done?
+- createdBy
+- createdAt
+- updatedBy
+- updatedAt
 
 ## Backend
 

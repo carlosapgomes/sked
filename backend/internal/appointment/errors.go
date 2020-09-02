@@ -2,7 +2,7 @@ package appointment
 
 import "errors"
 
-// ErrNoRecord flags user not found
+// ErrNoRecord flags appointment not found
 var ErrNoRecord = errors.New("appointments: no matching record found")
 
 // ErrDuplicateField flags use of duplicate
