@@ -23,21 +23,24 @@ specialty/clinic.
 
 - id (uuidV4)
 - Name
-- PhoneNumber
+- Phone
 - isAdmin?
 - createdBy
-- updatedBy
 - createdAt
+- updatedBy
 - updatedAt
 
 ### Patients
 
 - id (uuidV4)
 - Name
-- PhoneNumbers
+- Address
+- City
+- State
+- Phones
 - createdBy
-- updatedBy
 - createdAt
+- updatedBy
 - updatedAt
 
 ### Appointments
@@ -50,8 +53,8 @@ specialty/clinic.
 - isCancelled?
 - completed?
 - createdBy
-- updatedBy
 - createdAt
+- updatedBy
 - updatedAt
 
 ### Surgeries
@@ -96,3 +99,11 @@ Tables:
 - add/edit user
 - view scheduling
 - view activities log
+
+## TODOS
+- create entities models, interfaces and errors
+- add tables to db setup sql file
+- write failing tests for each API (appointments, surgeries and patients)
+- write services for each entity
+- add postgres container for testing
+

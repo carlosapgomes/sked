@@ -17,8 +17,13 @@ type Cursor struct {
 type Patient struct {
 	ID        string    `json:"id"` //uuidv4
 	Name      string    `json:"name"`
-	Phone     string    `json:"phone,omitempty"`
+	Address   string    `json:"address"`
+	City      string    `json:"city"`
+	State     string    `json:"state"`
+	Phones    []string  `json:"phones,omitempty"`
+	CreatedBy string    `json:"createdBy"`
 	CreatedAt time.Time `json:"createdAt,omitempty"`
+	UpdatedBy string    `json:"updatedBy"`
 	UpdatedAt time.Time `json:"updatedAt,omitempty"`
 	Active    bool      `json:"active"`
 }

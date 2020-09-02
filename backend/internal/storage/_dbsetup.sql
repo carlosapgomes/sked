@@ -22,19 +22,30 @@ DROP TABLE IF EXISTS patients;
 CREATE TABLE patients (
   id UUID NOT NULL PRIMARY KEY UNIQUE,
   name TEXT,
-  email TEXT NOT NULL UNIQUE,
   address TEXT,
   city TEXT,
   state CHAR(2),
   phones TEXT[],
-  created_at TIMESTAMP WITH TIME ZONE,
-  updated_at TIMESTAMP WITH TIME ZONE,
   createdBy UUID,
-  updatedBy UUID
+  created_at TIMESTAMP WITH TIME ZONE,
+  updatedBy UUID,
+  updated_at TIMESTAMP WITH TIME ZONE
 );
 
 CREATE INDEX patients_id_index ON patients (id);
 CREATE INDEX patients_name_index ON patients (name);
+
+DROP TABLE IF EXISTS appointments;
+CREATE TABLE appointments (
+ 	
+  createdBy UUID,
+  created_at TIMESTAMP WITH TIME ZONE,
+  updatedBy UUID,
+  updated_at TIMESTAMP WITH TIME ZONE
+)
+
+
+
 
 DROP TABLE IF EXISTS sessions;
 CREATE TABLE sessions (
