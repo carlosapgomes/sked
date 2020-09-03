@@ -9,8 +9,7 @@ type Service interface {
 		PatientID string,
 		DoctorName string,
 		DoctorID string,
-		Notes string,
-		Canceled bool) (*string, error)
+		Notes string) (*string, error)
 	Update(appointment Appointment) (*string, error)
 	FindByID(id string) (*Appointment, error)
 	FindByPatientID(patientID string) ([]*Appointment, error)
