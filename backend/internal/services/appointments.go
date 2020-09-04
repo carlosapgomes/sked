@@ -39,19 +39,19 @@ func (s *appointmentService) FindByID(id string) (*appointment.Appointment, erro
 // FindFindByPatientID - look for appointments by its patientID
 func (s *appointmentService) FindByPatientID(patientID string) ([]*appointment.Appointment, error) {
 	var appoints []*appointment.Appointment
-	return &appoints, nil
+	return appoints, nil
 }
 
-// FindFindByDoctorID - look for appointments by doctorID
-func (s *appointmentService) FindByDoctorID(doctorID string) ([]*appointments.Appointment, error) {
+// FindByDoctorID - look for appointments by doctorID
+func (s *appointmentService) FindByDoctorID(doctorID string) ([]*appointment.Appointment, error) {
 	var appoints []*appointment.Appointment
-	return &appoints, nil
+	return appoints, nil
 }
 
 // FFindByDate - look for appointments by date
 func (s *appointmentService) FindByDate(date time.Time) ([]*appointment.Appointment, error) {
 	var appoints []*appointment.Appointment
-	return &id, nil
+	return appoints, nil
 }
 
 // GetAll - return all appointments

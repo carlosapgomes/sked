@@ -58,7 +58,7 @@ func (r AppointmentMockRepo) FindByDate(date time.Time) ([]*appointment.Appointm
 }
 
 // GetAll
-func (r AppointmentMockRepo) GetAll(cursor string, after bool, pgSize int) (*[]appointment.Appointment, bool, error) {
+func (r AppointmentMockRepo) GetAll(cursor string, after bool, pgSize int) ([]*appointment.Appointment, bool, error) {
 	var res []*appointment.Appointment
 	return res, false, nil
 }

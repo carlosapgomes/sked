@@ -12,5 +12,5 @@ type Repository interface {
 	FindByPatientID(patientID string) ([]*Appointment, error)
 	FindByDoctorID(doctorID string) ([]*Appointment, error)
 	FindByDate(date time.Time) ([]*Appointment, error)
-	GetAll(cursor string, after bool, pgSize int) (*[]Appointment, bool, error)
+	GetAll(cursor string, after bool, pgSize int) ([]*Appointment, bool, error)
 }
