@@ -1,9 +1,11 @@
 package services
 
 import (
+	"errors"
 	"time"
 
 	"carlosapgomes.com/sked/internal/appointment"
+	uuid "github.com/satori/go.uuid"
 )
 
 // AppointmentService provides implementation of appointment domain interface
@@ -19,9 +21,44 @@ func NewAppointmentService(repo appointment.Repository) appointment.Service {
 }
 
 // Create - creates a new appointment and returns its uuid
-func (s *appointmentService) Create(dateTime time.Time, patientName, patientID, doctorName, doctorID, notes string) (*string, error) {
-	var id string
-	return &id, nil
+func (s *appointmentService) Create(dateTime time.Time, patientName, patientID, doctorName, doctorID, notes, createdBy string) (*string, error) {
+	// validate ID's
+	ptID, err := uuid.FromString(patientID)
+	if err != nil {
+		return nil, appointment.ErrInvalidInputSyntax
+	}
+	docID, err := uuid.FromString(doctorID)
+	if err != nil {
+		return nil, appointment.ErrInvalidInputSyntax
+	}
+	createdByID, err := uuid.FromString(createdBy)
+	if err != nil {
+		return nil, appointment.ErrInvalidInputSyntax
+	}
+	uid := uuid.NewV4()
+	dt := dateTime.UTC()
+	newAppointmt := appointment.Appointment{
+		ID:          uid.String(),
+		DateTime:    dt,
+		PatientName: patientName,
+		PatientID:   ptID.String(),
+		DoctorName:  doctorName,
+		DoctorID:    docID.String(),
+		Notes:       notes,
+		Canceled:    false,
+		Completed:   false,
+		CreatedBy:   createdByID.String(),
+		CreatedAt:   time.Now().UTC(),
+	}
+
+	id, err := s.repo.Create(newAppointmt)
+	if err != nil {
+		return nil, err
+	}
+	if (id != nil) && (*id != newAppointmt.ID) {
+		return nil, errors.New("New appointment creation: returned repository ID not equal to new user ID")
+	}
+	return id, err
 }
 
 // Update - updates an appointment

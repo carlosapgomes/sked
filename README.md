@@ -106,4 +106,5 @@ Tables:
 - write failing tests for each API (appointments, surgeries and patients)
 - write services for each entity
 - add postgres container for testing
+- validation should be in services implementation
 
