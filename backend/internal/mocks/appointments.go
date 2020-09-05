@@ -24,6 +24,7 @@ func NewAppointmentRepo() *AppointmentMockRepo {
 // Create
 func (r AppointmentMockRepo) Create(appointment appointment.Appointment) (*string, error) {
 	var id string
+	id = appointment.ID
 	return &id, nil
 }
 

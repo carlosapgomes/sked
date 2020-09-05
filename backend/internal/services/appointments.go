@@ -22,7 +22,7 @@ func NewAppointmentService(repo appointment.Repository) appointment.Service {
 
 // Create - creates a new appointment and returns its uuid
 func (s *appointmentService) Create(dateTime time.Time, patientName, patientID, doctorName, doctorID, notes, createdBy string) (*string, error) {
-	// validate ID's
+	// validate ID format (uuidV4)
 	ptID, err := uuid.FromString(patientID)
 	if err != nil {
 		return nil, appointment.ErrInvalidInputSyntax

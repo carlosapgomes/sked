@@ -22,13 +22,14 @@ func TestAppointmentCreate(t *testing.T) {
 		doctorName  string
 		doctorID    string
 		notes       string
+		createdByID string
 		wantError   []byte
 	}{
-		{"Valid appointment", time.Now(), "John Doe", "22070f56-5d52-43f0-9f59-5de61c1db506", "Dr House", "f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes", nil},
+		{"Valid appointment", time.Now(), "John Doe", "22070f56-5d52-43f0-9f59-5de61c1db506", "Dr House", "f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes", "10b9ad06-e86d-4a85-acb1-d7e268d1f21a", nil},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			id, err := svc.Create(tt.dateTime, tt.patientName, tt.patientID, tt.doctorName, tt.doctorID, tt.notes)
+			id, err := svc.Create(tt.dateTime, tt.patientName, tt.patientID, tt.doctorName, tt.doctorID, tt.notes, tt.createdByID)
 
 			if (tt.wantError != nil) && (err != nil) {
 				t.Log("wantError and error != nil")
