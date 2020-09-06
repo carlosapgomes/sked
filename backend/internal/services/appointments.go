@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"carlosapgomes.com/sked/internal/appointment"
@@ -66,9 +67,10 @@ func (s *appointmentService) Update(appointmt appointment.Appointment) (*string,
 	// get original appointment
 	original, err := s.repo.FindByID(appointmt.ID)
 	if err != nil {
+		fmt.Print("could not find appointment\n")
 		return nil, appointment.ErrNoRecord
 	}
-	updatedByID, err := uuid.FromString(appointmt.CreatedBy)
+	_, err = uuid.FromString(appointmt.UpdatedBy)
 	if err != nil {
 		return nil, appointment.ErrInvalidInputSyntax
 	}
@@ -76,7 +78,7 @@ func (s *appointmentService) Update(appointmt appointment.Appointment) (*string,
 	original.Canceled = appointmt.Canceled
 	original.Completed = appointmt.Completed
 	original.UpdatedAt = time.Now().UTC()
-	original.UpdatedBy = updatedByID.String()
+	original.UpdatedBy = appointmt.UpdatedBy
 	original.Notes = appointmt.Notes
 
 	id, err := s.repo.Update(*original)

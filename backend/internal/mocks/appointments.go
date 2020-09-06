@@ -48,7 +48,7 @@ func (r AppointmentMockRepo) FindByID(id string) (*appointment.Appointment, erro
 		CreatedBy:   "10b9ad06-e86d-4a85-acb1-d7e268d1f21a",
 		CreatedAt:   time.Now(),
 	}
-	if appointmt.PatientID == id {
+	if id == appointmt.ID {
 		return &appointmt, nil
 	} else {
 		return nil, appointment.ErrNoRecord

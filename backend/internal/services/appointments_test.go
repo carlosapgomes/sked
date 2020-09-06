@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"carlosapgomes.com/sked/internal/appointment"
 	"carlosapgomes.com/sked/internal/mocks"
 	"carlosapgomes.com/sked/internal/services"
 	uuid "github.com/satori/go.uuid"
@@ -61,6 +62,64 @@ func TestAppointmentCreate(t *testing.T) {
 
 }
 
+func TestAppointmentUpdate(t *testing.T) {
+	repo := mocks.NewAppointmentRepo()
+	svc := services.NewAppointmentService(repo)
+
+	tests := []struct {
+		name        string
+		id          string
+		dateTime    time.Time
+		patientName string
+		patientID   string
+		doctorName  string
+		doctorID    string
+		notes       string
+		updatedBy   string
+		wantError   []byte
+	}{
+		{"Valid appointment", "e521798b-9f33-4a10-8b2a-9677ed1cd1ae", time.Now(), "John Doe", "22070f56-5d52-43f0-9f59-5de61c1db506", "Dr House", "f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes", "10b9ad06-e86d-4a85-acb1-d7e268d1f21a", nil},
+		{"Invalid updatedBy", "e521798b-9f33-4a10-8b2a-9677ed1cd1ae", time.Now(), "John Doe", "22070f56-5d52-43f0-9f59-5de61c1db506", "Dr House", "f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes", "10b9ad06-4a85-acb1", []byte("invalid input syntax")},
+		//{"Invalid updatedBy", "e521798b-9f33-4a10-8b2a-9677ed1cd1ae", time.Now(), "John Doe", "22070f56-5d52-43f0-9f59-5de61c1db506", "Dr House", "f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes", "10b9ad06-e-acb1-d7e268d1f21a", []byte("invalid input syntax")},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			appointmt := appointment.Appointment{
+				ID:          tt.id,
+				DateTime:    tt.dateTime,
+				PatientName: tt.patientName,
+				PatientID:   tt.patientID,
+				DoctorName:  tt.doctorName,
+				DoctorID:    tt.doctorID,
+				Notes:       tt.notes,
+				UpdatedBy:   tt.updatedBy,
+			}
+			id, err := svc.Update(appointmt)
+			if tt.wantError != nil {
+				if err != nil {
+					t.Log("wantError and error != nil")
+					e := err.Error()
+					if !bytes.Contains([]byte(e), tt.wantError) {
+						t.Errorf("want error msg %s to contain %q", e, tt.wantError)
+					}
+				} else {
+					t.Errorf("want error msg nil to contain %q", tt.wantError)
+				}
+
+			}
+			if id != nil {
+				if *id != appointmt.ID {
+					t.Errorf("want id %s but received %s", tt.id, *id)
+				}
+			} else if tt.wantError == nil {
+				t.Errorf("received id is nil")
+			}
+		})
+	}
+}
+
 func TestAppointmentFindByID(t *testing.T) {
 	repo := mocks.NewAppointmentRepo()
 	svc := services.NewAppointmentService(repo)
@@ -77,7 +136,7 @@ func TestAppointmentFindByID(t *testing.T) {
 		wantError   []byte
 	}{
 		{"Valid appointmentID", "e521798b-9f33-4a10-8b2a-9677ed1cd1ae", "John Doe", "22070f56-5d52-43f0-9f59-5de61c1db506", "Dr House", "f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes", "10b9ad06-e86d-4a85-acb1-d7e268d1f21a", nil},
-		//{"Invalid appointmentID", "e521798b-9f33-9677ed1cd1ae", "John Doe", "22070f56--43f0-9f59-5de61c1db506", "Dr House", "f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes", "10b9ad06-e86d-4a85-acb1-d7e268d1f21a", []byte("invalid input syntax")},
+		{"Invalid appointmentID", "e521798b-9f33-9677ed1cd1ae", "John Doe", "22070f56-5d52-43f0-9f59-5de61c1db506", "Dr House", "f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes", "10b9ad06-e86d-4a85-acb1-d7e268d1f21a", []byte("invalid input syntax")},
 	}
 
 	for _, tt := range tests {
