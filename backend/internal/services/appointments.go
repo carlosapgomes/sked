@@ -53,8 +53,6 @@ func (s *appointmentService) Create(dateTime time.Time, patientName, patientID, 
 
 	id, err := s.repo.Create(newAppointmt)
 	if err != nil {
-		// TODO: should return appointment.ErrDb
-		// and log the real error
 		return nil, err
 	}
 	if (id != nil) && (*id != newAppointmt.ID) {
@@ -77,26 +75,31 @@ func (s *appointmentService) Update(appointmt appointment.Appointment) (*string,
 	original.DateTime = appointmt.DateTime
 	original.Canceled = appointmt.Canceled
 	original.Completed = appointmt.Completed
-	original.UpdatedAt = time.now().UTC()
+	original.UpdatedAt = time.Now().UTC()
 	original.UpdatedBy = updatedByID.String()
 	original.Notes = appointmt.Notes
 
 	id, err := s.repo.Update(*original)
 	if err != nil {
-		// TODO: should return appointment.ErrDb
-		// and log the real error
 		return nil, err
 	}
 	if (id != nil) && (*id != original.ID) {
 		return nil, errors.New("Appointment update: returned repository ID not equal to new appointment ID")
 	}
-	return &id, nil
+	return id, nil
 }
 
 // FindByID - look for an appointment by its uuid
 func (s *appointmentService) FindByID(id string) (*appointment.Appointment, error) {
-	var appointment appointment.Appointment
-	return &appointment, nil
+	_, err := uuid.FromString(id)
+	if err != nil {
+		return nil, appointment.ErrInvalidInputSyntax
+	}
+	appointment, err := s.repo.FindByID(id)
+	if err != nil {
+		return nil, err
+	}
+	return appointment, nil
 }
 
 // FindFindByPatientID - look for appointments by its patientID

@@ -35,10 +35,24 @@ func (r AppointmentMockRepo) Update(appointment appointment.Appointment) (*strin
 	return &id, nil
 }
 
-// FindFindByID
+// FindByID
 func (r AppointmentMockRepo) FindByID(id string) (*appointment.Appointment, error) {
-	var appointment appointment.Appointment
-	return &appointment, nil
+	appointmt := appointment.Appointment{
+		ID:          "e521798b-9f33-4a10-8b2a-9677ed1cd1ae",
+		DateTime:    time.Now(),
+		PatientName: "John Doe",
+		PatientID:   "22070f56-5d52-43f0-9f59-5de61c1db506",
+		DoctorName:  "Dr House",
+		DoctorID:    "f06244b9-97e5-4f1a-bae0-3b6da7a0b604",
+		Notes:       "some notes",
+		CreatedBy:   "10b9ad06-e86d-4a85-acb1-d7e268d1f21a",
+		CreatedAt:   time.Now(),
+	}
+	if appointmt.PatientID == id {
+		return &appointmt, nil
+	} else {
+		return nil, appointment.ErrNoRecord
+	}
 }
 
 // FindByPatientID
