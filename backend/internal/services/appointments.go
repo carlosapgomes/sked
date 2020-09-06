@@ -53,17 +53,43 @@ func (s *appointmentService) Create(dateTime time.Time, patientName, patientID, 
 
 	id, err := s.repo.Create(newAppointmt)
 	if err != nil {
+		// TODO: should return appointment.ErrDb
+		// and log the real error
 		return nil, err
 	}
 	if (id != nil) && (*id != newAppointmt.ID) {
-		return nil, errors.New("New appointment creation: returned repository ID not equal to new user ID")
+		return nil, errors.New("New appointment creation: returned repository ID not equal to new appointment ID")
 	}
 	return id, err
 }
 
 // Update - updates an appointment
-func (s *appointmentService) Update(appointment appointment.Appointment) (*string, error) {
-	var id string
+func (s *appointmentService) Update(appointmt appointment.Appointment) (*string, error) {
+	// get original appointment
+	original, err := s.repo.FindByID(appointmt.ID)
+	if err != nil {
+		return nil, appointment.ErrNoRecord
+	}
+	updatedByID, err := uuid.FromString(appointmt.CreatedBy)
+	if err != nil {
+		return nil, appointment.ErrInvalidInputSyntax
+	}
+	original.DateTime = appointmt.DateTime
+	original.Canceled = appointmt.Canceled
+	original.Completed = appointmt.Completed
+	original.UpdatedAt = time.now().UTC()
+	original.UpdatedBy = updatedByID.String()
+	original.Notes = appointmt.Notes
+
+	id, err := s.repo.Update(*original)
+	if err != nil {
+		// TODO: should return appointment.ErrDb
+		// and log the real error
+		return nil, err
+	}
+	if (id != nil) && (*id != original.ID) {
+		return nil, errors.New("Appointment update: returned repository ID not equal to new appointment ID")
+	}
 	return &id, nil
 }
 
