@@ -106,8 +106,15 @@ func (s *appointmentService) FindByID(id string) (*appointment.Appointment, erro
 
 // FindFindByPatientID - look for appointments by its patientID
 func (s *appointmentService) FindByPatientID(patientID string) ([]*appointment.Appointment, error) {
-	var appoints []*appointment.Appointment
-	return appoints, nil
+	_, err := uuid.FromString(patientID)
+	if err != nil {
+		return nil, appointment.ErrInvalidInputSyntax
+	}
+	appointmts, err := s.repo.FindByPatientID(patientID)
+	if err != nil {
+		return nil, err
+	}
+	return appointmts, nil
 }
 
 // FindByDoctorID - look for appointments by doctorID
