@@ -131,9 +131,12 @@ func (s *appointmentService) FindByDoctorID(doctorID string) ([]*appointment.App
 }
 
 // FindByDate - look for appointments by date
-func (s *appointmentService) FindByDate(date time.Time) ([]*appointment.Appointment, error) {
-	var appoints []*appointment.Appointment
-	return appoints, nil
+func (s *appointmentService) FindByDate(dateTime time.Time) ([]*appointment.Appointment, error) {
+	appointmts, err := s.repo.FindByDate(dateTime)
+	if err != nil {
+		return nil, err
+	}
+	return appointmts, nil
 }
 
 // GetAll - return all appointments

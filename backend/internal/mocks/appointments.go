@@ -101,10 +101,27 @@ func (r AppointmentMockRepo) FindByDoctorID(doctorID string) ([]*appointment.App
 	}
 }
 
-// FFindByDate
-func (r AppointmentMockRepo) FindByDate(date time.Time) ([]*appointment.Appointment, error) {
-	var res []*appointment.Appointment
-	return res, nil
+// FindByDate
+func (r AppointmentMockRepo) FindByDate(dateTime time.Time) ([]*appointment.Appointment, error) {
+	appointmt := appointment.Appointment{
+		ID:          "e521798b-9f33-4a10-8b2a-9677ed1cd1ae",
+		DateTime:    time.Date(2020, 9, 6, 12, 0, 0, 0, time.UTC),
+		PatientName: "John Doe",
+		PatientID:   "22070f56-5d52-43f0-9f59-5de61c1db506",
+		DoctorName:  "Dr House",
+		DoctorID:    "f06244b9-97e5-4f1a-bae0-3b6da7a0b604",
+		Notes:       "some notes",
+		CreatedBy:   "10b9ad06-e86d-4a85-acb1-d7e268d1f21a",
+		CreatedAt:   time.Date(2020, 9, 6, 12, 0, 0, 0, time.UTC),
+	}
+	if dateTime.Equal(appointmt.DateTime) {
+		appointmts := []*appointment.Appointment{
+			&appointmt,
+		}
+		return appointmts, nil
+	} else {
+		return nil, appointment.ErrNoRecord
+	}
 }
 
 // GetAll
