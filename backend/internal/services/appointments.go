@@ -154,7 +154,7 @@ func (s *appointmentService) GetAll(before string, after string, pgSize int) (*a
 		// if both (before & after) are present, returns error
 		return nil, appointment.ErrInvalidInputSyntax
 	case (before == "" && after == ""):
-		// if they are empty absent
+		// if they are empty
 		// get default list and page size
 		aList, appointmtsResp.HasBefore, err = s.repo.
 			GetAll("", false, pgSize)

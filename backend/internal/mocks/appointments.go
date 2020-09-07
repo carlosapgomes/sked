@@ -126,8 +126,8 @@ func (r AppointmentMockRepo) FindByDate(dateTime time.Time) ([]*appointment.Appo
 
 // GetAll
 func (r AppointmentMockRepo) GetAll(cursor string, after bool, pgSize int) (*[]appointment.Appointment, bool, error) {
-	var res []appointment.Appointment
-	res = append(res, appointment.Appointment{
+	var db []appointment.Appointment
+	db = append(db, appointment.Appointment{
 		ID:          "e521798b-9f33-4a10-8b2a-9677ed1cd1ae",
 		DateTime:    time.Date(2020, 9, 6, 12, 0, 0, 0, time.UTC),
 		PatientName: "John Doe",
@@ -189,5 +189,44 @@ func (r AppointmentMockRepo) GetAll(cursor string, after bool, pgSize int) (*[]a
 		CreatedAt:   time.Date(2020, 9, 6, 12, 0, 0, 0, time.UTC),
 	},
 	)
-	return &res, false, nil
+	if cursor == "" {
+		return &db, false, nil
+	}
+	pos := r.findPos(db, cursor)
+	if pos == -1 {
+		return nil, false, appointment.ErrNoRecord
+	}
+
+	var res []appointment.Appointment
+	var hasMore bool
+	hasMore = false
+	if after {
+		start := pos + 1
+		for i := start; i < (start + pgSize); i++ {
+			res = append(res, db[i])
+		}
+		if (len(db) - pos) > pgSize {
+			hasMore = true
+		}
+	} else {
+		start := pos - pgSize
+		if start < 0 {
+			start = 0
+		}
+		for i := start; i <= (pos - 1); i++ {
+			res = append(res, db[i])
+		}
+		if pos > pgSize {
+			hasMore = true
+		}
+	}
+	return &res, hasMore, nil
+}
+func (r AppointmentMockRepo) findPos(appointmts []appointment.Appointment, id string) int {
+	for i, el := range appointmts {
+		if el.ID == id {
+			return i
+		}
+	}
+	return -1
 }

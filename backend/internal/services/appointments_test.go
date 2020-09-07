@@ -356,14 +356,24 @@ func TestAppointmentGetAll(t *testing.T) {
 			wantContainID: "5e6f7cd1-d8d2-40cd-97a3-aca01a93bfde",
 		},
 		{
-			desc:          "Valid Cursor After",
+			desc:          "Valid Cursor Before",
 			before:        "NWU2ZjdjZDEtZDhkMi00MGNkLTk3YTMtYWNhMDFhOTNiZmRl",
 			after:         "",
+			pgSize:        2,
+			wantSize:      1,
+			hasMore:       false,
+			wantError:     nil,
+			wantContainID: "e521798b-9f33-4a10-8b2a-9677ed1cd1ae",
+		},
+		{
+			desc:          "Valid Cursor After",
+			before:        "",
+			after:         "NWU2ZjdjZDEtZDhkMi00MGNkLTk3YTMtYWNhMDFhOTNiZmRl",
 			pgSize:        2,
 			wantSize:      2,
 			hasMore:       true,
 			wantError:     nil,
-			wantContainID: "e521798b-9f33-4a10-8b2a-9677ed1cd1ae",
+			wantContainID: "7fef3c47-a01a-42a6-ac45-27a440596751",
 		},
 		//{
 		//desc:             "Valid Cursor Before",
@@ -391,7 +401,6 @@ func TestAppointmentGetAll(t *testing.T) {
 			}
 			var contain bool
 			for _, u := range cursor.Appointments {
-				//t.Logf("%v\n", u.Email)
 				if u.ID == tC.wantContainID {
 					contain = true
 				}
