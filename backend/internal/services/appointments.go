@@ -1,6 +1,7 @@
 package services
 
 import (
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"time"
@@ -141,15 +142,97 @@ func (s *appointmentService) FindByDate(dateTime time.Time) ([]*appointment.Appo
 
 // GetAll - return all appointments
 func (s *appointmentService) GetAll(before string, after string, pgSize int) (*appointment.Cursor, error) {
-	appointmts, hasMore, err := s.repo.GetAll(before, false, pgSize)
-	if err != nil {
-		return nil, err
+	var appointmtsResp appointment.Cursor
+	var err error
+	var aList *[]appointment.Appointment
+	if pgSize <= 0 {
+		pgSize = 15
 	}
-	var cursor appointment.Cursor
-	for _, a := range *appointmts {
-		cursor.Appointments = append(cursor.Appointments, a)
+
+	switch {
+	case (before != "" && after != ""):
+		// if both (before & after) are present, returns error
+		return nil, appointment.ErrInvalidInputSyntax
+	case (before == "" && after == ""):
+		// if they are empty absent
+		// get default list and page size
+		aList, appointmtsResp.HasBefore, err = s.repo.
+			GetAll("", false, pgSize)
+		if err != nil {
+			return nil, err
+		}
+		if aList != nil {
+			for _, a := range *aList {
+				appointmtsResp.Appointments = append(appointmtsResp.Appointments, a)
+			}
+		}
+		if len(appointmtsResp.Appointments) > 0 {
+			appointmtsResp.Before = base64.StdEncoding.
+				EncodeToString([]byte(appointmtsResp.Appointments[len(appointmtsResp.Appointments)-1].ID))
+		} else {
+			appointmtsResp.Before = ""
+		}
+		appointmtsResp.After = ""
+		appointmtsResp.HasAfter = false
+		// and return values
+	case (before != ""):
+		// if before is present,
+		// get a before list
+		c, err := base64.StdEncoding.DecodeString(before)
+		if err != nil {
+			return nil, err
+		}
+		cursor := string(c)
+		aList, appointmtsResp.HasBefore, err = s.repo.GetAll(cursor, false, pgSize)
+		if err != nil {
+			return nil, err
+		}
+		if aList != nil {
+			for _, a := range *aList {
+				appointmtsResp.Appointments = append(appointmtsResp.Appointments, a)
+			}
+		}
+		if len(appointmtsResp.Appointments) > 0 {
+			befCursor := base64.StdEncoding.EncodeToString([]byte(appointmtsResp.Appointments[len(appointmtsResp.Appointments)-1].ID))
+			appointmtsResp.Before = befCursor
+		} else {
+			appointmtsResp.Before = ""
+		}
+		// test for 'after data' from the requested cursor
+		// fill the response fields
+		_, appointmtsResp.HasAfter, err = s.repo.GetAll(cursor, true, pgSize)
+		if appointmtsResp.HasAfter {
+			appointmtsResp.After = base64.StdEncoding.EncodeToString([]byte(before))
+		} else {
+			appointmtsResp.After = ""
+		}
+		// and return it
+	case (after != ""):
+		// if after is present,
+		// get an after list
+		c, err := base64.StdEncoding.DecodeString(after)
+		if err != nil {
+			return nil, err
+		}
+		cursor := string(c)
+		aList, appointmtsResp.HasAfter, err = s.repo.
+			GetAll(cursor, true, pgSize)
+		// and return it
+		if aList != nil {
+			for _, a := range *aList {
+				appointmtsResp.Appointments = append(appointmtsResp.Appointments, a)
+			}
+		}
+		if len(appointmtsResp.Appointments) > 0 {
+			appointmtsResp.After = base64.StdEncoding.EncodeToString([]byte(appointmtsResp.Appointments[0].ID))
+		}
+		// test for 'before data' from the requested cursor
+		// fill the response fields
+		_, appointmtsResp.HasBefore, err = s.repo.
+			GetAll(cursor, false, pgSize)
+		if appointmtsResp.HasBefore {
+			appointmtsResp.Before = base64.StdEncoding.EncodeToString([]byte(after))
+		}
 	}
-	cursor.HasAfter = hasMore
-	cursor.HasBefore = hasMore
-	return &cursor, nil
+	return &appointmtsResp, nil
 }
