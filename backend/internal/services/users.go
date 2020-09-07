@@ -258,6 +258,6 @@ func (s *userService) GetAll(before string, after string, pgSize int) (*user.Cur
 }
 
 // FindByName returns a list of users whose names looks like 'name'
-func (s *userService) FindByName(name string, before string, hasBef bool, after string, hasAft bool, pgSize int) (*[]user.User, error) {
+func (s *userService) FindByName(name string) (*[]user.User, error) {
 	return nil, nil
 }

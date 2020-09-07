@@ -208,7 +208,6 @@ func (r userRepository) GetAll(cursor string, after bool, pgSize int) (*[]user.U
 }
 
 // FindByName returns a list of users whose names looks like 'name'
-func (r userRepository) FindByName(name string, before string,
-	hasBef bool, after string, hasAft bool, pgSize int) (*[]user.User, error) {
+func (r userRepository) FindByName(name string) (*[]user.User, error) {
 	return nil, nil
 }
