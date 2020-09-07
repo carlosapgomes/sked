@@ -141,6 +141,15 @@ func (s *appointmentService) FindByDate(dateTime time.Time) ([]*appointment.Appo
 
 // GetAll - return all appointments
 func (s *appointmentService) GetAll(before string, after string, pgSize int) (*appointment.Cursor, error) {
+	appointmts, hasMore, err := s.repo.GetAll(before, false, pgSize)
+	if err != nil {
+		return nil, err
+	}
 	var cursor appointment.Cursor
+	for _, a := range *appointmts {
+		cursor.Appointments = append(cursor.Appointments, a)
+	}
+	cursor.HasAfter = hasMore
+	cursor.HasBefore = hasMore
 	return &cursor, nil
 }

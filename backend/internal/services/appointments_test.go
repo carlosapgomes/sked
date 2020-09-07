@@ -331,3 +331,74 @@ func TestAppointmentFindByDate(t *testing.T) {
 		})
 	}
 }
+
+func TestAppointmentGetAll(t *testing.T) {
+	repo := mocks.NewAppointmentRepo()
+	svc := services.NewAppointmentService(repo)
+	testCases := []struct {
+		desc          string
+		before        string
+		after         string
+		pgSize        int
+		wantSize      int
+		hasMore       bool
+		wantError     error
+		wantContainID string
+	}{
+		{
+			desc:          "Valid Page",
+			before:        "",
+			after:         "",
+			pgSize:        6,
+			wantSize:      6,
+			hasMore:       false,
+			wantError:     nil,
+			wantContainID: "5e6f7cd1-d8d2-40cd-97a3-aca01a93bfde",
+		},
+		//{
+		//desc:             "Valid Cursor After",
+		//cursor:           "bobama@somewhere.com",
+		//after:            true,
+		//pgSize:           2,
+		//wantSize:         2,
+		//hasMore:          true,
+		//wantError:        nil,
+		//wantContainEmail: "spongebob@somewhere.com",
+		//},
+		//{
+		//desc:             "Valid Cursor Before",
+		//cursor:           "bobama@somewhere.com",
+		//after:            false,
+		//pgSize:           2,
+		//wantSize:         2,
+		//hasMore:          false,
+		//wantError:        nil,
+		//wantContainEmail: "alice@example.com",
+		//},
+	}
+	for _, tC := range testCases {
+		t.Run(tC.desc, func(t *testing.T) {
+
+			cursor, err := svc.GetAll(tC.before, tC.after, tC.pgSize)
+			if err != tC.wantError {
+				t.Errorf("Want %v; got %v\n", tC.wantError, err)
+			}
+			if cursor != nil && len(cursor.Appointments) != tC.wantSize {
+				t.Errorf("Want %v; got %v\n", tC.wantSize, len(cursor.Appointments))
+			}
+			if tC.hasMore && !(cursor.HasAfter || cursor.HasBefore) {
+				t.Errorf("want %v; got %v\n", tC.hasMore, (cursor.HasAfter || cursor.HasBefore))
+			}
+			var contain bool
+			for _, u := range cursor.Appointments {
+				//t.Logf("%v\n", u.Email)
+				if u.ID == tC.wantContainID {
+					contain = true
+				}
+			}
+			if !contain {
+				t.Errorf("Want response to contain %v ID;  but it did not\n", tC.wantContainID)
+			}
+		})
+	}
+}
