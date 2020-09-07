@@ -143,13 +143,16 @@ func TestAppointmentFindByID(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			appointmt, err := svc.FindByID(tt.ID)
-			if (tt.wantError != nil) && (err != nil) {
-				t.Log("wantError and error != nil")
-				e := err.Error()
-				if !bytes.Contains([]byte(e), tt.wantError) {
-					t.Errorf("want error msg %s to contain %q", e, tt.wantError)
+			if tt.wantError != nil {
+				if err != nil {
+					t.Log("wantError and error != nil")
+					e := err.Error()
+					if !bytes.Contains([]byte(e), tt.wantError) {
+						t.Errorf("want error msg %s to contain %q", e, tt.wantError)
+					}
+				} else {
+					t.Errorf("want error msg nil to contain %q", tt.wantError)
 				}
-
 			}
 			if appointmt != nil {
 				if appointmt.ID != tt.ID {
@@ -160,6 +163,60 @@ func TestAppointmentFindByID(t *testing.T) {
 				}
 				if appointmt.DoctorID != tt.doctorID {
 					t.Errorf("want doctorID = %s but got %s \n", appointmt.DoctorID, tt.doctorID)
+				}
+
+			}
+		})
+	}
+}
+
+func TestAppointmentFindByPatientID(t *testing.T) {
+	repo := mocks.NewAppointmentRepo()
+	svc := services.NewAppointmentService(repo)
+
+	tests := []struct {
+		name        string
+		ID          string
+		patientName string
+		patientID   string
+		doctorName  string
+		doctorID    string
+		notes       string
+		createdByID string
+		wantError   []byte
+	}{
+		{"Valid patientID", "e521798b-9f33-4a10-8b2a-9677ed1cd1ae", "John Doe", "22070f56-5d52-43f0-9f59-5de61c1db506", "Dr House", "f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes", "10b9ad06-e86d-4a85-acb1-d7e268d1f21a", nil},
+		{"Invalid patientID", "e521798b-9f33-4a10-8b2a-9677ed1cd1ae", "John Doe", "22070f56-5d52-9f59-5de61c1db506", "Dr House", "f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes", "10b9ad06-e86d-4a85-acb1-d7e268d1f21a", []byte("invalid input syntax")},
+		{"Valid patientID without appointement", "", "John Doe", "c49a4ead-73de-46d9-92c6-9418043ae0d8", "Dr House", "f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes", "10b9ad06-e86d-4a85-acb1-d7e268d1f21a", []byte("no matching record found")},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			appointmts, err := svc.FindByPatientID(tt.patientID)
+			if tt.wantError != nil {
+				if err != nil {
+					t.Log("wantError and error != nil")
+					e := err.Error()
+					if !bytes.Contains([]byte(e), tt.wantError) {
+						t.Errorf("want error msg %s to contain %q", e, tt.wantError)
+					}
+				} else {
+					t.Errorf("want error msg nil to contain %q", tt.wantError)
+				}
+			}
+			if tt.wantError == nil && len(appointmts) == 0 {
+				t.Errorf("want size of appointements list > 0")
+			}
+			if appointmts != nil {
+				if appointmts[0].ID != tt.ID {
+					t.Errorf("want appointement id %s but received %s", tt.ID, appointmts[0].ID)
+				}
+				if appointmts[0].PatientID != tt.patientID {
+					t.Errorf("want patientID = %s but got %s \n", appointmts[0].PatientID, tt.patientID)
+				}
+				if appointmts[0].DoctorID != tt.doctorID {
+					t.Errorf("want doctorID = %s but got %s \n", appointmts[0].DoctorID, tt.doctorID)
 				}
 
 			}
