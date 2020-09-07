@@ -119,11 +119,18 @@ func (s *appointmentService) FindByPatientID(patientID string) ([]*appointment.A
 
 // FindByDoctorID - look for appointments by doctorID
 func (s *appointmentService) FindByDoctorID(doctorID string) ([]*appointment.Appointment, error) {
-	var appoints []*appointment.Appointment
-	return appoints, nil
+	_, err := uuid.FromString(doctorID)
+	if err != nil {
+		return nil, appointment.ErrInvalidInputSyntax
+	}
+	appointmts, err := s.repo.FindByDoctorID(doctorID)
+	if err != nil {
+		return nil, err
+	}
+	return appointmts, nil
 }
 
-// FFindByDate - look for appointments by date
+// FindByDate - look for appointments by date
 func (s *appointmentService) FindByDate(date time.Time) ([]*appointment.Appointment, error) {
 	var appoints []*appointment.Appointment
 	return appoints, nil
