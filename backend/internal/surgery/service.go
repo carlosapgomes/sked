@@ -2,7 +2,7 @@ package surgery
 
 import "time"
 
-// Service interface for appointment model
+// Service interface for surgery  model
 type Service interface {
 	Create(dateTime time.Time,
 		PatientName string,
@@ -10,8 +10,7 @@ type Service interface {
 		DoctorName string,
 		DoctorID string,
 		Notes string,
-		ProposedSurgery string,
-		Done bool) (*string, error)
+		ProposedSurgery, createdBy string) (*string, error)
 	Update(surgery Surgery) (*string, error)
 	FindByID(id string) (*Surgery, error)
 	FindByPatientID(patientID string) ([]*Surgery, error)

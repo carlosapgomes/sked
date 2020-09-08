@@ -64,7 +64,7 @@ specialty/clinic.
 - Patient (uuidV4)
 - Doctor (uuidV4)
 - Notes
-- Proposed surgery 
+- Proposed surgery
 - Cancelled?
 - Done?
 - createdBy
