@@ -259,5 +259,9 @@ func (s *userService) GetAll(before string, after string, pgSize int) (*user.Cur
 
 // FindByName returns a list of users whose names looks like 'name'
 func (s *userService) FindByName(name string) (*[]user.User, error) {
-	return nil, nil
+	res, err := s.repo.FindByName(name)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
 }

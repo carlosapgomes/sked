@@ -1,6 +1,7 @@
 package mocks
 
 import (
+	"strings"
 	"time"
 
 	"carlosapgomes.com/sked/internal/user"
@@ -218,7 +219,7 @@ func (r *UserMockRepo) GetAll(cursor string, after bool, pgSize int) (*[]user.Us
 }
 
 // FindByName returns a list of users whose names looks like 'name'
-func (r *UserMockRepo) FindByName(name string, before string, hasBef bool, after string, hasAft bool, pgSize int) (*[]user.User, error) {
+func (r *UserMockRepo) FindByName(name string) (*[]user.User, error) {
 	return nil, nil
 }
 
@@ -422,6 +423,16 @@ func (s UserMockSvc) GetAll(before string, after string, pgSize int) (*user.Curs
 }
 
 // FindByName return a list of users whose names looks like 'name'
-func (s UserMockSvc) FindByName(name string, before string, hasBef bool, after string, hasAft bool, pgSize int) (*[]user.User, error) {
-	return nil, nil
+func (s UserMockSvc) FindByName(name string) (*[]user.User, error) {
+	repo := NewUserRepo()
+	var users []user.User
+	for _, u := range repo.uDb {
+		if strings.Contains(strings.ToLower(u.Name), strings.ToLower(name)) {
+			users = append(users, u)
+		}
+	}
+	if len(users) == 0 {
+		return nil, user.ErrNoRecord
+	}
+	return &users, nil
 }

@@ -3,6 +3,7 @@ package services_test
 import (
 	"bytes"
 	"reflect"
+	"strings"
 	"testing"
 	"time"
 
@@ -602,6 +603,59 @@ func TestGetAll(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
+
+		})
+	}
+}
+
+func TestUserFindByName(t *testing.T) {
+	repo := mocks.NewUserRepo()
+	svc := services.NewUserService(repo)
+	var tests = []struct {
+		name           string
+		nameToSearch   string
+		wantResNumber  int
+		wantResContain string
+		wantError      error
+	}{
+		{
+			"Valid name",
+			"Tim",
+			1,
+			"Tim Berners-Lee",
+			nil,
+		},
+		{
+			"Unknown name",
+			"John",
+			0,
+			"",
+			user.ErrNoRecord,
+		},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			res, err := svc.FindByName(tt.nameToSearch)
+			if err != nil && err != tt.wantError {
+				t.Errorf("want %v; got %v", tt.wantError, err)
+			}
+			if (res != nil) && (len(*res) != tt.wantResNumber) {
+				t.Errorf("want %d results but got %d", tt.wantResNumber, len(*res))
+			}
+			if (res != nil) && (len(*res) > 0) && (len(tt.wantResContain) > 0) {
+				var contains bool
+				contains = false
+				for _, u := range *res {
+					if strings.Contains(strings.ToLower(u.Name), strings.ToLower(tt.wantResContain)) {
+						contains = true
+						t.Log("response contains desired result")
+					}
+				}
+				if !contains {
+					t.Errorf("Want results contains %v; but got nothing similar", tt.wantResContain)
+				}
+			}
 
 		})
 	}
