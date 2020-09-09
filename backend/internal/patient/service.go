@@ -2,7 +2,7 @@ package patient
 
 // Service interface for user model
 type Service interface {
-	Create(name, email, password, phone string) (*string, error)
+	Create(name, address, city, state string, phone []string, createdBy string) (*string, error)
 	FindByID(id string) (*Patient, error)
 	UpdateName(id, name string) error
 	UpdatePhone(id, phone string) error

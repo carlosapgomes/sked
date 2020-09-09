@@ -2,7 +2,7 @@ package patient
 
 import "errors"
 
-// ErrNoRecord flags user not found
+// ErrNoRecord flags patient not found
 var ErrNoRecord = errors.New("patients: no matching record found")
 
 // ErrDuplicateField flags use of duplicate email

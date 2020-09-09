@@ -10,7 +10,7 @@ type Cursor struct {
 	HasBefore bool   `json:"hasbefore"`
 	After     string `json:"after"`
 	HasAfter  bool   `json:"hasafter"`
-	Users     []Patient
+	Patients  []Patient
 }
 
 //User type
@@ -25,5 +25,4 @@ type Patient struct {
 	CreatedAt time.Time `json:"createdAt,omitempty"`
 	UpdatedBy string    `json:"updatedBy"`
 	UpdatedAt time.Time `json:"updatedAt,omitempty"`
-	Active    bool      `json:"active"`
 }
