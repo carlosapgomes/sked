@@ -7,5 +7,5 @@ type Service interface {
 	UpdateName(id, name string) error
 	UpdatePhone(id, phone string) error
 	GetAll(before string, after string, pgSize int) (*Cursor, error)
-	FindByName(name string, before string, hasBef bool, after string, hasAft bool, pgSize int) (*[]Patient, error)
+	FindByName(name string) (*[]Patient, error)
 }

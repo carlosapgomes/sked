@@ -72,6 +72,14 @@ func (s *patientService) UpdateName(id string, name string) error {
 	return s.repo.UpdateName(id, name)
 }
 
+// UpdatePhone updates user email
+func (s *patientService) UpdatePhone(id string, phone string) error {
+	if phone == "" {
+		return patient.ErrInvalidInputSyntax
+	}
+	return s.repo.UpdatePhone(id, phone)
+}
+
 func (s *patientService) GetAll(before string, after string, pgSize int) (*patient.Cursor, error) {
 	var patientsResp patient.Cursor
 	var err error
