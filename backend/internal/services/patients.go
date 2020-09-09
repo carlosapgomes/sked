@@ -6,9 +6,7 @@ import (
 	"time"
 
 	"carlosapgomes.com/sked/internal/patient"
-	"carlosapgomes.com/sked/internal/user"
 	uuid "github.com/satori/go.uuid"
-	"golang.org/x/crypto/bcrypt"
 )
 
 // UserService provides implementation of user domain interface
@@ -50,132 +48,54 @@ func (s *patientService) Create(name, address, city, state string, phone []strin
 }
 
 // FindByID searches a patient by its ID
-func (s *patientService) FindByID(uID string) (*patient.Patient, error) {
-	if uID == "" {
-		return nil, user.ErrInvalidInputSyntax
+func (s *patientService) FindByID(id string) (*patient.Patient, error) {
+	if id == "" {
+		return nil, patient.ErrInvalidInputSyntax
 	}
-	_, err := uuid.FromString(uID)
+	_, err := uuid.FromString(id)
 	if err != nil {
-		return nil, user.ErrInvalidInputSyntax
+		return nil, patient.ErrInvalidInputSyntax
 	}
 
-	u, err := s.repo.FindByID(uID)
-	if err != nil {
-		return nil, err
-	}
-	return u, nil
-}
-
-// FindByEmail searches a user by its email address
-func (s *patientService) FindByEmail(email string) (*patient.Patient, error) {
-	if email == "" {
-		return nil, user.ErrInvalidInputSyntax
-	}
-
-	u, err := s.repo.FindByEmail(email)
+	u, err := s.repo.FindByID(id)
 	if err != nil {
 		return nil, err
 	}
 	return u, nil
-}
-
-// Authenticate autheticates a user and return its ID
-func (s *patientService) Authenticate(email, password string) (*string, error) {
-	if (email == "") || (password == "") {
-		return nil, user.ErrInvalidInputSyntax
-	}
-	u, err := s.repo.FindByEmail(email)
-	if err != nil {
-		return nil, err
-	}
-	err = bcrypt.CompareHashAndPassword(u.HashedPw, []byte(password))
-	if err != nil {
-		if err == bcrypt.ErrMismatchedHashAndPassword {
-			return nil, user.ErrInvalidCredentials
-		}
-		return nil, err
-	}
-	return &u.ID, nil
-}
-
-// UpdateRoles set a new user roles
-func (s *patientService) UpdateRoles(id string, roles []string) error {
-	return s.repo.UpdateRoles(id, roles)
-}
-
-// UpdatePw updates a user's password
-func (s *patientService) UpdatePw(id, pw string) error {
-	if pw == "" {
-		return user.ErrInvalidInputSyntax
-	}
-	hashedPw, err := bcrypt.GenerateFromPassword([]byte(pw), 12)
-	if err != nil {
-		return err
-	}
-	return s.repo.UpdatePw(id, hashedPw)
-}
-
-// UpdateStatus updates a user's status
-func (s *patientService) UpdateStatus(id string, active bool) error {
-	return s.repo.UpdateStatus(id, active)
-}
-
-// UpdateEmailValidated updates a user's EmailValidated
-func (s *patientService) UpdateEmailValidated(id string, emailWasValidated bool) error {
-	return s.repo.UpdateEmailValidated(id, emailWasValidated)
 }
 
 // UpdateName, updates user name
 func (s *patientService) UpdateName(id string, name string) error {
 	if name == "" {
-		return user.ErrInvalidInputSyntax
+		return patient.ErrInvalidInputSyntax
 	}
 	return s.repo.UpdateName(id, name)
 }
 
-// UpdateEmail, updates user email, only admin should be able to do this.
-// email account is the source of truth for system access
-func (s *patientService) UpdateEmail(id string, email string) error {
-	// validate email string
-	if email == "" {
-		return user.ErrInvalidInputSyntax
-	}
-	return s.repo.UpdateEmail(id, email)
-}
-
-// UpdatePhone updates user email
-func (s *patientService) UpdatePhone(id string, phone string) error {
-	if phone == "" {
-		return user.ErrInvalidInputSyntax
-	}
-	return s.repo.UpdatePhone(id, phone)
-}
-
-// GetAll returns a paginated list of all users ordered by email
 func (s *patientService) GetAll(before string, after string, pgSize int) (*patient.Cursor, error) {
 	var patientsResp patient.Cursor
 	var err error
-	var uList *[]patient.Patient
+	var pList *[]patient.Patient
 	switch {
 	case (before != "" && after != ""):
 		// if both (before & after) are present, returns error
-		return nil, user.ErrInvalidInputSyntax
+		return nil, patient.ErrInvalidInputSyntax
 	case (before == "" && after == ""):
 		// if they are empty/or absent
 		// get default list and page size
-		uList, patientsResp.HasBefore, err = s.repo.
+		pList, patientsResp.HasBefore, err = s.repo.
 			GetAll("", false, pgSize)
 		if err != nil {
 			return nil, err
 		}
-		if uList != nil {
-			for _, u := range *uList {
+		if pList != nil {
+			for _, u := range *pList {
 				patientsResp.Patients = append(patientsResp.Patients, u)
 			}
 		}
 		if len(patientsResp.Patients) > 0 {
 			patientsResp.Before = base64.StdEncoding.
-				EncodeToString([]byte(patientsResp.Patients[len(patientsResp.Patients)-1].Email))
+				EncodeToString([]byte(patientsResp.Patients[len(patientsResp.Patients)-1].ID))
 		} else {
 			patientsResp.Before = ""
 		}
@@ -190,17 +110,17 @@ func (s *patientService) GetAll(before string, after string, pgSize int) (*patie
 			return nil, err
 		}
 		cursor := string(c)
-		uList, patientsResp.HasBefore, err = s.repo.GetAll(cursor, false, pgSize)
+		pList, patientsResp.HasBefore, err = s.repo.GetAll(cursor, false, pgSize)
 		if err != nil {
 			return nil, err
 		}
-		if uList != nil {
-			for _, u := range *uList {
+		if pList != nil {
+			for _, u := range *pList {
 				patientsResp.Patients = append(patientsResp.Patients, u)
 			}
 		}
 		if len(patientsResp.Patients) > 0 {
-			befCursor := base64.StdEncoding.EncodeToString([]byte(patientsResp.Patients[len(patientsResp.Patients)-1].Email))
+			befCursor := base64.StdEncoding.EncodeToString([]byte(patientsResp.Patients[len(patientsResp.Patients)-1].ID))
 			patientsResp.Before = befCursor
 		} else {
 			patientsResp.Before = ""
@@ -222,16 +142,16 @@ func (s *patientService) GetAll(before string, after string, pgSize int) (*patie
 			return nil, err
 		}
 		cursor := string(c)
-		uList, patientsResp.HasAfter, err = s.repo.
+		pList, patientsResp.HasAfter, err = s.repo.
 			GetAll(cursor, true, pgSize)
 		// and return it
-		if uList != nil {
-			for _, u := range *uList {
-				patientsResp.Patients = append(patientsResp.Patients, u)
+		if pList != nil {
+			for _, p := range *pList {
+				patientsResp.Patients = append(patientsResp.Patients, p)
 			}
 		}
 		if len(patientsResp.Patients) > 0 {
-			patientsResp.After = base64.StdEncoding.EncodeToString([]byte(patientsResp.Patients[0].Email))
+			patientsResp.After = base64.StdEncoding.EncodeToString([]byte(patientsResp.Patients[0].Name))
 		}
 		// test for 'before data' from the requested cursor
 		// fill the response fields
