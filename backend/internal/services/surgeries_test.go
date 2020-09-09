@@ -63,39 +63,68 @@ func TestSurgeryCreate(t *testing.T) {
 
 }
 
-func TestsurgeryUpdate(t *testing.T) {
+func TestSurgeryUpdate(t *testing.T) {
 	repo := mocks.NewSurgeryRepo()
 	svc := services.NewSurgeryService(repo)
 
 	tests := []struct {
-		name        string
-		id          string
-		dateTime    time.Time
-		patientName string
-		patientID   string
-		doctorName  string
-		doctorID    string
-		notes       string
-		updatedBy   string
-		wantError   []byte
+		name            string
+		id              string
+		dateTime        time.Time
+		patientName     string
+		patientID       string
+		doctorName      string
+		doctorID        string
+		notes           string
+		proposedSurgery string
+		canceled        bool
+		done            bool
+		updatedBy       string
+		wantError       []byte
 	}{
-		{"Valid surgery", "e521798b-9f33-4a10-8b2a-9677ed1cd1ae", time.Now(), "John Doe", "22070f56-5d52-43f0-9f59-5de61c1db506", "Dr House", "f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes", "10b9ad06-e86d-4a85-acb1-d7e268d1f21a", nil},
-		{"Invalid updatedBy", "e521798b-9f33-4a10-8b2a-9677ed1cd1ae", time.Now(), "John Doe", "22070f56-5d52-43f0-9f59-5de61c1db506", "Dr House", "f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes", "10b9ad06-4a85-acb1", []byte("invalid input syntax")},
-		//{"Invalid updatedBy", "e521798b-9f33-4a10-8b2a-9677ed1cd1ae", time.Now(), "John Doe", "22070f56-5d52-43f0-9f59-5de61c1db506", "Dr House", "f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes", "10b9ad06-e-acb1-d7e268d1f21a", []byte("invalid input syntax")},
+		{"Valid surgery",
+			"e521798b-9f33-4a10-8b2a-9677ed1cd1ae",
+			time.Now(),
+			"John Doe",
+			"22070f56-5d52-43f0-9f59-5de61c1db506",
+			"Dr House",
+			"f06244b9-97e5-4f1a-bae0-3b6da7a0b604",
+			"some notes",
+			"saphenectomy",
+			false,
+			false,
+			"10b9ad06-e86d-4a85-acb1-d7e268d1f21a",
+			nil},
+		{"Invalid updatedBy",
+			"e521798b-9f33-4a10-8b2a-9677ed1cd1ae",
+			time.Now(),
+			"John Doe",
+			"22070f56-5d52-43f0-9f59-5de61c1db506",
+			"Dr House",
+			"f06244b9-97e5-4f1a-bae0-3b6da7a0b604",
+			"some notes",
+			"saphenectomy",
+			false,
+			false,
+			"10b9ad06-4a85-acb1",
+			[]byte("invalid input syntax")},
 	}
 
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			surgery := surgery.Surgery{
-				ID:          tt.id,
-				DateTime:    tt.dateTime,
-				PatientName: tt.patientName,
-				PatientID:   tt.patientID,
-				DoctorName:  tt.doctorName,
-				DoctorID:    tt.doctorID,
-				Notes:       tt.notes,
-				UpdatedBy:   tt.updatedBy,
+				ID:              tt.id,
+				DateTime:        tt.dateTime,
+				PatientName:     tt.patientName,
+				PatientID:       tt.patientID,
+				DoctorName:      tt.doctorName,
+				DoctorID:        tt.doctorID,
+				Notes:           tt.notes,
+				ProposedSurgery: tt.proposedSurgery,
+				Canceled:        tt.canceled,
+				Done:            tt.done,
+				UpdatedBy:       tt.updatedBy,
 			}
 			id, err := svc.Update(surgery)
 			if tt.wantError != nil {
@@ -121,7 +150,7 @@ func TestsurgeryUpdate(t *testing.T) {
 	}
 }
 
-func TestsurgeryFindByID(t *testing.T) {
+func TestSurgeryFindByID(t *testing.T) {
 	repo := mocks.NewSurgeryRepo()
 	svc := services.NewSurgeryService(repo)
 
@@ -171,7 +200,7 @@ func TestsurgeryFindByID(t *testing.T) {
 	}
 }
 
-func TestsurgeryFindByPatientID(t *testing.T) {
+func TestSurgeryFindByPatientID(t *testing.T) {
 	repo := mocks.NewSurgeryRepo()
 	svc := services.NewSurgeryService(repo)
 
@@ -225,7 +254,7 @@ func TestsurgeryFindByPatientID(t *testing.T) {
 	}
 }
 
-func TestsurgeryFindByDoctorID(t *testing.T) {
+func TestSurgeryFindByDoctorID(t *testing.T) {
 	repo := mocks.NewSurgeryRepo()
 	svc := services.NewSurgeryService(repo)
 
@@ -279,7 +308,7 @@ func TestsurgeryFindByDoctorID(t *testing.T) {
 	}
 }
 
-func TestsurgeryFindByDate(t *testing.T) {
+func TestSurgeryFindByDate(t *testing.T) {
 	repo := mocks.NewSurgeryRepo()
 	svc := services.NewSurgeryService(repo)
 
@@ -333,7 +362,7 @@ func TestsurgeryFindByDate(t *testing.T) {
 	}
 }
 
-func TestsurgeryGetAll(t *testing.T) {
+func TestSurgeryGetAll(t *testing.T) {
 	repo := mocks.NewSurgeryRepo()
 	svc := services.NewSurgeryService(repo)
 	testCases := []struct {
