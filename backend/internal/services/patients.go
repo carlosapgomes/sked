@@ -23,10 +23,17 @@ func NewPatientService(repo patient.Repository) patient.Service {
 
 // Create creates a new patient and returns its uuid
 func (s *patientService) Create(name, address, city, state string, phone []string, createdBy string) (*string, error) {
-	uid := uuid.NewV4()
+	if len(name) == 0 {
+		return nil, patient.ErrInvalidInputSyntax
+	}
+	_, err := uuid.FromString(createdBy)
+	if err != nil {
+		return nil, patient.ErrInvalidInputSyntax
+	}
+	newID := uuid.NewV4()
 	dt := time.Now().UTC()
 	newPatient := patient.Patient{
-		ID:        uid.String(),
+		ID:        newID.String(),
 		Name:      name,
 		Address:   address,
 		City:      city,
@@ -37,12 +44,12 @@ func (s *patientService) Create(name, address, city, state string, phone []strin
 		UpdatedAt: dt,
 	}
 	var id *string
-	id, err := s.repo.Create(newPatient)
+	id, err = s.repo.Create(newPatient)
 	if err != nil {
 		return nil, err
 	}
 	if (id != nil) && (*id != newPatient.ID) {
-		return nil, errors.New("New user creation: returned repository ID not equal to new user ID")
+		return nil, errors.New("New patient creation: returned repository ID not equal to new user ID")
 	}
 	return id, err
 }

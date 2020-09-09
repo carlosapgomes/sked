@@ -28,8 +28,7 @@ func TestPatientCreate(t *testing.T) {
 		wantError []byte
 	}{
 		{"Valid patient", "Valid Street, 23", "Main City", "ST", []string{"12345"}, "7f064a4e-d3bd-48a6-a305-accf4743a94f", nil},
-		//{"Bad uuid", "Bad uuid", "bad@uuid.com", "secret", "12345", []byte("repository ID not equal to new user ID")},
-		//{"DB error", "DB error", "db@error.com", "secret", "12345", []byte("DB error")},
+		{"Bad uuid", "Valid Street, 22", "Main City", "ST", []string{"12345"}, "7f064a4e-d3bd-48a6-a305-accf4743a94f", []byte("repository ID not equal to new user ID")},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -76,7 +76,7 @@ func NewPatientRepo() *PatientMockRepo {
 func (r *PatientMockRepo) Create(user patient.Patient) (*string, error) {
 	badID := "12342342"
 	switch user.Name {
-	case "New User":
+	case "Valid patient":
 		return &user.ID, nil
 	case "Bad uuid":
 		return &badID, nil
