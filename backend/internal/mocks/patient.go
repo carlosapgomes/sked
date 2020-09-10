@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"carlosapgomes.com/sked/internal/patient"
-	"carlosapgomes.com/sked/internal/user"
 	"github.com/pkg/errors"
 )
 
@@ -13,60 +12,60 @@ import (
 
 // PatientMockRepo is a mocked user repository
 type PatientMockRepo struct {
-	uDb []patient.Patient
+	pDb []patient.Patient
 }
 
 //NewPatientRepo returns a mocked repository
 func NewPatientRepo() *PatientMockRepo {
 	var db []patient.Patient
-	validUser := &patient.Patient{
+	validPatient := &patient.Patient{
 		ID:        "85f45ff9-d31c-4ff7-94ac-5afb5a1f0fcd",
 		Name:      "Valid Patient",
 		Phones:    []string{"6544332135"},
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
-	validUser2 := &patient.Patient{
+	validPatient2 := &patient.Patient{
 		ID:        "68b1d5e2-39dd-4713-8631-a08100383a0f",
 		Name:      "Bob",
 		Phones:    []string{"6544334535"},
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
-	validUser3 := &patient.Patient{
+	validPatient3 := &patient.Patient{
 		ID:        "dcce1beb-aee6-4a4d-b724-94d470817323",
 		Name:      "Alice Jones",
 		Phones:    []string{"6544332135"},
 		CreatedAt: time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
 		UpdatedAt: time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
 	}
-	validUser4 := &patient.Patient{
+	validPatient4 := &patient.Patient{
 		ID:        "ecadbb28-14e6-4560-8574-809c6c54b9cb",
 		Name:      "Barack Obama",
 		Phones:    []string{"6544332135"},
 		CreatedAt: time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
 		UpdatedAt: time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
 	}
-	validUser5 := &patient.Patient{
+	validPatient5 := &patient.Patient{
 		ID:        "ca16fc9d-df7b-4594-97e3-264432145b01",
 		Name:      "SpongeBob Squarepants",
 		Phones:    []string{"65949340"},
 		CreatedAt: time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
 		UpdatedAt: time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
 	}
-	validUser6 := &patient.Patient{
+	validPatient6 := &patient.Patient{
 		ID:        "27f9802b-acb3-4852-bf97-c4ed4c3b3658",
 		Name:      "Tim Berners-Lee",
 		Phones:    []string{"0323949324"},
 		CreatedAt: time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
 		UpdatedAt: time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
 	}
-	db = append(db, *validUser)
-	db = append(db, *validUser2)
-	db = append(db, *validUser3)
-	db = append(db, *validUser4)
-	db = append(db, *validUser5)
-	db = append(db, *validUser6)
+	db = append(db, *validPatient)
+	db = append(db, *validPatient2)
+	db = append(db, *validPatient3)
+	db = append(db, *validPatient4)
+	db = append(db, *validPatient5)
+	db = append(db, *validPatient6)
 	return &PatientMockRepo{
 		db,
 	}
@@ -89,9 +88,9 @@ func (r *PatientMockRepo) Create(user patient.Patient) (*string, error) {
 
 // UpdateName mocks updating user's Name
 func (r *PatientMockRepo) UpdateName(id string, name string) error {
-	for i, u := range r.uDb {
+	for i, u := range r.pDb {
 		if u.ID == id {
-			r.uDb[i].Name = name
+			r.pDb[i].Name = name
 			return nil
 		}
 	}
@@ -102,9 +101,9 @@ func (r *PatientMockRepo) UpdateName(id string, name string) error {
 func (r *PatientMockRepo) UpdatePhone(id string, phone string) error {
 	var newPhone []string
 	newPhone = append(newPhone, phone)
-	for i, u := range r.uDb {
+	for i, u := range r.pDb {
 		if u.ID == id {
-			r.uDb[i].Phones = newPhone
+			r.pDb[i].Phones = newPhone
 			return nil
 		}
 	}
@@ -113,7 +112,7 @@ func (r *PatientMockRepo) UpdatePhone(id string, phone string) error {
 
 // FindByID mocks finding a user by its ID
 func (r *PatientMockRepo) FindByID(id string) (*patient.Patient, error) {
-	for _, u := range r.uDb {
+	for _, u := range r.pDb {
 		if u.ID == id {
 			return &u, nil
 		}
@@ -123,7 +122,47 @@ func (r *PatientMockRepo) FindByID(id string) (*patient.Patient, error) {
 
 // GetAll returns a list of users ordered by email
 func (r *PatientMockRepo) GetAll(cursor string, after bool, pgSize int) (*[]patient.Patient, bool, error) {
-	return nil, false, nil
+	if cursor == "" {
+		return &r.pDb, false, nil
+	}
+	pos := r.findPos(r.pDb, cursor)
+	if pos == -1 {
+		return nil, false, patient.ErrNoRecord
+	}
+
+	var res []patient.Patient
+	var hasMore bool
+	hasMore = false
+	if after {
+		start := pos + 1
+		for i := start; i < (start + pgSize); i++ {
+			res = append(res, r.pDb[i])
+		}
+		if (len(r.pDb) - pos) > pgSize {
+			hasMore = true
+		}
+	} else {
+		start := pos - pgSize
+		if start < 0 {
+			start = 0
+		}
+		for i := start; i <= (pos - 1); i++ {
+			res = append(res, r.pDb[i])
+		}
+		if pos > pgSize {
+			hasMore = true
+		}
+	}
+	return &res, hasMore, nil
+}
+
+func (r PatientMockRepo) findPos(patients []patient.Patient, id string) int {
+	for i, el := range patients {
+		if el.ID == id {
+			return i
+		}
+	}
+	return -1
 }
 
 // FindByName returns a list of users whose names looks like 'name'
@@ -206,7 +245,7 @@ func (s PatientMockSvc) UpdatePhone(id string, phone string) error {
 }
 
 // GetAll return a lista of users ordered by email
-func (s PatientMockSvc) GetAll(before string, after string, pgSize int) (*user.Cursor, error) {
+func (s PatientMockSvc) GetAll(before string, after string, pgSize int) (*patient.Cursor, error) {
 	return nil, nil
 }
 
@@ -214,7 +253,7 @@ func (s PatientMockSvc) GetAll(before string, after string, pgSize int) (*user.C
 func (s PatientMockSvc) FindByName(name string) (*[]patient.Patient, error) {
 	repo := NewPatientRepo()
 	var users []patient.Patient
-	for _, u := range repo.uDb {
+	for _, u := range repo.pDb {
 		if strings.Contains(strings.ToLower(u.Name), strings.ToLower(name)) {
 			users = append(users, u)
 		}

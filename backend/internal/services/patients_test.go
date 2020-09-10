@@ -159,46 +159,71 @@ func TestUpdatePatientName(t *testing.T) {
 }
 
 func TestPatientGetAll(t *testing.T) {
+	repo := mocks.NewPatientRepo()
+	svc := services.NewPatientService(repo)
 	testCases := []struct {
-		desc             string
-		cursor           string
-		after            bool
-		pgSize           int
-		wantSize         int
-		wantError        error
-		wantContainEmail string
+		desc          string
+		before        string
+		after         string
+		pgSize        int
+		wantSize      int
+		hasMore       bool
+		wantError     error
+		wantContainID string
 	}{
 		{
-			desc:             "Valid Page",
-			cursor:           "",
-			after:            true,
-			pgSize:           6,
-			wantSize:         6,
-			wantError:        nil,
-			wantContainEmail: "spongebob@somewhere.com",
+			desc:          "Valid Page",
+			before:        "",
+			after:         "",
+			pgSize:        6,
+			wantSize:      6,
+			hasMore:       false,
+			wantError:     nil,
+			wantContainID: "85f45ff9-d31c-4ff7-94ac-5afb5a1f0fcd",
 		},
 		{
-			desc:             "Valid Cursor After",
-			cursor:           "bobama@somewhere.com",
-			after:            true,
-			pgSize:           2,
-			wantSize:         2,
-			wantError:        nil,
-			wantContainEmail: "spongebob@somewhere.com",
+			desc:          "Valid Cursor After",
+			before:        "NjhiMWQ1ZTItMzlkZC00NzEzLTg2MzEtYTA4MTAwMzgzYTBm",
+			after:         "",
+			pgSize:        2,
+			wantSize:      1,
+			hasMore:       false,
+			wantError:     nil,
+			wantContainID: "85f45ff9-d31c-4ff7-94ac-5afb5a1f0fcd",
 		},
 		{
-			desc:             "Valid Cursor Before",
-			cursor:           "bobama@somewhere.com",
-			after:            false,
-			pgSize:           2,
-			wantSize:         2,
-			wantError:        nil,
-			wantContainEmail: "alice@example.com",
+			desc:          "Valid Cursor Before",
+			before:        "",
+			after:         "NjhiMWQ1ZTItMzlkZC00NzEzLTg2MzEtYTA4MTAwMzgzYTBm",
+			pgSize:        2,
+			wantSize:      2,
+			hasMore:       true,
+			wantError:     nil,
+			wantContainID: "dcce1beb-aee6-4a4d-b724-94d470817323",
 		},
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
 
+			cursor, err := svc.GetAll(tC.before, tC.after, tC.pgSize)
+			if err != tC.wantError {
+				t.Errorf("Want %v; got %v\n", tC.wantError, err)
+			}
+			if cursor != nil && len(cursor.Patients) != tC.wantSize {
+				t.Errorf("Want %v; got %v\n", tC.wantSize, len(cursor.Patients))
+			}
+			if tC.hasMore && !(cursor.HasAfter || cursor.HasBefore) {
+				t.Errorf("want %v; got %v\n", tC.hasMore, (cursor.HasAfter || cursor.HasBefore))
+			}
+			var contain bool
+			for _, p := range cursor.Patients {
+				if p.ID == tC.wantContainID {
+					contain = true
+				}
+			}
+			if !contain {
+				t.Errorf("Want response to contain %v ID;  but it did not\n", tC.wantContainID)
+			}
 		})
 	}
 }
