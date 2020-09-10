@@ -121,37 +121,37 @@ func TestUpdatePatientName(t *testing.T) {
 	svc := services.NewPatientService(repo)
 
 	testCases := []struct {
-		desc        string
-		uid         string
-		newUserName string
-		wantError   error
+		desc           string
+		id             string
+		newPatientName string
+		wantError      error
 	}{
 		{
-			desc:        "Valid User",
-			uid:         "68b1d5e2-39dd-4713-8631-a08100383a0f",
-			newUserName: "Johnny Silva",
-			wantError:   nil,
+			desc:           "Valid Patient",
+			id:             "68b1d5e2-39dd-4713-8631-a08100383a0f",
+			newPatientName: "Johnny Silva",
+			wantError:      nil,
 		},
 		{
-			desc:        "Empty new user name",
-			uid:         "68b1d5e2-39dd-4713-8631-a08100383a0f",
-			newUserName: "",
-			wantError:   patient.ErrInvalidInputSyntax,
+			desc:           "Empty new patient name",
+			id:             "68b1d5e2-39dd-4713-8631-a08100383a0f",
+			newPatientName: "",
+			wantError:      patient.ErrInvalidInputSyntax,
 		},
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
-			err := svc.UpdateName(tC.uid, tC.newUserName)
+			err := svc.UpdateName(tC.id, tC.newPatientName)
 			if err != tC.wantError {
 				t.Errorf("want %v; got %v", tC.wantError, err)
 			}
 			if tC.wantError == nil {
-				user, err := svc.FindByID(tC.uid)
+				patient, err := svc.FindByID(tC.id)
 				if err != nil {
-					t.Error("Could not find user")
+					t.Error("Could not find patient")
 				}
-				if (user != nil) && (user.Name != tC.newUserName) {
-					t.Errorf("want \n%v\n; got \n%v\n", tC.newUserName, user.Name)
+				if (patient != nil) && (patient.Name != tC.newPatientName) {
+					t.Errorf("want \n%v\n; got \n%v\n", tC.newPatientName, patient.Name)
 				}
 			}
 		})
