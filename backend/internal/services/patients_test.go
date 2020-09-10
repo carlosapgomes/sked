@@ -10,7 +10,6 @@ import (
 	"carlosapgomes.com/sked/internal/mocks"
 	"carlosapgomes.com/sked/internal/patient"
 	"carlosapgomes.com/sked/internal/services"
-	"carlosapgomes.com/sked/internal/user"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -66,111 +65,51 @@ func TestFindPatientByID(t *testing.T) {
 	svc := services.NewPatientService(repo)
 
 	testCases := []struct {
-		desc      string
-		userID    string
-		wantUser  *user.User
-		wantError error
+		desc        string
+		patientID   string
+		wantPatient *patient.Patient
+		wantError   error
 	}{
 		{
-			desc:   "Valid User",
-			userID: "dcce1beb-aee6-4a4d-b724-94d470817323",
-			wantUser: &user.User{
-				ID:                "dcce1beb-aee6-4a4d-b724-94d470817323",
-				Name:              "Alice Jones",
-				Email:             "alice@example.com",
-				Phone:             "6544332135",
-				HashedPw:          []byte("$2a$12$I9BW22CbzLHzY9ORTRhkEuEtq8ufJVMf1dX9CKFlo4W9cIaAjD0Je"),
-				CreatedAt:         time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
-				UpdatedAt:         time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
-				Active:            true,
-				EmailWasValidated: true,
-				Roles:             []string{user.RoleCommon},
+			desc:      "Valid Patient",
+			patientID: "dcce1beb-aee6-4a4d-b724-94d470817323",
+			wantPatient: &patient.Patient{
+				ID:        "dcce1beb-aee6-4a4d-b724-94d470817323",
+				Name:      "Alice Jones",
+				Phones:    []string{"6544332135"},
+				CreatedAt: time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
+				UpdatedAt: time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
 			},
 			wantError: nil,
 		},
 		{
-			desc:      "Non-existing ID",
-			userID:    "d1700797-42d4-4fe4-8fc2-60cda46f2448",
-			wantUser:  nil,
-			wantError: patient.ErrNoRecord,
+			desc:        "Non-existing ID",
+			patientID:   "d1700797-42d4-4fe4-8fc2-60cda46f2448",
+			wantPatient: nil,
+			wantError:   patient.ErrNoRecord,
 		},
 		{
-			desc:      "Invalid ID",
-			userID:    "d1700797-42d460cda46f2448",
-			wantUser:  nil,
-			wantError: patient.ErrInvalidInputSyntax,
+			desc:        "Invalid ID",
+			patientID:   "d1700797-42d460cda46f2448",
+			wantPatient: nil,
+			wantError:   patient.ErrInvalidInputSyntax,
 		},
 		{
-			desc:      "empty ID",
-			userID:    "",
-			wantUser:  nil,
-			wantError: patient.ErrInvalidInputSyntax,
+			desc:        "empty ID",
+			patientID:   "",
+			wantPatient: nil,
+			wantError:   patient.ErrInvalidInputSyntax,
 		},
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
-			u, err := svc.FindByID(tC.userID)
+			u, err := svc.FindByID(tC.patientID)
 
 			if err != tC.wantError {
 				t.Errorf("want %v; got %v", tC.wantError, err)
 			}
-			if !reflect.DeepEqual(u, tC.wantUser) {
-				t.Errorf("want \n%v\n; got \n%v\n", tC.wantUser, u)
-			}
-
-		})
-	}
-}
-
-func TestFindPatientByEmail(t *testing.T) {
-	repo := mocks.NewPatientRepo()
-	svc := services.NewPatientService(repo)
-
-	testCases := []struct {
-		desc      string
-		userEmail string
-		wantUser  *user.User
-		wantError error
-	}{
-		{
-			desc:      "Valid User",
-			userEmail: "alice@example.com",
-			wantUser: &user.User{
-				ID:                "dcce1beb-aee6-4a4d-b724-94d470817323",
-				Name:              "Alice Jones",
-				Email:             "alice@example.com",
-				Phone:             "6544332135",
-				HashedPw:          []byte("$2a$12$I9BW22CbzLHzY9ORTRhkEuEtq8ufJVMf1dX9CKFlo4W9cIaAjD0Je"),
-				CreatedAt:         time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
-				UpdatedAt:         time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
-				Active:            true,
-				EmailWasValidated: true,
-				Roles:             []string{user.RoleCommon},
-			},
-			wantError: nil,
-		},
-		{
-			desc:      "Non-existing user",
-			userEmail: "joe@nowhere.com",
-			wantUser:  nil,
-			wantError: patient.ErrNoRecord,
-		},
-		{
-			desc:      "empty Email",
-			userEmail: "",
-			wantUser:  nil,
-			wantError: patient.ErrInvalidInputSyntax,
-		},
-	}
-	for _, tC := range testCases {
-		t.Run(tC.desc, func(t *testing.T) {
-			u, err := svc.FindByName(tC.userEmail)
-
-			if err != tC.wantError {
-				t.Errorf("want %v; got %v", tC.wantError, err)
-			}
-			if !reflect.DeepEqual(u, tC.wantUser) {
-				t.Errorf("want \n%v\n; got \n%v\n", tC.wantUser, u)
+			if !reflect.DeepEqual(u, tC.wantPatient) {
+				t.Errorf("want \n%v\n; got \n%v\n", tC.wantPatient, u)
 			}
 
 		})
@@ -218,48 +157,6 @@ func TestUpdatePatientName(t *testing.T) {
 		})
 	}
 }
-
-//func TestPatientUpdatePhone(t *testing.T) {
-//repo := mocks.NewPatientRepo()
-//svc := services.NewPatientService(repo)
-
-//testCases := []struct {
-//desc      string
-//uid       string
-//newPhone  string
-//wantError error
-//}{
-//{
-//desc:      "Valid User",
-//uid:       "68b1d5e2-39dd-4713-8631-a08100383a0f",
-//newPhone:  "3453453452",
-//wantError: nil,
-//},
-//{
-//desc:      "Empty new user name",
-//uid:       "68b1d5e2-39dd-4713-8631-a08100383a0f",
-//newPhone:  "",
-//wantError: patient.ErrInvalidInputSyntax,
-//},
-//}
-//for _, tC := range testCases {
-//t.Run(tC.desc, func(t *testing.T) {
-//err := svc.UpdatePhone(tC.uid, tC.newPhone)
-//if err != tC.wantError {
-//t.Errorf("want %v; got %v", tC.wantError, err)
-//}
-//if tC.wantError == nil {
-//user, err := svc.FindByID(tC.uid)
-//if err != nil {
-//t.Error("Could not find user")
-//}
-//if (user != nil) && (user.Phones != tC.newPhone) {
-//t.Errorf("want \n%v\n; got \n%v\n", tC.newPhone, user.Phones)
-//}
-//}
-//})
-//}
-//}
 
 func TestPatientGetAll(t *testing.T) {
 	testCases := []struct {
