@@ -169,6 +169,9 @@ func (s *userService) GetAll(before string, after string, pgSize int) (*user.Cur
 	var usersResp user.Cursor
 	var err error
 	var uList *[]user.User
+	if pgSize <= 0 {
+		return nil, user.ErrInvalidInputSyntax
+	}
 	switch {
 	case (before != "" && after != ""):
 		// if both (before & after) are present, returns error
