@@ -80,11 +80,12 @@ func (s *patientService) UpdateName(id string, name string) error {
 }
 
 // UpdatePhone updates user email
-func (s *patientService) UpdatePhone(id string, phone string) error {
-	if phone == "" {
+func (s *patientService) UpdatePhone(id string, phones []string) error {
+	_, err := uuid.FromString(id)
+	if err != nil {
 		return patient.ErrInvalidInputSyntax
 	}
-	return s.repo.UpdatePhone(id, phone)
+	return s.repo.UpdatePhone(id, phones)
 }
 
 func (s *patientService) GetAll(before string, after string, pgSize int) (*patient.Cursor, error) {
