@@ -88,6 +88,9 @@ func (s *patientService) UpdatePhone(id string, phone string) error {
 }
 
 func (s *patientService) GetAll(before string, after string, pgSize int) (*patient.Cursor, error) {
+	if pgSize <= 0 {
+		return nil, patient.ErrInvalidInputSyntax
+	}
 	var patientsResp patient.Cursor
 	var err error
 	var pList *[]patient.Patient
@@ -181,6 +184,9 @@ func (s *patientService) GetAll(before string, after string, pgSize int) (*patie
 
 // FindByName returns a list of users whose names looks like 'name'
 func (s *patientService) FindByName(name string) (*[]patient.Patient, error) {
+	if len(name) == 0 {
+		return nil, patient.ErrInvalidInputSyntax
+	}
 	res, err := s.repo.FindByName(name)
 	if err != nil {
 		return nil, err
