@@ -22,8 +22,11 @@ func NewPatientService(repo patient.Repository) patient.Service {
 }
 
 // Create creates a new patient and returns its uuid
-func (s *patientService) Create(name, address, city, state string, phone []string, createdBy string) (*string, error) {
+func (s *patientService) Create(name, address, city, state string, phones []string, createdBy string) (*string, error) {
 	if len(name) == 0 {
+		return nil, patient.ErrInvalidInputSyntax
+	}
+	if len(phones) > 10 {
 		return nil, patient.ErrInvalidInputSyntax
 	}
 	_, err := uuid.FromString(createdBy)
@@ -38,7 +41,7 @@ func (s *patientService) Create(name, address, city, state string, phone []strin
 		Address:   address,
 		City:      city,
 		State:     state,
-		Phones:    phone,
+		Phones:    phones,
 		CreatedBy: createdBy,
 		CreatedAt: dt,
 		UpdatedAt: dt,
