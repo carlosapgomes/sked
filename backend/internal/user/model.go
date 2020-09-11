@@ -9,6 +9,8 @@ const (
 	RoleAdmin string = "Admin"
 	// RoleCommon role const
 	RoleCommon string = "Common"
+	// RoleDoctor role const
+	RoleDoctor string = "Doctor"
 )
 
 // Cursor encapsulates data for pagination

@@ -101,6 +101,7 @@ Tables:
 - view activities log
 
 ## TODOS
+
 - create entities models, interfaces and errors
 - add tables to db setup sql file
 - write failing tests for each API (appointments, surgeries and patients)
