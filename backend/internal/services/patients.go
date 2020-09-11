@@ -85,6 +85,9 @@ func (s *patientService) UpdatePhone(id string, phones []string) error {
 	if err != nil {
 		return patient.ErrInvalidInputSyntax
 	}
+	if len(phones) > 10 {
+		return patient.ErrInvalidInputSyntax
+	}
 	return s.repo.UpdatePhone(id, phones)
 }
 
