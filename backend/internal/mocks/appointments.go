@@ -13,7 +13,7 @@ type AppointmentMockRepo struct {
 	aDb []appointment.Appointment
 }
 
-//NewUserRepo returns a mocked repository
+//NewAppointmentRepo returns a mocked repository
 func NewAppointmentRepo() *AppointmentMockRepo {
 	var db []appointment.Appointment
 	return &AppointmentMockRepo{
