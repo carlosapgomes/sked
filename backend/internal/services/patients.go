@@ -9,12 +9,12 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-// UserService provides implementation of user domain interface
+// PatientService provides implementation of patient domain interface
 type patientService struct {
 	repo patient.Repository
 }
 
-// NewUserService returns an user Service instance
+// NewPatientService returns an patient Service instance
 func NewPatientService(repo patient.Repository) patient.Service {
 	return &patientService{
 		repo,
@@ -52,7 +52,7 @@ func (s *patientService) Create(name, address, city, state string, phones []stri
 		return nil, err
 	}
 	if (id != nil) && (*id != newPatient.ID) {
-		return nil, errors.New("New patient creation: returned repository ID not equal to new user ID")
+		return nil, errors.New("New patient creation: returned repository ID not equal to new patient ID")
 	}
 	return id, err
 }
@@ -74,7 +74,7 @@ func (s *patientService) FindByID(id string) (*patient.Patient, error) {
 	return u, nil
 }
 
-// UpdateName, updates user name
+// UpdateName, updates patient name
 func (s *patientService) UpdateName(id string, name string) error {
 	if name == "" {
 		return patient.ErrInvalidInputSyntax
@@ -82,7 +82,7 @@ func (s *patientService) UpdateName(id string, name string) error {
 	return s.repo.UpdateName(id, name)
 }
 
-// UpdatePhone updates user email
+// UpdatePhone updates patient email
 func (s *patientService) UpdatePhone(id string, phones []string) error {
 	_, err := uuid.FromString(id)
 	if err != nil {
@@ -189,7 +189,7 @@ func (s *patientService) GetAll(before string, after string, pgSize int) (*patie
 	return &patientsResp, nil
 }
 
-// FindByName returns a list of users whose names looks like 'name'
+// FindByName returns a list of patients whose names looks like 'name'
 func (s *patientService) FindByName(name string) (*[]patient.Patient, error) {
 	if len(name) == 0 {
 		return nil, patient.ErrInvalidInputSyntax
