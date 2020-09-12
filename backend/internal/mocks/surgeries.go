@@ -13,7 +13,7 @@ type SurgeryMockRepo struct {
 	aDb []surgery.Surgery
 }
 
-//NewUserRepo returns a mocked repository
+//NewSurgeryRepo returns a mocked repository
 func NewSurgeryRepo() *SurgeryMockRepo {
 	var db []surgery.Surgery
 	return &SurgeryMockRepo{
