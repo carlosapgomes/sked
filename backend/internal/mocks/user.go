@@ -215,7 +215,47 @@ func (r *UserMockRepo) FindByEmail(email string) (*user.User, error) {
 
 // GetAll returns a list of users ordered by email
 func (r *UserMockRepo) GetAll(cursor string, after bool, pgSize int) (*[]user.User, bool, error) {
-	return nil, false, nil
+	if cursor == "" {
+		return &r.uDb, false, nil
+	}
+	pos := r.findPos(r.uDb, cursor)
+	if pos == -1 {
+		return nil, false, user.ErrNoRecord
+	}
+
+	var res []user.User
+	var hasMore bool
+	hasMore = false
+	if after {
+		start := pos + 1
+		for i := start; i < (start + pgSize); i++ {
+			res = append(res, r.uDb[i])
+		}
+		if (len(r.uDb) - pos) > pgSize {
+			hasMore = true
+		}
+	} else {
+		start := pos - pgSize
+		if start < 0 {
+			start = 0
+		}
+		for i := start; i <= (pos - 1); i++ {
+			res = append(res, r.uDb[i])
+		}
+		if pos > pgSize {
+			hasMore = true
+		}
+	}
+	return &res, hasMore, nil
+}
+
+func (r UserMockRepo) findPos(patients []user.User, id string) int {
+	for i, el := range patients {
+		if el.ID == id {
+			return i
+		}
+	}
+	return -1
 }
 
 // FindByName returns a list of users whose names looks like 'name'

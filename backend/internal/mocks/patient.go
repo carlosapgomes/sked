@@ -98,12 +98,10 @@ func (r *PatientMockRepo) UpdateName(id string, name string) error {
 }
 
 // UpdatePhone mocks updating user's Phone
-func (r *PatientMockRepo) UpdatePhone(id string, phone string) error {
-	var newPhone []string
-	newPhone = append(newPhone, phone)
+func (r *PatientMockRepo) UpdatePhone(id string, phones []string) error {
 	for i, u := range r.pDb {
 		if u.ID == id {
-			r.pDb[i].Phones = newPhone
+			r.pDb[i].Phones = phones
 			return nil
 		}
 	}
@@ -240,7 +238,7 @@ func (s PatientMockSvc) UpdateName(id string, name string) error {
 }
 
 // UpdatePhone updates user email
-func (s PatientMockSvc) UpdatePhone(id string, phone string) error {
+func (s PatientMockSvc) UpdatePhone(id string, phones []string) error {
 	return nil
 }
 

@@ -564,46 +564,71 @@ func TestUpdatePhone(t *testing.T) {
 }
 
 func TestGetAll(t *testing.T) {
+	repo := mocks.NewUserRepo()
+	svc := services.NewUserService(repo)
 	testCases := []struct {
 		desc             string
-		cursor           string
-		after            bool
+		before           string
+		after            string
 		pgSize           int
 		wantSize         int
+		hasMore          bool
 		wantError        error
 		wantContainEmail string
 	}{
 		{
 			desc:             "Valid Page",
-			cursor:           "",
-			after:            true,
+			before:           "",
+			after:            "",
 			pgSize:           6,
 			wantSize:         6,
+			hasMore:          false,
 			wantError:        nil,
 			wantContainEmail: "spongebob@somewhere.com",
 		},
-		{
-			desc:             "Valid Cursor After",
-			cursor:           "bobama@somewhere.com",
-			after:            true,
-			pgSize:           2,
-			wantSize:         2,
-			wantError:        nil,
-			wantContainEmail: "spongebob@somewhere.com",
-		},
-		{
-			desc:             "Valid Cursor Before",
-			cursor:           "bobama@somewhere.com",
-			after:            false,
-			pgSize:           2,
-			wantSize:         2,
-			wantError:        nil,
-			wantContainEmail: "alice@example.com",
-		},
+		//{
+		//desc:             "Valid Cursor After",
+		//before:           "bobama@somewhere.com",
+		//after:            "",
+		//pgSize:           2,
+		//wantSize:         1,
+		//hasMore:          false,
+		//wantError:        nil,
+		//wantContainEmail: "spongebob@somewhere.com",
+		//},
+		//{
+		//desc:             "Valid Cursor Before",
+		//before:           "bobama@somewhere.com",
+		//after:            "",
+		//pgSize:           2,
+		//wantSize:         2,
+		//hasMore:          true,
+		//wantError:        nil,
+		//wantContainEmail: "alice@example.com",
+		//},
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
 
+			cursor, err := svc.GetAll(tC.before, tC.after, tC.pgSize)
+			if err != tC.wantError {
+				t.Errorf("Want %v; got %v\n", tC.wantError, err)
+			}
+			if cursor != nil && len(cursor.Users) != tC.wantSize {
+				t.Errorf("Want %v; got %v\n", tC.wantSize, len(cursor.Users))
+			}
+			if tC.hasMore && !(cursor.HasAfter || cursor.HasBefore) {
+				t.Errorf("want %v; got %v\n", tC.hasMore, (cursor.HasAfter || cursor.HasBefore))
+			}
+			var contain bool
+			for _, u := range cursor.Users {
+				if u.Email == tC.wantContainEmail {
+					contain = true
+				}
+			}
+			if !contain {
+				t.Errorf("Want response to contain %v ID;  but it did not\n", tC.wantContainEmail)
+			}
 		})
 	}
 }
