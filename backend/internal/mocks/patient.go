@@ -8,9 +8,9 @@ import (
 	"github.com/pkg/errors"
 )
 
-// mocks user services and repository
+// mocks patient services and repository
 
-// PatientMockRepo is a mocked user repository
+// PatientMockRepo is a mocked patient repository
 type PatientMockRepo struct {
 	pDb []patient.Patient
 }
@@ -71,12 +71,12 @@ func NewPatientRepo() *PatientMockRepo {
 	}
 }
 
-// Create mocks user creation
-func (r *PatientMockRepo) Create(user patient.Patient) (*string, error) {
+// Create mocks patient creation
+func (r *PatientMockRepo) Create(patient patient.Patient) (*string, error) {
 	badID := "12342342"
-	switch user.Name {
+	switch patient.Name {
 	case "Valid patient":
-		return &user.ID, nil
+		return &patient.ID, nil
 	case "Bad uuid":
 		return &badID, nil
 	case "DB error":
@@ -86,7 +86,7 @@ func (r *PatientMockRepo) Create(user patient.Patient) (*string, error) {
 	}
 }
 
-// UpdateName mocks updating user's Name
+// UpdateName mocks updating patient's Name
 func (r *PatientMockRepo) UpdateName(id string, name string) error {
 	for i, u := range r.pDb {
 		if u.ID == id {
@@ -97,7 +97,7 @@ func (r *PatientMockRepo) UpdateName(id string, name string) error {
 	return patient.ErrNoRecord
 }
 
-// UpdatePhone mocks updating user's Phone
+// UpdatePhone mocks updating patient's Phone
 func (r *PatientMockRepo) UpdatePhone(id string, phones []string) error {
 	for i, u := range r.pDb {
 		if u.ID == id {
@@ -108,7 +108,7 @@ func (r *PatientMockRepo) UpdatePhone(id string, phones []string) error {
 	return patient.ErrNoRecord
 }
 
-// FindByID mocks finding a user by its ID
+// FindByID mocks finding a patient by its ID
 func (r *PatientMockRepo) FindByID(id string) (*patient.Patient, error) {
 	for _, u := range r.pDb {
 		if u.ID == id {
@@ -118,7 +118,7 @@ func (r *PatientMockRepo) FindByID(id string) (*patient.Patient, error) {
 	return nil, patient.ErrNoRecord
 }
 
-// GetAll returns a list of users ordered by email
+// GetAll returns a list of patients ordered by email
 func (r *PatientMockRepo) GetAll(cursor string, after bool, pgSize int) (*[]patient.Patient, bool, error) {
 	if cursor == "" {
 		return &r.pDb, false, nil
@@ -163,21 +163,21 @@ func (r PatientMockRepo) findPos(patients []patient.Patient, id string) int {
 	return -1
 }
 
-// FindByName returns a list of users whose names looks like 'name'
+// FindByName returns a list of patients whose names looks like 'name'
 func (r *PatientMockRepo) FindByName(name string) (*[]patient.Patient, error) {
 	return nil, nil
 }
 
-// PatientMockSvc mocks user services
+// PatientMockSvc mocks patient services
 type PatientMockSvc struct {
 }
 
-// NewPatientSvc returns a mocked user service
+// NewPatientSvc returns a mocked patient service
 func NewPatientSvc() *PatientMockSvc {
 	return &PatientMockSvc{}
 }
 
-// Create mocks new user creation service
+// Create mocks new patient creation service
 func (s PatientMockSvc) Create(name, address, city, state string, phone []string, createdBy string) (*string, error) {
 	switch name {
 	case "Bob":
@@ -188,7 +188,7 @@ func (s PatientMockSvc) Create(name, address, city, state string, phone []string
 	}
 }
 
-// FindByID mocks finding a user by its ID
+// FindByID mocks finding a patient by its ID
 func (s PatientMockSvc) FindByID(id string) (*patient.Patient, error) {
 	if id == "68b1d5e2-39dd-4713-8631-a08100383a0f" {
 		dt := time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC)
@@ -204,7 +204,7 @@ func (s PatientMockSvc) FindByID(id string) (*patient.Patient, error) {
 		dt := time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC)
 		return &patient.Patient{
 			ID:        "85f45ff9-d31c-4ff7-94ac-5afb5a1f0fcd",
-			Name:      "Valid User",
+			Name:      "Valid patient",
 			Phones:    []string{"6544332135"},
 			CreatedAt: dt,
 			UpdatedAt: dt,
@@ -232,32 +232,32 @@ func (s PatientMockSvc) FindByID(id string) (*patient.Patient, error) {
 	return nil, errors.New("not found")
 }
 
-// UpdateName updates user name
+// UpdateName updates patient name
 func (s PatientMockSvc) UpdateName(id string, name string) error {
 	return nil
 }
 
-// UpdatePhone updates user email
+// UpdatePhone updates patient email
 func (s PatientMockSvc) UpdatePhone(id string, phones []string) error {
 	return nil
 }
 
-// GetAll return a lista of users ordered by email
+// GetAll return a lista of patients ordered by email
 func (s PatientMockSvc) GetAll(before string, after string, pgSize int) (*patient.Cursor, error) {
 	return nil, nil
 }
 
-// FindByName return a list of users whose names looks like 'name'
+// FindByName return a list of patients whose names looks like 'name'
 func (s PatientMockSvc) FindByName(name string) (*[]patient.Patient, error) {
 	repo := NewPatientRepo()
-	var users []patient.Patient
+	var patients []patient.Patient
 	for _, u := range repo.pDb {
 		if strings.Contains(strings.ToLower(u.Name), strings.ToLower(name)) {
-			users = append(users, u)
+			patients = append(patients, u)
 		}
 	}
-	if len(users) == 0 {
+	if len(patients) == 0 {
 		return nil, patient.ErrNoRecord
 	}
-	return &users, nil
+	return &patients, nil
 }
