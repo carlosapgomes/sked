@@ -7,18 +7,21 @@ import (
 	"time"
 
 	"carlosapgomes.com/sked/internal/appointment"
+	"carlosapgomes.com/sked/internal/user"
 	uuid "github.com/satori/go.uuid"
 )
 
 // AppointmentService provides implementation of appointment domain interface
 type appointmentService struct {
-	repo appointment.Repository
+	repo    appointment.Repository
+	userSvc user.Service
 }
 
 // NewAppointmentService returns an appointment Service instance
-func NewAppointmentService(repo appointment.Repository) appointment.Service {
+func NewAppointmentService(repo appointment.Repository, userSvc user.Service) appointment.Service {
 	return &appointmentService{
 		repo,
+		userSvc,
 	}
 }
 
@@ -37,6 +40,39 @@ func (s *appointmentService) Create(dateTime time.Time, patientName, patientID, 
 	if err != nil {
 		return nil, appointment.ErrInvalidInputSyntax
 	}
+	// user with ID == doctorID must have RoleDoctor
+	userDoc, err := s.userSvc.FindByID(doctorID)
+	if err != nil {
+		return nil, err
+	}
+	isDoc := false
+	for i := range userDoc.Roles {
+		if userDoc.Roles[i] == user.RoleDoctor {
+			isDoc = true
+		}
+	}
+	if !isDoc {
+		return nil, appointment.ErrInvalidInputSyntax
+	}
+	// if appointment is not created by the same doctor,
+	// it can only be created by a clerk or admin
+	if doctorID != createdBy {
+		createdByUser, err := s.userSvc.FindByID(createdBy)
+		if err != nil {
+			return nil, err
+		}
+		isClerkOrAdmin := false
+		for i := range createdByUser.Roles {
+			if (createdByUser.Roles[i] == user.RoleAdmin) ||
+				(createdByUser.Roles[i] == user.RoleClerk) {
+				isClerkOrAdmin = true
+			}
+			if !isClerkOrAdmin {
+				return nil, appointment.ErrInvalidInputSyntax
+			}
+		}
+	}
+
 	uid := uuid.NewV4()
 	dt := dateTime.UTC()
 	newAppointmt := appointment.Appointment{
