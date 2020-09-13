@@ -49,7 +49,7 @@ INSERT INTO users (id, name, email, phone, hashedpw, created_at,updated_at,activ
 '2019-06-23 17:25:00 UTC',
 '2019-06-23 17:25:00 UTC',
 TRUE,FALSE,
-'{"Common"}'
+'{"Clerk"}'
 );
 
 -- Bob'b password: 'test1234'
@@ -60,7 +60,7 @@ INSERT INTO users (id, name, email, phone, hashedpw, created_at, updated_at, act
     '2019-06-24 17:25:00 UTC',
     '2019-06-24 17:25:00 UTC',
 		TRUE,TRUE,
-		'{"Common","Admin"}'
+		'{"Clerk","Admin"}'
 );
 
 INSERT INTO users (id, name, email, phone, hashedpw, created_at, updated_at, active, email_was_validated, roles) VALUES(
@@ -69,7 +69,7 @@ INSERT INTO users (id, name, email, phone, hashedpw, created_at, updated_at, act
  '2019-06-25 17:25:00 UTC',
  '2019-06-25 17:25:00 UTC',
  TRUE,TRUE,
- '{"Common","Admin"}'
+ '{"Clerk","Admin"}'
 );
 
 INSERT INTO users (id, name, email, phone, hashedpw, created_at, updated_at, active, email_was_validated, roles) VALUES(
@@ -79,7 +79,7 @@ INSERT INTO users (id, name, email, phone, hashedpw, created_at, updated_at, act
 '2019-06-26 17:25:00 UTC',
 '2019-06-26 17:25:00 UTC',
 FALSE,TRUE,
-'{"Common"}'
+'{"Clerk"}'
 );
 
 INSERT INTO users (id, name, email, phone, hashedpw, created_at, updated_at, active, email_was_validated, roles) VALUES(
@@ -88,7 +88,7 @@ INSERT INTO users (id, name, email, phone, hashedpw, created_at, updated_at, act
 '2019-06-27 17:25:00 UTC',
 '2019-06-27 17:25:00 UTC',
 FALSE,TRUE,
-'{"Common"}'
+'{"Clerk"}'
 );
 
 INSERT INTO users (id, name, email, phone, hashedpw, created_at, updated_at, active, email_was_validated, roles) VALUES(
@@ -100,7 +100,7 @@ INSERT INTO users (id, name, email, phone, hashedpw, created_at, updated_at, act
 '2019-06-28 17:25:00 UTC',
 '2019-06-28 17:25:00 UTC',
 FALSE,TRUE,
-'{"Common"}'
+'{"Clerk"}'
 );
 
 UPDATE users SET phone='5434534534' where id='68b1d5e2-39dd-4713-8631-a08100383a0f';

@@ -38,7 +38,7 @@ Header: Content-type: application-json
 }
 
 
-### Login as Maria (common user)
+### Login as Maria (common/clerk user)
 
 POST https://localhost/api/login HTTP/1.1
 Header: Content-type: application-json

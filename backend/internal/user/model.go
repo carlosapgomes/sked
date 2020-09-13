@@ -7,8 +7,8 @@ import "time"
 const (
 	// RoleAdmin role const
 	RoleAdmin string = "Admin"
-	// RoleCommon role const
-	RoleCommon string = "Common"
+	// RoleClerk role const
+	RoleClerk string = "Clerk"
 	// RoleDoctor role const
 	RoleDoctor string = "Doctor"
 )

@@ -28,7 +28,7 @@ func NewUserRepo() *UserMockRepo {
 		UpdatedAt:         time.Now(),
 		Active:            true,
 		EmailWasValidated: true,
-		Roles:             []string{user.RoleCommon},
+		Roles:             []string{user.RoleClerk},
 	}
 	validUser2 := &user.User{
 		ID:                "68b1d5e2-39dd-4713-8631-a08100383a0f",
@@ -40,7 +40,7 @@ func NewUserRepo() *UserMockRepo {
 		UpdatedAt:         time.Now(),
 		Active:            true,
 		EmailWasValidated: true,
-		Roles:             []string{user.RoleCommon, user.RoleAdmin},
+		Roles:             []string{user.RoleClerk, user.RoleAdmin},
 	}
 	validUser3 := &user.User{
 		ID:                "dcce1beb-aee6-4a4d-b724-94d470817323",
@@ -52,7 +52,7 @@ func NewUserRepo() *UserMockRepo {
 		UpdatedAt:         time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
 		Active:            true,
 		EmailWasValidated: true,
-		Roles:             []string{user.RoleCommon},
+		Roles:             []string{user.RoleClerk},
 	}
 	validUser4 := &user.User{
 		ID:                "ecadbb28-14e6-4560-8574-809c6c54b9cb",
@@ -64,7 +64,7 @@ func NewUserRepo() *UserMockRepo {
 		UpdatedAt:         time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
 		Active:            false,
 		EmailWasValidated: true,
-		Roles:             []string{user.RoleCommon},
+		Roles:             []string{user.RoleClerk},
 	}
 	validUser5 := &user.User{
 		ID:                "ca16fc9d-df7b-4594-97e3-264432145b01",
@@ -76,7 +76,7 @@ func NewUserRepo() *UserMockRepo {
 		UpdatedAt:         time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
 		Active:            false,
 		EmailWasValidated: true,
-		Roles:             []string{user.RoleCommon},
+		Roles:             []string{user.RoleClerk},
 	}
 	validUser6 := &user.User{
 		ID:                "27f9802b-acb3-4852-bf97-c4ed4c3b3658",
@@ -88,7 +88,7 @@ func NewUserRepo() *UserMockRepo {
 		UpdatedAt:         time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
 		Active:            false,
 		EmailWasValidated: true,
-		Roles:             []string{user.RoleCommon},
+		Roles:             []string{user.RoleClerk},
 	}
 	db = append(db, *validUser)
 	db = append(db, *validUser2)
@@ -297,7 +297,7 @@ func (s UserMockSvc) FindByID(id string) (*user.User, error) {
 			UpdatedAt:         dt,
 			Active:            true,
 			EmailWasValidated: true,
-			Roles:             []string{user.RoleCommon, user.RoleAdmin},
+			Roles:             []string{user.RoleClerk, user.RoleAdmin},
 		}, nil
 	}
 	if id == "85f45ff9-d31c-4ff7-94ac-5afb5a1f0fcd" {
@@ -312,7 +312,7 @@ func (s UserMockSvc) FindByID(id string) (*user.User, error) {
 			UpdatedAt:         dt,
 			Active:            true,
 			EmailWasValidated: true,
-			Roles:             []string{user.RoleCommon},
+			Roles:             []string{user.RoleClerk},
 		}, nil
 	}
 	if id == "dcce1beb-aee6-4a4d-b724-94d470817323" {
@@ -327,7 +327,7 @@ func (s UserMockSvc) FindByID(id string) (*user.User, error) {
 			UpdatedAt:         dt,
 			Active:            true,
 			EmailWasValidated: true,
-			Roles:             []string{user.RoleCommon},
+			Roles:             []string{user.RoleClerk},
 		}, nil
 	}
 	if id == "ecadbb28-14e6-4560-8574-809c6c54b9cb" {
@@ -341,7 +341,7 @@ func (s UserMockSvc) FindByID(id string) (*user.User, error) {
 			UpdatedAt:         time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
 			Active:            false,
 			EmailWasValidated: true,
-			Roles:             []string{user.RoleCommon},
+			Roles:             []string{user.RoleClerk},
 		}, nil
 	}
 	return nil, errors.New("not found")
@@ -361,7 +361,7 @@ func (s UserMockSvc) FindByEmail(email string) (*user.User, error) {
 			UpdatedAt:         dt,
 			Active:            true,
 			EmailWasValidated: true,
-			Roles:             []string{user.RoleCommon, user.RoleAdmin},
+			Roles:             []string{user.RoleClerk, user.RoleAdmin},
 		}, nil
 	}
 	if email == "valid@user.com" {
@@ -376,7 +376,7 @@ func (s UserMockSvc) FindByEmail(email string) (*user.User, error) {
 			UpdatedAt:         dt,
 			Active:            true,
 			EmailWasValidated: true,
-			Roles:             []string{user.RoleCommon},
+			Roles:             []string{user.RoleClerk},
 		}, nil
 	}
 	if email == "alice@example.com" {
@@ -391,7 +391,7 @@ func (s UserMockSvc) FindByEmail(email string) (*user.User, error) {
 			UpdatedAt:         dt,
 			Active:            true,
 			EmailWasValidated: true,
-			Roles:             []string{user.RoleCommon},
+			Roles:             []string{user.RoleClerk},
 		}, nil
 	}
 	if email == "bobama@somewhere.com" {
@@ -405,7 +405,7 @@ func (s UserMockSvc) FindByEmail(email string) (*user.User, error) {
 			UpdatedAt:         time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
 			Active:            false,
 			EmailWasValidated: true,
-			Roles:             []string{user.RoleCommon},
+			Roles:             []string{user.RoleClerk},
 		}, nil
 	}
 	return nil, user.ErrNoRecord

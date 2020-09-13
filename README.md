@@ -7,8 +7,8 @@ specialty/clinic.
 
 - Only an admin can add a new user
 - A user with role 'doctor' can only schedule his/her own appointments or surgeries
-- A user with role 'common' can schedule appointments and surgeries for doctors
-- A user with role 'common' does not have schedules
+- A user with role 'clerk' can schedule appointments and surgeries for doctors
+- A user with role 'clerk' does not have schedules
 - A user can schedule a patient for any available date
 - A user can schedule a surgery
 - A user can insert a new patient

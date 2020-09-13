@@ -218,8 +218,8 @@ func TestVerifyResetPw(t *testing.T) {
 	}
 }
 
-// TestSetPasswordByCommonUser function tests user password update
-func TestSetPasswordByCommonUser(t *testing.T) {
+// TestSetPasswordByClerkUser function tests user password update
+func TestSetPasswordByClerkUser(t *testing.T) {
 	app := newTestApplication(t)
 	ts := newTestServer(t, app.Routes())
 	defer ts.Close()
@@ -607,7 +607,7 @@ func TestGetUserByEmailByAdmin(t *testing.T) {
 	// })
 }
 
-func TestGetUserByEmailByCommonUser(t *testing.T) {
+func TestGetUserByEmailByClerkUser(t *testing.T) {
 	handlers := newTestApplication(t)
 	ts := newTestServer(t, handlers.Routes())
 	defer ts.Close()
@@ -671,7 +671,7 @@ func TestGetUserByEmailByCommonUser(t *testing.T) {
 }
 
 // TestGetUserName function test end point for getting a user name
-func TestGetUserNameByCommonUser(t *testing.T) {
+func TestGetUserNameByClerkUser(t *testing.T) {
 	handlers := newTestApplication(t)
 	ts := newTestServer(t, handlers.Routes())
 	defer ts.Close()
@@ -748,7 +748,7 @@ func TestGetUserNameByAdminUser(t *testing.T) {
 	}
 }
 
-func TestGetUserEmailByCommonUser(t *testing.T) {
+func TestGetUserEmailByClerkUser(t *testing.T) {
 	handlers := newTestApplication(t)
 	ts := newTestServer(t, handlers.Routes())
 	defer ts.Close()

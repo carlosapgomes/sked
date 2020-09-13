@@ -61,7 +61,7 @@ func TestIsSameUserOrAdmin(t *testing.T) {
 				"user": user.User{
 					ID:    "adea27f8-4091-4908-9ad9-3d68e198b488",
 					Email: "user@test.com",
-					Roles: []string{user.RoleCommon, user.RoleAdmin},
+					Roles: []string{user.RoleClerk, user.RoleAdmin},
 				},
 			},
 			userData: user.User{
@@ -110,7 +110,7 @@ func TestIsSameUserOrAdmin(t *testing.T) {
 				"user": user.User{
 					ID:    "adea27f8-4091-4908-9ad9-3d68e198b488",
 					Email: "user@test.com",
-					Roles: []string{user.RoleCommon, user.RoleAdmin},
+					Roles: []string{user.RoleClerk, user.RoleAdmin},
 				},
 			},
 			userData: user.User{
