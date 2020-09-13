@@ -586,26 +586,26 @@ func TestGetAll(t *testing.T) {
 			wantError:        nil,
 			wantContainEmail: "spongebob@somewhere.com",
 		},
-		//{
-		//desc:             "Valid Cursor After",
-		//before:           "bobama@somewhere.com",
-		//after:            "",
-		//pgSize:           2,
-		//wantSize:         1,
-		//hasMore:          false,
-		//wantError:        nil,
-		//wantContainEmail: "spongebob@somewhere.com",
-		//},
-		//{
-		//desc:             "Valid Cursor Before",
-		//before:           "bobama@somewhere.com",
-		//after:            "",
-		//pgSize:           2,
-		//wantSize:         2,
-		//hasMore:          true,
-		//wantError:        nil,
-		//wantContainEmail: "alice@example.com",
-		//},
+		{
+			desc:             "Valid Cursor After",
+			before:           "",
+			after:            "ZWNhZGJiMjgtMTRlNi00NTYwLTg1NzQtODA5YzZjNTRiOWNi",
+			pgSize:           2,
+			wantSize:         2,
+			hasMore:          true,
+			wantError:        nil,
+			wantContainEmail: "spongebob@somewhere.com",
+		},
+		{
+			desc:             "Valid Cursor Before",
+			before:           "ZWNhZGJiMjgtMTRlNi00NTYwLTg1NzQtODA5YzZjNTRiOWNi",
+			after:            "",
+			pgSize:           2,
+			wantSize:         2,
+			hasMore:          true,
+			wantError:        nil,
+			wantContainEmail: "alice@example.com",
+		},
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
@@ -617,8 +617,15 @@ func TestGetAll(t *testing.T) {
 			if cursor != nil && len(cursor.Users) != tC.wantSize {
 				t.Errorf("Want %v; got %v\n", tC.wantSize, len(cursor.Users))
 			}
-			if tC.hasMore && !(cursor.HasAfter || cursor.HasBefore) {
-				t.Errorf("want %v; got %v\n", tC.hasMore, (cursor.HasAfter || cursor.HasBefore))
+			if !tC.hasMore {
+				if cursor.HasAfter || cursor.HasBefore {
+					t.Errorf("want %v; got %v\n", tC.hasMore, (cursor.HasAfter || cursor.HasBefore))
+				}
+			} else {
+				if !(cursor.HasAfter || cursor.HasBefore) {
+					t.Errorf("want %v; got %v\n", tC.hasMore, (cursor.HasAfter || cursor.HasBefore))
+
+				}
 			}
 			var contain bool
 			for _, u := range cursor.Users {
