@@ -106,11 +106,11 @@ Tables:
 
 ## TODOS
 
-- create entities models, interfaces and errors
-- add tables to db setup sql file
-- write failing tests for each API (appointments, surgeries and patients)
-- write services for each entity
-- add postgres container for testing
+- ~~create entities models, interfaces and errors~~
+- ~~Add tables to db setup sql file - appointments, surgeries~~
+- ~~write failing tests for each API (appointments, surgeries and patients)~~
+- ~~write services for each entity~~
+- ~~add postgres container for testing~~
 - validation should be in services implementation
-- add role for doctors (doctors are users who can have schedules [appointments|surgeries])
+- ~~add role for doctors (doctors are users who can have schedules [appointments|surgeries])~~
 
