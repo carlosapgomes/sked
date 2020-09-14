@@ -12,8 +12,10 @@ import (
 )
 
 func TestAppointmentCreate(t *testing.T) {
+	userRepo := mocks.NewUserRepo()
+	userSvc := services.NewUserService(userRepo)
 	repo := mocks.NewAppointmentRepo()
-	svc := services.NewAppointmentService(repo)
+	svc := services.NewAppointmentService(repo, userSvc)
 
 	tests := []struct {
 		name        string
@@ -63,8 +65,10 @@ func TestAppointmentCreate(t *testing.T) {
 }
 
 func TestAppointmentUpdate(t *testing.T) {
+	userRepo := mocks.NewUserRepo()
+	userSvc := services.NewUserService(userRepo)
 	repo := mocks.NewAppointmentRepo()
-	svc := services.NewAppointmentService(repo)
+	svc := services.NewAppointmentService(repo, userSvc)
 
 	tests := []struct {
 		name        string
@@ -121,8 +125,10 @@ func TestAppointmentUpdate(t *testing.T) {
 }
 
 func TestAppointmentFindByID(t *testing.T) {
+	userRepo := mocks.NewUserRepo()
+	userSvc := services.NewUserService(userRepo)
 	repo := mocks.NewAppointmentRepo()
-	svc := services.NewAppointmentService(repo)
+	svc := services.NewAppointmentService(repo, userSvc)
 
 	tests := []struct {
 		name        string
@@ -171,8 +177,10 @@ func TestAppointmentFindByID(t *testing.T) {
 }
 
 func TestAppointmentFindByPatientID(t *testing.T) {
+	userRepo := mocks.NewUserRepo()
+	userSvc := services.NewUserService(userRepo)
 	repo := mocks.NewAppointmentRepo()
-	svc := services.NewAppointmentService(repo)
+	svc := services.NewAppointmentService(repo, userSvc)
 
 	tests := []struct {
 		name        string
@@ -225,8 +233,10 @@ func TestAppointmentFindByPatientID(t *testing.T) {
 }
 
 func TestAppointmentFindByDoctorID(t *testing.T) {
+	userRepo := mocks.NewUserRepo()
+	userSvc := services.NewUserService(userRepo)
 	repo := mocks.NewAppointmentRepo()
-	svc := services.NewAppointmentService(repo)
+	svc := services.NewAppointmentService(repo, userSvc)
 
 	tests := []struct {
 		name        string
@@ -279,8 +289,10 @@ func TestAppointmentFindByDoctorID(t *testing.T) {
 }
 
 func TestAppointmentFindByDate(t *testing.T) {
+	userRepo := mocks.NewUserRepo()
+	userSvc := services.NewUserService(userRepo)
 	repo := mocks.NewAppointmentRepo()
-	svc := services.NewAppointmentService(repo)
+	svc := services.NewAppointmentService(repo, userSvc)
 
 	tests := []struct {
 		name        string
@@ -333,8 +345,11 @@ func TestAppointmentFindByDate(t *testing.T) {
 }
 
 func TestAppointmentGetAll(t *testing.T) {
+	userRepo := mocks.NewUserRepo()
+	userSvc := services.NewUserService(userRepo)
 	repo := mocks.NewAppointmentRepo()
-	svc := services.NewAppointmentService(repo)
+	svc := services.NewAppointmentService(repo, userSvc)
+
 	testCases := []struct {
 		desc          string
 		before        string
