@@ -3,8 +3,11 @@ package web
 import (
 	"log"
 
+	"carlosapgomes.com/sked/internal/appointment"
 	"carlosapgomes.com/sked/internal/mailer"
+	"carlosapgomes.com/sked/internal/patient"
 	"carlosapgomes.com/sked/internal/session"
+	"carlosapgomes.com/sked/internal/surgery"
 	"carlosapgomes.com/sked/internal/token"
 	"carlosapgomes.com/sked/internal/user"
 )
@@ -33,13 +36,16 @@ type CkProps struct {
 
 // App struct to hold its depedencies
 type App struct {
-	errorLog       *log.Logger
-	infoLog        *log.Logger
-	ckProps        *CkProps
-	sessionService session.Service
-	userService    user.Service
-	mailerService  mailer.Service
-	tokenService   token.Service
+	errorLog           *log.Logger
+	infoLog            *log.Logger
+	ckProps            *CkProps
+	sessionService     session.Service
+	userService        user.Service
+	mailerService      mailer.Service
+	tokenService       token.Service
+	patientService     patient.Service
+	appointmentService appointment.Service
+	surgeryService     surgery.Service
 }
 
 // New returns a new App object
