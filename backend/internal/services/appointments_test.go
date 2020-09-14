@@ -29,6 +29,7 @@ func TestAppointmentCreate(t *testing.T) {
 		wantError   []byte
 	}{
 		{"Valid appointment", time.Now(), "John Doe", "22070f56-5d52-43f0-9f59-5de61c1db506", "Dr House", "f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes", "85f45ff9-d31c-4ff7-94ac-5afb5a1f0fcd", nil},
+		{"CreatedBy user can not be another doctor", time.Now(), "John Doe", "22070f56-5d52-43f0-9f59-5de61c1db506", "Dr House", "f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes", "a520df95-02fa-4d86-8eef-58385c354b29", []byte("invalid input syntax")},
 		{"Invalid patientID format", time.Now(), "John Doe", "22070f56--43f0-9f59-5de61c1db506", "Dr House", "f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes", "10b9ad06-e86d-4a85-acb1-d7e268d1f21a", []byte("invalid input syntax")},
 		{"Invalid doctorID format", time.Now(), "John Doe", "22070f56-5d52-43f0-9f59-5de61c1db506", "Dr House", "f06244b9-97e5--bae0-3b6da7a0b604", "some notes", "10b9ad06-e86d-4a85-acb1-d7e268d1f21a", []byte("invalid input syntax")},
 		{"Invalid createdByID format", time.Now(), "John Doe", "22070f56-5d52-43f0-9f59-5de61c1db506", "Dr House", "f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes", "10b9ad06-e86d--acb1-d7e268d1f21a", []byte("invalid input syntax")},
