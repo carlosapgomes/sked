@@ -90,12 +90,25 @@ func NewUserRepo() *UserMockRepo {
 		EmailWasValidated: true,
 		Roles:             []string{user.RoleClerk},
 	}
+	validUser7 := &user.User{
+		ID:                "f06244b9-97e5-4f1a-bae0-3b6da7a0b604",
+		Name:              "Dr. House",
+		Email:             "house@doctor.com",
+		Phone:             "6544332135",
+		HashedPw:          []byte("validPw"),
+		CreatedAt:         time.Now(),
+		UpdatedAt:         time.Now(),
+		Active:            true,
+		EmailWasValidated: true,
+		Roles:             []string{user.RoleDoctor},
+	}
 	db = append(db, *validUser)
 	db = append(db, *validUser2)
 	db = append(db, *validUser3)
 	db = append(db, *validUser4)
 	db = append(db, *validUser5)
 	db = append(db, *validUser6)
+	db = append(db, *validUser7)
 	return &UserMockRepo{
 		db,
 	}
