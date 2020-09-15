@@ -72,10 +72,14 @@ func validEmail(email string) bool {
 func (app App) getUsers() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		v := r.URL.Query()
-		for id := range v {
+		for q := range v {
 			switch {
-			case strings.Contains(id, "email"):
+			case strings.Contains(q, "email"):
 				app.getUserByEmail(w, r)
+			case strings.Contains(q, "before"):
+				app.getAllUsers(w, r)
+			case strings.Contains(q, "after"):
+				app.getAllUsers(w, r)
 			default:
 				app.clientError(w, http.StatusBadRequest)
 			}
@@ -719,6 +723,10 @@ func (app App) getUserByEmail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Write(output)
+}
+
+func (app App) getAllUsers(w http.ResponseWriter, r *http.Request) {
+	w.Write()
 }
 
 // resetPassword sends an reset password confirmation email with a "magic link"
