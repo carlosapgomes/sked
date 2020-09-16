@@ -1225,3 +1225,78 @@ func TestPasswordResetRequest(t *testing.T) {
 		})
 	}
 }
+
+// TestGetATestGetAllUsersByAdmin
+func TestGetAllUsersByAdmin(t *testing.T) {
+	// use a mail recorder
+	// https://tmichel.github.io/2014/10/12/golang-send-test-email/
+	rec := new(mocks.EmailRecorder)
+	mailer := mocks.NewMailerMock(rec)
+	handlers := web.New(
+		log.New(ioutil.Discard, "", 0),
+		log.New(ioutil.Discard, "", 0),
+		&web.CkProps{
+			Name:     "sid",
+			HTTPOnly: false,
+			Secure:   false,
+		},
+		mocks.NewSessionSvc(),
+		mocks.NewUserSvc(),
+		mailer,
+		mocks.NewTokenMockSvc())
+
+	ts := newTestServer(t, handlers.Routes())
+	defer ts.Close()
+	tests := []struct {
+		name     string
+		before   string
+		after    string
+		pgSize   string
+		wantSize int
+		wantCode int
+		wantBody []byte
+	}{
+		{"Valid submission", "", "", "6", 6, http.StatusOK, []byte("bob@example.com")},
+	}
+
+	type postBody struct {
+		Name, Email, Password, Phone string
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			query := map[string]string{
+				"before": tt.before,
+				"after":  tt.after,
+				"pgSize": tt.pgSize,
+			}
+			req, _ := http.NewRequest(http.MethodPost, ts.URL+"/users", nil)
+			q := req.URL.Query()
+			for k, v := range query {
+				q.Add(k, v)
+			}
+			req.URL.RawQuery = q.Encode()
+			cookie := &http.Cookie{
+				Name:  "sid",
+				Value: "4e66a385-c7cd-47de-9e3b-cdfe26eecad4",
+			}
+			req.AddCookie(cookie)
+			rs, err := ts.Client().Do(req)
+			if err != nil {
+				t.Fatal(err)
+			}
+			code := rs.StatusCode
+			defer rs.Body.Close()
+			_, err = ioutil.ReadAll(rs.Body)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if code != tt.wantCode {
+				t.Errorf("want %d; got %d", tt.wantCode, code)
+			}
+			//if !bytes.Contains(respBody, tt.wantBody) {
+			//t.Errorf("want body %s to contain %q", respBody, tt.wantBody)
+			//}
+		})
+	}
+
+}
