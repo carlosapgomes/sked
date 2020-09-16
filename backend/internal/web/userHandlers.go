@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -729,7 +730,12 @@ func (app App) getAllUsers(w http.ResponseWriter, r *http.Request) {
 	before := r.URL.Query().Get("before")
 	after := r.URL.Query().Get("after")
 	pgSize := r.URL.Query().Get("pgSize")
-	res, err := app.userService.GetAll(before, after, pgSize)
+	size, err := strconv.Atoi(pgSize)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	res, err := app.userService.GetAll(before, after, size)
 	if err != nil {
 		app.serverError(w, err)
 		return
