@@ -726,7 +726,20 @@ func (app App) getUserByEmail(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app App) getAllUsers(w http.ResponseWriter, r *http.Request) {
-	w.Write()
+	before := r.URL.Query().Get("before")
+	after := r.URL.Query().Get("after")
+	pgSize := r.URL.Query().Get("pgSize")
+	res, err := app.userService.GetAll(before, after, pgSize)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	output, err := json.Marshal(res)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	w.Write(output)
 }
 
 // resetPassword sends an reset password confirmation email with a "magic link"
@@ -890,42 +903,43 @@ func (app App) redirectToSuccessPageForPwResetRequest(w http.ResponseWriter, ema
 		return
 	}
 }
-func (app App) getAll() http.Handler {
-	return http.HandlerFunc(
-		func(w http.ResponseWriter, r *http.Request) {
-			// Read body
-			b, err := ioutil.ReadAll(r.Body)
-			defer r.Body.Close()
-			if err != nil {
-				app.clientError(w, http.StatusBadRequest)
-				return
-			}
 
-			var usersReq struct {
-				Before string `json:"before"`
-				After  string `json:"after"`
-				PgSize int    `json:"pgsize"`
-			}
-			err = json.Unmarshal(b, &usersReq)
-			if err != nil {
-				app.serverError(w, err)
-				return
-			}
+//func (app App) getAll() http.Handler {
+//return http.HandlerFunc(
+//func(w http.ResponseWriter, r *http.Request) {
+//Read body
+//b, err := ioutil.ReadAll(r.Body)
+//defer r.Body.Close()
+//if err != nil {
+//app.clientError(w, http.StatusBadRequest)
+//return
+//}
 
-			res, err := app.userService.GetAll(usersReq.Before, usersReq.After, usersReq.PgSize)
-			if err != nil {
-				app.serverError(w, err)
-				return
-			}
-			// return values
-			output, err := json.Marshal(res)
-			if err != nil {
-				app.serverError(w, err)
-				return
-			}
-			w.Write(output)
-		})
-}
+//var usersReq struct {
+//Before string `json:"before"`
+//After  string `json:"after"`
+//PgSize int    `json:"pgsize"`
+//}
+//err = json.Unmarshal(b, &usersReq)
+//if err != nil {
+//app.serverError(w, err)
+//return
+//}
+
+//res, err := app.userService.GetAll(usersReq.Before, usersReq.After, usersReq.PgSize)
+//if err != nil {
+//app.serverError(w, err)
+//return
+//}
+//return values
+//output, err := json.Marshal(res)
+//if err != nil {
+//app.serverError(w, err)
+//return
+//}
+//w.Write(output)
+//})
+//}
 func (app App) verifyResetPw() http.Handler {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
