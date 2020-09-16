@@ -1269,7 +1269,7 @@ func TestGetAllUsersByAdmin(t *testing.T) {
 				"after":  tt.after,
 				"pgSize": tt.pgSize,
 			}
-			req, _ := http.NewRequest(http.MethodPost, ts.URL+"/users", nil)
+			req, _ := http.NewRequest(http.MethodGet, ts.URL+"/users", nil)
 			q := req.URL.Query()
 			for k, v := range query {
 				q.Add(k, v)
