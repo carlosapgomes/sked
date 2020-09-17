@@ -22,6 +22,15 @@ type Cursor struct {
 	Users     []User
 }
 
+// Page encapsulates data and pagination cursors
+type Page struct {
+	StartCursor     string `json:"startCursor"`
+	HasPreviousPage bool   `json:"hasPreviousPage"`
+	EndCursor       string `json:"endCursor"`
+	HasAfterPage    bool   `json:"hasAfterPage"`
+	Users           []User `json:"users"`
+}
+
 //User type
 type User struct {
 	ID                string    `json:"id"` //uuidv4
