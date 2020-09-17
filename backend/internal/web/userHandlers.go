@@ -72,15 +72,20 @@ func validEmail(email string) bool {
 // getUsers search for users based on query params
 func (app App) getUsers() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("entering getUsers")
 		v := r.URL.Query()
+	Loop:
 		for q := range v {
 			switch {
 			case strings.Contains(q, "email"):
 				app.getUserByEmail(w, r)
+				break Loop
 			case strings.Contains(q, "before"):
 				app.getAllUsers(w, r)
+				break Loop
 			case strings.Contains(q, "after"):
 				app.getAllUsers(w, r)
+				break Loop
 			default:
 				app.clientError(w, http.StatusBadRequest)
 			}
@@ -727,6 +732,7 @@ func (app App) getUserByEmail(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app App) getAllUsers(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("entering getAllUsers")
 	before := r.URL.Query().Get("before")
 	after := r.URL.Query().Get("after")
 	pgSize := r.URL.Query().Get("pgSize")
