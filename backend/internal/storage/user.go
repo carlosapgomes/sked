@@ -162,7 +162,7 @@ func (r userRepository) FindByEmail(email string) (*user.User, error) {
 	return &u, err
 }
 
-// GetAll returns a paginated list of all users ordered by email and a bool if there is more results in this direction
+// GetAll returns a paginated list of all users ordered by email and a bool if there are more results in this direction
 func (r userRepository) GetAll(cursor string, after bool, pgSize int) (*[]user.User, bool, error) {
 	if pgSize <= 0 {
 		pgSize = 15
