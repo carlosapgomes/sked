@@ -163,20 +163,21 @@ func (r userRepository) FindByEmail(email string) (*user.User, error) {
 }
 
 // GetAll returns a paginated list of all users ordered by email and a bool if there are more results in this direction
-func (r userRepository) GetAll(cursor string, after bool, pgSize int) (*[]user.User, bool, error) {
+func (r userRepository) GetAll(cursor string, next bool, pgSize int) (*[]user.User, bool, error) {
 	if pgSize <= 0 {
 		pgSize = 15
 	}
-	pgSize++
 	var stmt string
-	if after {
+	if next {
+		// Get next result page
 		stmt = `SELECT id, name, email, phone, created_at, updated_at, active, email_was_validated, roles
 		FROM users WHERE email > $1 ORDER BY email LIMIT $2`
 	} else {
+		// Get previous result page
 		stmt = `SELECT id, name, email, phone, created_at, updated_at, active, email_was_validated, roles
 		FROM users WHERE email < $1 ORDER BY email LIMIT $2`
 	}
-	rows, err := r.DB.Query(stmt, cursor, pgSize)
+	rows, err := r.DB.Query(stmt, cursor, (pgSize + 1))
 	if err != nil {
 		return nil, false, err
 	}
