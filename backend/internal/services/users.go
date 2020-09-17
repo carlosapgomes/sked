@@ -165,22 +165,22 @@ func (s *userService) UpdatePhone(id string, phone string) error {
 }
 
 // GetAll returns a paginated list of all users ordered by email
-func (s *userService) GetAll(before string, after string, pgSize int) (*user.Cursor, error) {
-	var usersResp user.Cursor
+func (s *userService) GetAll(previous string, next string, pgSize int) (*user.Page, error) {
+	var usersResp user.Page
 	var err error
 	var uList *[]user.User
 	if pgSize <= 0 {
 		return nil, user.ErrInvalidInputSyntax
 	}
 	switch {
-	case (before != "" && after != ""):
-		// if both (before & after) are present, returns error
+	case (previous != "" && next != ""):
+		// if both (previous & next) are present, returns error
 		return nil, user.ErrInvalidInputSyntax
-	case (before == "" && after == ""):
-		// if they are empty/or absent
-		// get default list and page size
-		uList, usersResp.HasBefore, err = s.repo.
-			GetAll("", false, pgSize)
+	case (previous == "" && next == ""):
+		// if they are empty/or absent,
+		// get first "pgSize" elements of the list
+		uList, usersResp.HasNextPage, err = s.repo.
+			GetAll("", true, pgSize)
 		if err != nil {
 			return nil, err
 		}
@@ -190,23 +190,25 @@ func (s *userService) GetAll(before string, after string, pgSize int) (*user.Cur
 			}
 		}
 		if len(usersResp.Users) > 0 {
-			usersResp.Before = base64.StdEncoding.
+			usersResp.StartCursor = base64.StdEncoding.
+				EncodeToString([]byte(usersResp.Users[0].Email))
+			usersResp.EndCursor = base64.StdEncoding.
 				EncodeToString([]byte(usersResp.Users[len(usersResp.Users)-1].Email))
 		} else {
-			usersResp.Before = ""
+			usersResp.StartCursor = ""
+			usersResp.EndCursor = ""
 		}
-		usersResp.After = ""
-		usersResp.HasAfter = false
+		usersResp.HasPreviousPage = false
 		// and return values
-	case (before != ""):
-		// if before is present,
-		// get a before list
-		c, err := base64.StdEncoding.DecodeString(before)
+	case (previous != ""):
+		// if previous is present,
+		// get a previous list
+		c, err := base64.StdEncoding.DecodeString(previous)
 		if err != nil {
 			return nil, err
 		}
 		cursor := string(c)
-		uList, usersResp.HasBefore, err = s.repo.GetAll(cursor, false, pgSize)
+		uList, usersResp.HasPreviousPage, err = s.repo.GetAll(cursor, false, pgSize)
 		if err != nil {
 			return nil, err
 		}
@@ -217,28 +219,28 @@ func (s *userService) GetAll(before string, after string, pgSize int) (*user.Cur
 		}
 		if len(usersResp.Users) > 0 {
 			befCursor := base64.StdEncoding.EncodeToString([]byte(usersResp.Users[len(usersResp.Users)-1].Email))
-			usersResp.Before = befCursor
+			usersResp.StartCursor = befCursor
 		} else {
-			usersResp.Before = ""
+			usersResp.StartCursor = ""
 		}
-		// test for 'after data' from the requested cursor
+		// test for 'next data' from the requested cursor
 		// fill the response fields
-		_, usersResp.HasAfter, err = s.repo.GetAll(cursor, true, pgSize)
-		if usersResp.HasAfter {
-			usersResp.After = base64.StdEncoding.EncodeToString([]byte(before))
+		_, usersResp.HasNextPage, err = s.repo.GetAll(cursor, true, pgSize)
+		if usersResp.HasNextPage {
+			usersResp.EndCursor = base64.StdEncoding.EncodeToString([]byte(previous))
 		} else {
-			usersResp.After = ""
+			usersResp.EndCursor = ""
 		}
 		// and return it
-	case (after != ""):
-		// if after is present,
-		// get an after list
-		c, err := base64.StdEncoding.DecodeString(after)
+	case (next != ""):
+		// if next is present,
+		// get an next list
+		c, err := base64.StdEncoding.DecodeString(next)
 		if err != nil {
 			return nil, err
 		}
 		cursor := string(c)
-		uList, usersResp.HasAfter, err = s.repo.
+		uList, usersResp.HasNextPage, err = s.repo.
 			GetAll(cursor, true, pgSize)
 		// and return it
 		if uList != nil {
@@ -247,14 +249,14 @@ func (s *userService) GetAll(before string, after string, pgSize int) (*user.Cur
 			}
 		}
 		if len(usersResp.Users) > 0 {
-			usersResp.After = base64.StdEncoding.EncodeToString([]byte(usersResp.Users[0].Email))
+			usersResp.EndCursor = base64.StdEncoding.EncodeToString([]byte(usersResp.Users[0].Email))
 		}
-		// test for 'before data' from the requested cursor
+		// test for 'previous data' from the requested cursor
 		// fill the response fields
-		_, usersResp.HasBefore, err = s.repo.
+		_, usersResp.HasPreviousPage, err = s.repo.
 			GetAll(cursor, false, pgSize)
-		if usersResp.HasBefore {
-			usersResp.Before = base64.StdEncoding.EncodeToString([]byte(after))
+		if usersResp.HasPreviousPage {
+			usersResp.StartCursor = base64.StdEncoding.EncodeToString([]byte(next))
 		}
 	}
 	return &usersResp, nil

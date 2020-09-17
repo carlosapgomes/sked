@@ -741,6 +741,8 @@ func (app App) getAllUsers(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	fmt.Printf("before %s\n after %s\n pgSize %s\n size %d\n", before, after, pgSize, size)
+
 	res, err := app.userService.GetAll(before, after, size)
 	if err != nil {
 		app.serverError(w, err)

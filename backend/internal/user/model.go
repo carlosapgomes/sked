@@ -27,7 +27,7 @@ type Page struct {
 	StartCursor     string `json:"startCursor"`
 	HasPreviousPage bool   `json:"hasPreviousPage"`
 	EndCursor       string `json:"endCursor"`
-	HasAfterPage    bool   `json:"hasAfterPage"`
+	HasNextPage     bool   `json:"hasNextPage"`
 	Users           []User `json:"users"`
 }
 

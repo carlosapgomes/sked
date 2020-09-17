@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"carlosapgomes.com/sked/internal/mocks"
+	"carlosapgomes.com/sked/internal/services"
 	"carlosapgomes.com/sked/internal/user"
 	"carlosapgomes.com/sked/internal/web"
 )
@@ -1242,7 +1243,7 @@ func TestGetAllUsersByAdmin(t *testing.T) {
 			Secure:   false,
 		},
 		mocks.NewSessionSvc(),
-		mocks.NewUserSvc(),
+		services.NewUserService(mocks.NewUserRepo()),
 		mailer,
 		mocks.NewTokenMockSvc())
 
