@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"carlosapgomes.com/sked/internal/mocks"
+	"carlosapgomes.com/sked/internal/user"
 	"carlosapgomes.com/sked/internal/web"
 )
 
@@ -1259,8 +1260,13 @@ func TestGetAllUsersByAdmin(t *testing.T) {
 		{"Valid submission", "", "", "6", 6, http.StatusOK, []byte("bob@example.com")},
 	}
 
-	type postBody struct {
-		Name, Email, Password, Phone string
+	// cursor encapsulates data for pagination
+	type cursor struct {
+		Before    string `json:"before"`
+		HasBefore bool   `json:"hasbefore"`
+		After     string `json:"after"`
+		HasAfter  bool   `json:"hasafter"`
+		Users     []user.User
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -1286,13 +1292,20 @@ func TestGetAllUsersByAdmin(t *testing.T) {
 			}
 			code := rs.StatusCode
 			defer rs.Body.Close()
-			_, err = ioutil.ReadAll(rs.Body)
+			//respBody, err := ioutil.ReadAll(rs.Body)
+			//if err != nil {
+			//t.Fatal(err)
+			//}
+			var c cursor
+			err = json.NewDecoder(rs.Body).Decode(&c)
 			if err != nil {
-				t.Fatal(err)
+				t.Error("bad response body")
 			}
+
 			if code != tt.wantCode {
 				t.Errorf("want %d; got %d", tt.wantCode, code)
 			}
+			t.Logf("cursor received: %v", c.Users)
 			//if !bytes.Contains(respBody, tt.wantBody) {
 			//t.Errorf("want body %s to contain %q", respBody, tt.wantBody)
 			//}
