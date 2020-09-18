@@ -207,7 +207,7 @@ func (s *userService) GetAll(previous string, next string, pgSize int) (*user.Pa
 				usersResp.Users = append(usersResp.Users, u)
 			}
 			// test for the presence of data in the opposite direction
-			_, usersResp.HasNextPage, err = s.repo.GetAll(usersResp.Users[len(usersResp.Users)-1], true, pgSize)
+			_, usersResp.HasNextPage, err = s.repo.GetAll(usersResp.Users[len(usersResp.Users)-1].Email, true, pgSize)
 		}
 	case (next != ""):
 		// if next is present,
@@ -229,7 +229,7 @@ func (s *userService) GetAll(previous string, next string, pgSize int) (*user.Pa
 			}
 			// test for the presence of data in the opposite direction
 			_, usersResp.HasPreviousPage, err = s.repo.
-				GetAll(usersResp.Users[0], false, pgSize)
+				GetAll(usersResp.Users[0].Email, false, pgSize)
 		}
 	}
 	if len(usersResp.Users) > 0 {

@@ -491,7 +491,7 @@ func (s UserMockSvc) Authenticate(email, password string) (*string, error) {
 }
 
 // GetAll return a lista of users ordered by email
-func (s UserMockSvc) GetAll(before string, after string, pgSize int) (*user.Cursor, error) {
+func (s UserMockSvc) GetAll(before string, after string, pgSize int) (*user.Page, error) {
 	return nil, nil
 }
 

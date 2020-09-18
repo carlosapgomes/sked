@@ -72,7 +72,6 @@ func validEmail(email string) bool {
 // getUsers search for users based on query params
 func (app App) getUsers() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("entering getUsers")
 		v := r.URL.Query()
 	Loop:
 		for q := range v {
@@ -80,10 +79,10 @@ func (app App) getUsers() http.Handler {
 			case strings.Contains(q, "email"):
 				app.getUserByEmail(w, r)
 				break Loop
-			case strings.Contains(q, "before"):
+			case strings.Contains(q, "previous"):
 				app.getAllUsers(w, r)
 				break Loop
-			case strings.Contains(q, "after"):
+			case strings.Contains(q, "next"):
 				app.getAllUsers(w, r)
 				break Loop
 			default:
@@ -732,18 +731,15 @@ func (app App) getUserByEmail(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app App) getAllUsers(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("entering getAllUsers")
-	before := r.URL.Query().Get("before")
-	after := r.URL.Query().Get("after")
+	previous := r.URL.Query().Get("previous")
+	next := r.URL.Query().Get("next ")
 	pgSize := r.URL.Query().Get("pgSize")
 	size, err := strconv.Atoi(pgSize)
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
-	fmt.Printf("before %s\n after %s\n pgSize %s\n size %d\n", before, after, pgSize, size)
-
-	res, err := app.userService.GetAll(before, after, size)
+	res, err := app.userService.GetAll(previous, next, size)
 	if err != nil {
 		app.serverError(w, err)
 		return

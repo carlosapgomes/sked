@@ -1250,31 +1250,31 @@ func TestGetAllUsersByAdmin(t *testing.T) {
 	ts := newTestServer(t, handlers.Routes())
 	defer ts.Close()
 	tests := []struct {
-		name     string
-		before   string
-		after    string
-		pgSize   string
-		wantSize int
-		wantCode int
-		wantBody []byte
+		name         string
+		previous     string
+		next         string
+		pgSize       string
+		wantSize     int
+		wantCode     int
+		wantResponse string
 	}{
-		{"Valid submission", "", "", "6", 6, http.StatusOK, []byte("bob@example.com")},
+		{"Valid submission", "", "", "6", 6, http.StatusOK, "bob@example.com"},
 	}
 
-	// cursor encapsulates data for pagination
-	type cursor struct {
-		Before    string `json:"before"`
-		HasBefore bool   `json:"hasbefore"`
-		After     string `json:"after"`
-		HasAfter  bool   `json:"hasafter"`
-		Users     []user.User
+	// page encapsulates data for pagination
+	type page struct {
+		StartCursor     string `json:"startCursor"`
+		HasPreviousPage bool   `json:"hasprevious"`
+		EndCursor       string `json:"endCursor"`
+		HasNextPage     bool   `json:"hasnext"`
+		Users           []user.User
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			query := map[string]string{
-				"before": tt.before,
-				"after":  tt.after,
-				"pgSize": tt.pgSize,
+				"previous": tt.previous,
+				"next":     tt.next,
+				"pgSize":   tt.pgSize,
 			}
 			req, _ := http.NewRequest(http.MethodGet, ts.URL+"/users", nil)
 			q := req.URL.Query()
@@ -1293,12 +1293,8 @@ func TestGetAllUsersByAdmin(t *testing.T) {
 			}
 			code := rs.StatusCode
 			defer rs.Body.Close()
-			//respBody, err := ioutil.ReadAll(rs.Body)
-			//if err != nil {
-			//t.Fatal(err)
-			//}
-			var c cursor
-			err = json.NewDecoder(rs.Body).Decode(&c)
+			var p page
+			err = json.NewDecoder(rs.Body).Decode(&p)
 			if err != nil {
 				t.Error("bad response body")
 			}
@@ -1306,10 +1302,17 @@ func TestGetAllUsersByAdmin(t *testing.T) {
 			if code != tt.wantCode {
 				t.Errorf("want %d; got %d", tt.wantCode, code)
 			}
-			t.Logf("cursor received: %v", c.Users)
-			//if !bytes.Contains(respBody, tt.wantBody) {
-			//t.Errorf("want body %s to contain %q", respBody, tt.wantBody)
-			//}
+			//t.Logf("page received: %v", p)
+			contains := false
+			for _, u := range p.Users {
+				if u.Email == tt.wantResponse {
+					contains = true
+					break
+				}
+			}
+			if !contains {
+				t.Errorf("want response to contain %v", tt.wantResponse)
+			}
 		})
 	}
 
