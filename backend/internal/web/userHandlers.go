@@ -732,7 +732,7 @@ func (app App) getUserByEmail(w http.ResponseWriter, r *http.Request) {
 
 func (app App) getAllUsers(w http.ResponseWriter, r *http.Request) {
 	previous := r.URL.Query().Get("previous")
-	next := r.URL.Query().Get("next ")
+	next := r.URL.Query().Get("next")
 	pgSize := r.URL.Query().Get("pgSize")
 	size, err := strconv.Atoi(pgSize)
 	if err != nil {

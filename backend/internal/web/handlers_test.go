@@ -1259,6 +1259,7 @@ func TestGetAllUsersByAdmin(t *testing.T) {
 		wantResponse string
 	}{
 		{"Valid submission", "", "", "6", 6, http.StatusOK, "bob@example.com"},
+		{"Invalid submission", "dmFsaWRAdXNlci5jb20=", "dGJsZWVAc29tZXdoZXJlLmNvbQ==", "6", 6, http.StatusInternalServerError, ""},
 	}
 
 	// page encapsulates data for pagination
@@ -1271,6 +1272,7 @@ func TestGetAllUsersByAdmin(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			//t.Logf("previous: %s\n next: %s\n", tt.previous, tt.next)
 			query := map[string]string{
 				"previous": tt.previous,
 				"next":     tt.next,
@@ -1292,26 +1294,30 @@ func TestGetAllUsersByAdmin(t *testing.T) {
 				t.Fatal(err)
 			}
 			code := rs.StatusCode
-			defer rs.Body.Close()
-			var p page
-			err = json.NewDecoder(rs.Body).Decode(&p)
-			if err != nil {
-				t.Error("bad response body")
-			}
-
 			if code != tt.wantCode {
 				t.Errorf("want %d; got %d", tt.wantCode, code)
 			}
-			//t.Logf("page received: %v", p)
-			contains := false
-			for _, u := range p.Users {
-				if u.Email == tt.wantResponse {
-					contains = true
-					break
+			var p page
+			if tt.wantCode == http.StatusOK {
+				defer rs.Body.Close()
+				err = json.NewDecoder(rs.Body).Decode(&p)
+				if err != nil {
+					t.Error("bad response body")
 				}
 			}
-			if !contains {
-				t.Errorf("want response to contain %v", tt.wantResponse)
+
+			//t.Logf("page received: %v", p)
+			if tt.wantResponse != "" {
+				contains := false
+				for _, u := range p.Users {
+					if u.Email == tt.wantResponse {
+						contains = true
+						break
+					}
+				}
+				if !contains {
+					t.Errorf("want response to contain %v", tt.wantResponse)
+				}
 			}
 		})
 	}
