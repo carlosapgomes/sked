@@ -174,35 +174,24 @@ func (s *userService) GetAll(previous string, next string, pgSize int) (*user.Pa
 	}
 	switch {
 	case (previous != "" && next != ""):
-		// if both (previous & next) are present, returns error
+		// if both (previous & next) are present, return error
 		return nil, user.ErrInvalidInputSyntax
 	case (previous == "" && next == ""):
-		// if they are empty/or absent,
-		// get first "pgSize" elements of the list
+		// if both are empty, get the first "pgSize" elements of the list
 		uList, usersResp.HasNextPage, err = s.repo.
 			GetAll("", true, pgSize)
 		if err != nil {
 			return nil, err
 		}
-		if uList != nil {
+		if uList != nil && len(*uList) > 0 {
 			for _, u := range *uList {
 				usersResp.Users = append(usersResp.Users, u)
 			}
 		}
-		if len(usersResp.Users) > 0 {
-			usersResp.StartCursor = base64.StdEncoding.
-				EncodeToString([]byte(usersResp.Users[0].Email))
-			usersResp.EndCursor = base64.StdEncoding.
-				EncodeToString([]byte(usersResp.Users[len(usersResp.Users)-1].Email))
-		} else {
-			usersResp.StartCursor = ""
-			usersResp.EndCursor = ""
-		}
 		usersResp.HasPreviousPage = false
 		// and return values
 	case (previous != ""):
-		// if previous is present,
-		// get a previous list
+		// if previous is present, get a previous list
 		c, err := base64.StdEncoding.DecodeString(previous)
 		if err != nil {
 			return nil, err
@@ -212,26 +201,14 @@ func (s *userService) GetAll(previous string, next string, pgSize int) (*user.Pa
 		if err != nil {
 			return nil, err
 		}
-		if uList != nil {
+		// test if uList is not empty
+		if uList != nil && len(*uList) > 0 {
 			for _, u := range *uList {
 				usersResp.Users = append(usersResp.Users, u)
 			}
+			// test for the presence of data in the opposite direction
+			_, usersResp.HasNextPage, err = s.repo.GetAll(usersResp.Users[len(usersResp.Users)-1], true, pgSize)
 		}
-		if len(usersResp.Users) > 0 {
-			befCursor := base64.StdEncoding.EncodeToString([]byte(usersResp.Users[len(usersResp.Users)-1].Email))
-			usersResp.StartCursor = befCursor
-		} else {
-			usersResp.StartCursor = ""
-		}
-		// test for 'next data' from the requested cursor
-		// fill the response fields
-		_, usersResp.HasNextPage, err = s.repo.GetAll(cursor, true, pgSize)
-		if usersResp.HasNextPage {
-			usersResp.EndCursor = base64.StdEncoding.EncodeToString([]byte(previous))
-		} else {
-			usersResp.EndCursor = ""
-		}
-		// and return it
 	case (next != ""):
 		// if next is present,
 		// get an next list
@@ -242,22 +219,29 @@ func (s *userService) GetAll(previous string, next string, pgSize int) (*user.Pa
 		cursor := string(c)
 		uList, usersResp.HasNextPage, err = s.repo.
 			GetAll(cursor, true, pgSize)
-		// and return it
-		if uList != nil {
+		if err != nil {
+			return nil, err
+		}
+		// test if uList is not empty
+		if uList != nil && len(*uList) > 0 {
 			for _, u := range *uList {
 				usersResp.Users = append(usersResp.Users, u)
 			}
+			// test for the presence of data in the opposite direction
+			_, usersResp.HasPreviousPage, err = s.repo.
+				GetAll(usersResp.Users[0], false, pgSize)
 		}
-		if len(usersResp.Users) > 0 {
-			usersResp.EndCursor = base64.StdEncoding.EncodeToString([]byte(usersResp.Users[0].Email))
-		}
-		// test for 'previous data' from the requested cursor
-		// fill the response fields
-		_, usersResp.HasPreviousPage, err = s.repo.
-			GetAll(cursor, false, pgSize)
-		if usersResp.HasPreviousPage {
-			usersResp.StartCursor = base64.StdEncoding.EncodeToString([]byte(next))
-		}
+	}
+	if len(usersResp.Users) > 0 {
+		usersResp.StartCursor = base64.StdEncoding.
+			EncodeToString([]byte(usersResp.Users[0].Email))
+		usersResp.EndCursor = base64.StdEncoding.
+			EncodeToString([]byte(usersResp.Users[len(usersResp.Users)-1].Email))
+	} else {
+		usersResp.StartCursor = ""
+		usersResp.EndCursor = ""
+		usersResp.HasNextPage = false
+		usersResp.HasPreviousPage = false
 	}
 	return &usersResp, nil
 }
