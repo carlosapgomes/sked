@@ -1261,7 +1261,8 @@ func TestGetAllUsersByAdmin(t *testing.T) {
 		{"Valid submission", "", "", "6", 6, http.StatusOK, "bob@example.com"},
 		{"Invalid submission", "dmFsaWRAdXNlci5jb20=", "dGJsZWVAc29tZXdoZXJlLmNvbQ==", "6", 6, http.StatusBadRequest, ""},
 		{"Invalid page size", "", "", "0", 0, http.StatusBadRequest, ""},
-		//{"Valid previous submission", "YWxpY2VAZXhhbXBsZS5jb20=", "", "6", 2, http.StatusOK, "bob@example.com"},
+		{"Valid previous submission", "YWxpY2VAZXhhbXBsZS5jb20=", "", "6", 2, http.StatusOK, "bob@example.com"},
+		{"Valid next submission", "", "YWxpY2VAZXhhbXBsZS5jb20=", "4", 4, http.StatusOK, "spongebob@somewhere.com"},
 	}
 
 	// page encapsulates data for pagination

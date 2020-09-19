@@ -3,6 +3,7 @@ package services
 import (
 	"encoding/base64"
 	"errors"
+	"fmt"
 	"time"
 
 	"carlosapgomes.com/sked/internal/user"
@@ -197,8 +198,10 @@ func (s *userService) GetAll(previous string, next string, pgSize int) (*user.Pa
 			return nil, err
 		}
 		cursor := string(c)
+		fmt.Println(cursor)
 		uList, usersResp.HasPreviousPage, err = s.repo.GetAll(cursor, false, pgSize)
 		if err != nil {
+			fmt.Println(err)
 			return nil, err
 		}
 		// test if uList is not empty

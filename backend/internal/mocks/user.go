@@ -282,9 +282,9 @@ func (r *UserMockRepo) GetAll(cursor string, after bool, pgSize int) (*[]user.Us
 	return &res, hasMore, nil
 }
 
-func (r UserMockRepo) findPos(patients []user.User, id string) int {
-	for i, el := range patients {
-		if el.ID == id {
+func (r UserMockRepo) findPos(users []user.User, email string) int {
+	for i, el := range users {
+		if el.Email == email {
 			return i
 		}
 	}
