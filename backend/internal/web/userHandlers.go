@@ -741,7 +741,11 @@ func (app App) getAllUsers(w http.ResponseWriter, r *http.Request) {
 	}
 	res, err := app.userService.GetAll(previous, next, size)
 	if err != nil {
-		app.serverError(w, err)
+		if err == user.ErrInvalidInputSyntax {
+			app.clientError(w, http.StatusBadRequest)
+		} else {
+			app.serverError(w, err)
+		}
 		return
 	}
 	output, err := json.Marshal(res)

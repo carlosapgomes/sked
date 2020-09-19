@@ -1259,7 +1259,7 @@ func TestGetAllUsersByAdmin(t *testing.T) {
 		wantResponse string
 	}{
 		{"Valid submission", "", "", "6", 6, http.StatusOK, "bob@example.com"},
-		{"Invalid submission", "dmFsaWRAdXNlci5jb20=", "dGJsZWVAc29tZXdoZXJlLmNvbQ==", "6", 6, http.StatusInternalServerError, ""},
+		{"Invalid submission", "dmFsaWRAdXNlci5jb20=", "dGJsZWVAc29tZXdoZXJlLmNvbQ==", "6", 6, http.StatusBadRequest, ""},
 	}
 
 	// page encapsulates data for pagination
