@@ -167,9 +167,9 @@ func (s *userService) UpdatePhone(id string, phone string) error {
 
 // GetAll returns a paginated list of all users ordered by email
 func (s *userService) GetAll(previous string, next string, pgSize int) (*user.Page, error) {
-	var usersResp user.Page
+	var page user.Page
 	var err error
-	var uList *[]user.User
+	var list *[]user.User
 	if pgSize <= 0 {
 		return nil, user.ErrInvalidInputSyntax
 	}
@@ -179,18 +179,17 @@ func (s *userService) GetAll(previous string, next string, pgSize int) (*user.Pa
 		return nil, user.ErrInvalidInputSyntax
 	case (previous == "" && next == ""):
 		// if both are empty, get the first "pgSize" elements of the list
-		uList, usersResp.HasNextPage, err = s.repo.
+		list, page.HasNextPage, err = s.repo.
 			GetAll("", true, pgSize)
 		if err != nil {
 			return nil, err
 		}
-		if uList != nil && len(*uList) > 0 {
-			for _, u := range *uList {
-				usersResp.Users = append(usersResp.Users, u)
+		if list != nil && len(*list) > 0 {
+			for _, u := range *list {
+				page.Users = append(page.Users, u)
 			}
 		}
-		usersResp.HasPreviousPage = false
-		// and return values
+		page.HasPreviousPage = false
 	case (previous != ""):
 		// if previous is present, get a previous list
 		c, err := base64.StdEncoding.DecodeString(previous)
@@ -198,19 +197,18 @@ func (s *userService) GetAll(previous string, next string, pgSize int) (*user.Pa
 			return nil, err
 		}
 		cursor := string(c)
-		fmt.Println(cursor)
-		uList, usersResp.HasPreviousPage, err = s.repo.GetAll(cursor, false, pgSize)
+		list, page.HasPreviousPage, err = s.repo.GetAll(cursor, false, pgSize)
 		if err != nil {
 			fmt.Println(err)
 			return nil, err
 		}
-		// test if uList is not empty
-		if uList != nil && len(*uList) > 0 {
-			for _, u := range *uList {
-				usersResp.Users = append(usersResp.Users, u)
+		// test if list is not empty
+		if list != nil && len(*list) > 0 {
+			for _, item := range *list {
+				page.Users = append(page.Users, item)
 			}
 			// test for the presence of data in the opposite direction
-			_, usersResp.HasNextPage, err = s.repo.GetAll(usersResp.Users[len(usersResp.Users)-1].Email, true, pgSize)
+			_, page.HasNextPage, err = s.repo.GetAll(page.Users[len(page.Users)-1].Email, true, pgSize)
 		}
 	case (next != ""):
 		// if next is present,
@@ -220,33 +218,33 @@ func (s *userService) GetAll(previous string, next string, pgSize int) (*user.Pa
 			return nil, err
 		}
 		cursor := string(c)
-		uList, usersResp.HasNextPage, err = s.repo.
+		list, page.HasNextPage, err = s.repo.
 			GetAll(cursor, true, pgSize)
 		if err != nil {
 			return nil, err
 		}
-		// test if uList is not empty
-		if uList != nil && len(*uList) > 0 {
-			for _, u := range *uList {
-				usersResp.Users = append(usersResp.Users, u)
+		// test if list is not empty
+		if list != nil && len(*list) > 0 {
+			for _, item := range *list {
+				page.Users = append(page.Users, item)
 			}
 			// test for the presence of data in the opposite direction
-			_, usersResp.HasPreviousPage, err = s.repo.
-				GetAll(usersResp.Users[0].Email, false, pgSize)
+			_, page.HasPreviousPage, err = s.repo.
+				GetAll(page.Users[0].Email, false, pgSize)
 		}
 	}
-	if len(usersResp.Users) > 0 {
-		usersResp.StartCursor = base64.StdEncoding.
-			EncodeToString([]byte(usersResp.Users[0].Email))
-		usersResp.EndCursor = base64.StdEncoding.
-			EncodeToString([]byte(usersResp.Users[len(usersResp.Users)-1].Email))
+	if len(page.Users) > 0 {
+		page.StartCursor = base64.StdEncoding.
+			EncodeToString([]byte(page.Users[0].Email))
+		page.EndCursor = base64.StdEncoding.
+			EncodeToString([]byte(page.Users[len(page.Users)-1].Email))
 	} else {
-		usersResp.StartCursor = ""
-		usersResp.EndCursor = ""
-		usersResp.HasNextPage = false
-		usersResp.HasPreviousPage = false
+		page.StartCursor = ""
+		page.EndCursor = ""
+		page.HasNextPage = false
+		page.HasPreviousPage = false
 	}
-	return &usersResp, nil
+	return &page, nil
 }
 
 // FindByName returns a list of users whose names looks like 'name'

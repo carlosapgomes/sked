@@ -113,4 +113,5 @@ Tables:
 - ~~add postgres container for testing~~
 - validation should be in services implementation
 - ~~add role for doctors (doctors are users who can have schedules [appointments|surgeries])~~
+- move pagination to Page struct in all entities GetAll method
 

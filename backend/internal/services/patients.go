@@ -3,9 +3,11 @@ package services
 import (
 	"encoding/base64"
 	"errors"
+	"fmt"
 	"time"
 
 	"carlosapgomes.com/sked/internal/patient"
+	"carlosapgomes.com/sked/internal/user"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -94,99 +96,86 @@ func (s *patientService) UpdatePhone(id string, phones []string) error {
 	return s.repo.UpdatePhone(id, phones)
 }
 
-func (s *patientService) GetAll(before string, after string, pgSize int) (*patient.Cursor, error) {
+// GetAll returns a paginated list of all patients ordered byname
+func (s *patientService) GetAll(previous string, next string, pgSize int) (*patient.Page, error) {
+	var page patient.Page
+	var err error
+	var list *[]patient.Patient
 	if pgSize <= 0 {
 		return nil, patient.ErrInvalidInputSyntax
 	}
-	var patientsResp patient.Cursor
-	var err error
-	var pList *[]patient.Patient
 	switch {
-	case (before != "" && after != ""):
-		// if both (before & after) are present, returns error
-		return nil, patient.ErrInvalidInputSyntax
-	case (before == "" && after == ""):
-		// if they are empty/or absent
-		// get default list and page size
-		pList, patientsResp.HasBefore, err = s.repo.
-			GetAll("", false, pgSize)
+	case (previous != "" && next != ""):
+		// if both (previous & next) are present, return error
+		return nil, user.ErrInvalidInputSyntax
+	case (previous == "" && next == ""):
+		// if both are empty, get the first "pgSize" elements of the list
+		list, page.HasNextPage, err = s.repo.
+			GetAll("", true, pgSize)
 		if err != nil {
 			return nil, err
 		}
-		if pList != nil {
-			for _, u := range *pList {
-				patientsResp.Patients = append(patientsResp.Patients, u)
+		if list != nil && len(*list) > 0 {
+			for _, item := range *list {
+				page.Patients = append(page.Patients, item)
 			}
 		}
-		if len(patientsResp.Patients) > 0 {
-			patientsResp.Before = base64.StdEncoding.
-				EncodeToString([]byte(patientsResp.Patients[len(patientsResp.Patients)-1].ID))
-		} else {
-			patientsResp.Before = ""
-		}
-		patientsResp.After = ""
-		patientsResp.HasAfter = false
-		// and return values
-	case (before != ""):
-		// if before is present,
-		// get a before list
-		c, err := base64.StdEncoding.DecodeString(before)
+		page.HasPreviousPage = false
+	case (previous != ""):
+		// if previous is present, get a previous list
+		c, err := base64.StdEncoding.DecodeString(previous)
 		if err != nil {
 			return nil, err
 		}
 		cursor := string(c)
-		pList, patientsResp.HasBefore, err = s.repo.GetAll(cursor, false, pgSize)
+		list, page.HasPreviousPage, err = s.repo.GetAll(cursor, false, pgSize)
 		if err != nil {
+			fmt.Println(err)
 			return nil, err
 		}
-		if pList != nil {
-			for _, u := range *pList {
-				patientsResp.Patients = append(patientsResp.Patients, u)
+		// test if list is not empty
+		if list != nil && len(*list) > 0 {
+			for _, item := range *list {
+				page.Patients = append(page.Patients, item)
 			}
+			// test for the presence of data in the opposite direction
+			_, page.HasNextPage, err = s.repo.GetAll(page.Patients[len(page.Patients)-1].ID, true, pgSize)
 		}
-		if len(patientsResp.Patients) > 0 {
-			befCursor := base64.StdEncoding.EncodeToString([]byte(patientsResp.Patients[len(patientsResp.Patients)-1].ID))
-			patientsResp.Before = befCursor
-		} else {
-			patientsResp.Before = ""
-		}
-		// test for 'after data' from the requested cursor
-		// fill the response fields
-		_, patientsResp.HasAfter, err = s.repo.GetAll(cursor, true, pgSize)
-		if patientsResp.HasAfter {
-			patientsResp.After = base64.StdEncoding.EncodeToString([]byte(before))
-		} else {
-			patientsResp.After = ""
-		}
-		// and return it
-	case (after != ""):
-		// if after is present,
-		// get an after list
-		c, err := base64.StdEncoding.DecodeString(after)
+	case (next != ""):
+		// if next is present,
+		// get an next list
+		c, err := base64.StdEncoding.DecodeString(next)
 		if err != nil {
 			return nil, err
 		}
 		cursor := string(c)
-		pList, patientsResp.HasAfter, err = s.repo.
+		list, page.HasNextPage, err = s.repo.
 			GetAll(cursor, true, pgSize)
-		// and return it
-		if pList != nil {
-			for _, p := range *pList {
-				patientsResp.Patients = append(patientsResp.Patients, p)
+		if err != nil {
+			return nil, err
+		}
+		// test if list is not empty
+		if list != nil && len(*list) > 0 {
+			for _, item := range *list {
+				page.Patients = append(page.Patients, item)
 			}
-		}
-		if len(patientsResp.Patients) > 0 {
-			patientsResp.After = base64.StdEncoding.EncodeToString([]byte(patientsResp.Patients[0].Name))
-		}
-		// test for 'before data' from the requested cursor
-		// fill the response fields
-		_, patientsResp.HasBefore, err = s.repo.
-			GetAll(cursor, false, pgSize)
-		if patientsResp.HasBefore {
-			patientsResp.Before = base64.StdEncoding.EncodeToString([]byte(after))
+			// test for the presence of data in the opposite direction
+			_, page.HasPreviousPage, err = s.repo.
+				GetAll(page.Patients[0].ID, false, pgSize)
 		}
 	}
-	return &patientsResp, nil
+	if len(page.Patients) > 0 {
+		page.StartCursor = base64.StdEncoding.
+			EncodeToString([]byte(page.Patients[0].ID))
+		page.EndCursor = base64.StdEncoding.
+			EncodeToString([]byte(page.Patients[len(page.Patients)-1].ID))
+	} else {
+		page.StartCursor = ""
+		page.EndCursor = ""
+		page.HasNextPage = false
+		page.HasPreviousPage = false
+	}
+	return &page, nil
 }
 
 // FindByName returns a list of patients whose names looks like 'name'
