@@ -20,6 +20,7 @@ func (app *App) Routes() http.Handler {
 	// verify if "/users/" is enough to handle all "users" routes
 	mux.Handle("/users/", app.requireAuthentication(app.users())) // ANY VERB
 	mux.Handle("/users", app.requireAuthentication(app.users()))  // ANY VERB
+
 	// for an open app
 	// IMPORTANT: user signUp does not add a role
 	// mux.Handle("/users/signup", app.signUp()) //post
@@ -29,6 +30,9 @@ func (app *App) Routes() http.Handler {
 	// should be able to add new users:
 	// mux.Handle("/users", app.requireAuthentication(app.requireAdmin(app.addUser()))) //post
 
+	// patients endpoints
+	mux.Handle("/patients/", app.requireAuthentication(app.patients())) // any verb
+	mux.Handle("/patients", app.requireAuthentication(app.patients()))  // any verb
 	// health check route
 	mux.Handle("/healthz", app.Healthz())
 	return app.recoverPanic(app.logRequest(app.authenticate(mux)))
