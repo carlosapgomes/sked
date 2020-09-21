@@ -211,10 +211,27 @@ func (app App) findPatientByID(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// FindPatientByName
+// FindPatientByName find patient(s) with the name given
+// on the query's params
+// /patients?name=name_to_find
+// and returns a json with an array of patients
 func (app App) findPatientByName(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("OK"))
-
+	name := r.URL.Query().Get("name")
+	if name == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	list, err := app.patientService.FindByName(name)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	res, err := json.Marshal(*list)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	w.Write(res)
 }
 
 // getAllPatients
