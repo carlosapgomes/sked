@@ -35,10 +35,10 @@ func (p *patientData) validate() url.Values {
 
 	nameLen := utf8.RuneCountInString(p.Name)
 	if nameLen < 3 || nameLen > 100 {
-		errs.Add("name", "The name field must be between 3-100 chars!")
+		errs.Add("Name", "The name field must be between 3-100 chars!")
 	}
 
-	// check if email is empty
+	// check if phones list is empty
 	if len(p.Phones) == 0 {
 		errs.Add("Phones", "This field cannot be empty")
 	}
@@ -73,7 +73,7 @@ func (app App) patientsNoPath(w http.ResponseWriter, r *http.Request) {
 		default:
 			app.getAllPatients(w, r)
 		}
-	case http.Post:
+	case http.MethodPost:
 		app.createPatient(w, r)
 	default:
 		app.clientError(w, http.StatusBadRequest)
