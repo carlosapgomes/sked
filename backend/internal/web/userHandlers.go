@@ -323,7 +323,6 @@ func (app App) addUser() http.Handler {
 		}
 
 		var uid *string
-
 		uid, err = app.userService.Create(newUser.Name, newUser.Email, newUser.Password, newUser.Phone)
 		if err != nil {
 			if errors.As(err, &user.ErrDuplicateField) {

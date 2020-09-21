@@ -2,6 +2,7 @@ package web
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -10,18 +11,16 @@ import (
 	"unicode/utf8"
 
 	"carlosapgomes.com/sked/internal/patient"
+	"carlosapgomes.com/sked/internal/user"
 )
 
 type patientData struct {
-	ID       string   `json:"ID,omitempty"`
-	Name     string   `json:"Name"`
-	Address  string   `json:"Address"`
-	City     string   `json:"City"`
-	State    string   `json:"State"`
-	Phones   []string `json:"Phones"`
-	Email    string   `json:"Email"`
-	Phone    string   `json:"Phone"`
-	Password string   `json:"Password"`
+	ID      string   `json:"ID,omitempty"`
+	Name    string   `json:"Name"`
+	Address string   `json:"Address"`
+	City    string   `json:"City"`
+	State   string   `json:"State"`
+	Phones  []string `json:"Phones"`
 }
 
 // validates request patient data
@@ -101,7 +100,50 @@ func (app App) createPatient(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	if validationErrors := newPatient.validate(); len(validationErrors) > 0 {
+		err := map[string]interface{}{"validationError": validationErrors}
+		w.Header().Set("Content-type", "application/json")
+		app.clientError(w, http.StatusBadRequest)
+		js, e := json.Marshal(err)
+		if e != nil {
+			app.serverError(w, e)
+			return
+		}
+		w.Write(js)
+		return
+	}
+	// get logged in user from ctx
+	u, ok := r.Context().Value(ContextKeyUser).(*user.User)
+	if !ok {
+		// no ContextKeyUser -> user is not authenticated
+		app.clientError(w, http.StatusForbidden)
+		return
+	}
+	var id *string
+	id, err = app.patientService.Create(newPatient.Name, newPatient.Address, newPatient.City, newPatient.State, newPatient.Phones, u.ID)
+	if err != nil {
+		if errors.As(err, &patient.ErrDuplicateField) {
+			w.Header().Set("Content-type", "application/json")
+			app.clientError(w, http.StatusBadRequest)
+			js, err := json.Marshal(&map[string]string{"Name": "there is a patient record with that name"})
+			if err != nil {
+				app.serverError(w, err)
+				return
+			}
+			w.Write(js)
+			return
+		}
+		app.serverError(w, err)
+		return
 
+	}
+	newPatient.ID = *id
+	output, err := json.Marshal(newPatient)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	w.Write(output)
 }
 
 // FindPatientByID
