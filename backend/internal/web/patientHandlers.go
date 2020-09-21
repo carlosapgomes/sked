@@ -205,10 +205,27 @@ func (app App) createPatient(w http.ResponseWriter, r *http.Request) {
 	w.Write(output)
 }
 
-// FindPatientByID
+// FindPatientByID finds a patient with the given ID
+// on the query's params
+// patient?id=xxxxxxxx
+// and return a json with the patient data
 func (app App) findPatientByID(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("OK"))
-
+	id := r.URL.Query().Get("id")
+	if id == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	p, err := app.patientService.FindByID(id)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	res, err := json.Marshal(*p)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	w.Write(res)
 }
 
 // FindPatientByName find patient(s) with the name given
