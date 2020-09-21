@@ -5,13 +5,13 @@ package patient
 import "time"
 
 // Cursor encapsulates data for pagination
-type Cursor struct {
-	Before    string `json:"before"`
-	HasBefore bool   `json:"hasbefore"`
-	After     string `json:"after"`
-	HasAfter  bool   `json:"hasafter"`
-	Patients  []Patient
-}
+//type Cursor struct {
+//Before    string `json:"before"`
+//HasBefore bool   `json:"hasbefore"`
+//After     string `json:"after"`
+//HasAfter  bool   `json:"hasafter"`
+//Patients  []Patient
+//}
 
 // Page encapsulates data and pagination cursors
 type Page struct {
