@@ -79,7 +79,66 @@ func (app App) patientsNoPath(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func (app App) patientName(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "GET":
+		app.getPatientName(w, r)
+	case http.MethodPut:
+		app.updatePatientName(w, r)
+	default:
+		app.clientError(w, http.StatusMethodNotAllowed)
+	}
+}
+func (app App) getPatientName(w http.ResponseWriter, r *http.Request) {
+	pID := app.between(r.URL.Path, "/patients/", "/name")
+	if pID == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
 
+	p, err := app.patientService.FindByID(pID)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	res, err := json.Marshal(&map[string]string{"name": p.Name})
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	w.Write(res)
+
+}
+
+// updatePatientName expects a json in the request body
+// like: {"name":"This Is The New Name"}
+func (app App) updatePatientName(w http.ResponseWriter, r *http.Request) {
+
+	pID := app.between(r.URL.Path, "/patients/", "/name")
+	if pID == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	// Read body
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+	var newName struct {
+		name string
+	}
+	err = json.Unmarshal(b, &newName)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	err = app.patientService.UpdateName(pID, newName)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
 }
 func (app App) patientPhones(w http.ResponseWriter, r *http.Request) {
 
@@ -183,13 +242,6 @@ func (app App) getAllPatients(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Write(output)
-}
-
-// UpdatePatientName
-func (app App) updatePatientName() http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("OK"))
-	})
 }
 
 // UpdatePatientPhone
