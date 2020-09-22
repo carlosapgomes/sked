@@ -48,7 +48,8 @@ func TestAddCookie(t *testing.T) {
 				mocks.NewSessionSvc(),
 				mocks.NewUserSvc(),
 				mocks.NewMailerMock(nil),
-				mocks.NewTokenMockSvc())
+				mocks.NewTokenMockSvc(),
+				nil, nil, nil)
 			rr := httptest.NewRecorder()
 			app.AddCookie(rr, "1")
 			rs := rr.Result()

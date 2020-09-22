@@ -32,7 +32,8 @@ func newTestApplication(t *testing.T) *web.App {
 		mocks.NewSessionSvc(),
 		mocks.NewUserSvc(),
 		mocks.NewMailerMock(nil),
-		mocks.NewTokenMockSvc())
+		mocks.NewTokenMockSvc(),
+		nil, nil, nil)
 }
 
 // Define a custom testServer type which anonymously embeds a httptest.Server

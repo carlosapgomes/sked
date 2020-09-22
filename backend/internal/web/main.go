@@ -55,14 +55,20 @@ func New(errorLog *log.Logger,
 	sessionService session.Service,
 	userService user.Service,
 	mailerService mailer.Service,
-	tokenService token.Service) *App {
+	tokenService token.Service,
+	patientService patient.Service,
+	appointmentService appointment.Service,
+	surgeryService surgery.Service) *App {
 	return &App{
-		errorLog:       errorLog,
-		infoLog:        infoLog,
-		ckProps:        ckProps,
-		sessionService: sessionService,
-		userService:    userService,
-		mailerService:  mailerService,
-		tokenService:   tokenService,
+		errorLog:           errorLog,
+		infoLog:            infoLog,
+		ckProps:            ckProps,
+		sessionService:     sessionService,
+		userService:        userService,
+		mailerService:      mailerService,
+		tokenService:       tokenService,
+		patientService:     patientService,
+		appointmentService: appointmentService,
+		surgeryService:     surgeryService,
 	}
 }

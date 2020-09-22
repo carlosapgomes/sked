@@ -936,7 +936,8 @@ func TestAddUserByAdmin(t *testing.T) {
 		mocks.NewSessionSvc(),
 		mocks.NewUserSvc(),
 		mailer,
-		mocks.NewTokenMockSvc())
+		mocks.NewTokenMockSvc(),
+		nil, nil, nil)
 
 	ts := newTestServer(t, handlers.Routes())
 	defer ts.Close()
@@ -1162,7 +1163,8 @@ func TestPasswordResetRequest(t *testing.T) {
 		mocks.NewSessionSvc(),
 		mocks.NewUserSvc(),
 		mailer,
-		mocks.NewTokenMockSvc())
+		mocks.NewTokenMockSvc(),
+		nil, nil, nil)
 
 	ts := newTestServer(t, app.Routes())
 	defer ts.Close()
@@ -1245,7 +1247,8 @@ func TestGetAllUsersByAdmin(t *testing.T) {
 		mocks.NewSessionSvc(),
 		services.NewUserService(mocks.NewUserRepo()),
 		mailer,
-		mocks.NewTokenMockSvc())
+		mocks.NewTokenMockSvc(),
+		nil, nil, nil)
 
 	ts := newTestServer(t, handlers.Routes())
 	defer ts.Close()

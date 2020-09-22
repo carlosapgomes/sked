@@ -128,7 +128,8 @@ func TestIsSameUserOrAdmin(t *testing.T) {
 				mocks.NewSessionSvc(),
 				mocks.NewUserSvc(),
 				mocks.NewMailerMock(nil),
-				mocks.NewTokenMockSvc())
+				mocks.NewTokenMockSvc(),
+				nil, nil, nil)
 			var req *http.Request
 			if tt.method == http.MethodGet {
 				req, _ = http.NewRequest(tt.method, "/", nil)
