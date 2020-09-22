@@ -80,7 +80,7 @@ func (app App) patientsNoPath(w http.ResponseWriter, r *http.Request) {
 }
 func (app App) patientName(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
-	case "GET":
+	case http.MethodGet:
 		app.getPatientName(w, r)
 	case http.MethodPut:
 		app.updatePatientName(w, r)
@@ -100,7 +100,7 @@ func (app App) getPatientName(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
-	res, err := json.Marshal(&map[string]string{"name": p.Name})
+	res, err := json.Marshal(&map[string]string{"Name": p.Name})
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -126,22 +126,75 @@ func (app App) updatePatientName(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 	var newName struct {
-		name string
+		Name string `json:"name"`
 	}
 	err = json.Unmarshal(b, &newName)
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
-	err = app.patientService.UpdateName(pID, newName)
+	err = app.patientService.UpdateName(pID, newName.Name)
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
 }
-func (app App) patientPhones(w http.ResponseWriter, r *http.Request) {
 
+func (app App) patientPhones(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		app.getPatientPhones(w, r)
+	case http.MethodPut:
+		app.updatePatientPhones(w, r)
+	default:
+		app.clientError(w, http.StatusMethodNotAllowed)
+	}
+}
+
+// getPatientPhones returns a list of a patient's phone numbers
+func (app App) getPatientPhones(w http.ResponseWriter, r *http.Request) {
+	pID := app.between(r.URL.Path, "/patients/", "/name")
+	if pID == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	p, err := app.patientService.FindByID(pID)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	res, err := json.Marshal(&map[string][]string{"Phones": p.Phones})
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	w.Write(res)
+}
+
+// UpdatePatientPhone, updates a patient's phones list
+// it expects an json in the body like
+// {"Phones":["1234","34534"]}
+func (app App) updatePatientPhones(w http.ResponseWriter, r *http.Request) {
+	var list struct {
+		Phones []string `json:"Phones"`
+	}
+	err := decodeJSONBody(w, r, &list)
+	if err != nil {
+		var mr *malformedRequest
+		if errors.As(err, &mr) {
+			http.Error(w, mr.msg, mr.status)
+		} else {
+			app.serverError(w, err)
+		}
+		return
+	}
+	err = app.patientService.UpdatePhone(*list.Phones)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
 }
 
 // createPatient creates a new patient record
@@ -276,11 +329,4 @@ func (app App) getAllPatients(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Write(output)
-}
-
-// UpdatePatientPhone
-func (app App) updatePatientPhone() http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("OK"))
-	})
 }
