@@ -42,6 +42,12 @@ func NewSessionRepo() *SessionMockRepo {
 		CreatedAt: dt,
 		ExpiresAt: dt.Add(time.Duration(20) * time.Minute),
 	}
+	db["167ced64-af16-45d2-bb08-e35233c04ad1"] = session.Session{
+		ID:        "167ced64-af16-45d2-bb08-e35233c04ad1",
+		UID:       "f06244b9-97e5-4f1a-bae0-3b6da7a0b604",
+		CreatedAt: dt,
+		ExpiresAt: dt.Add(time.Duration(20) * time.Minute),
+	}
 	return &SessionMockRepo{
 		db,
 	}
