@@ -176,6 +176,11 @@ func (app App) getPatientPhones(w http.ResponseWriter, r *http.Request) {
 // it expects an json in the body like
 // {"Phones":["1234","34534"]}
 func (app App) updatePatientPhones(w http.ResponseWriter, r *http.Request) {
+	pID := app.between(r.URL.Path, "/patients/", "/phones")
+	if pID == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
 	var list struct {
 		Phones []string `json:"Phones"`
 	}
@@ -189,7 +194,7 @@ func (app App) updatePatientPhones(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	err = app.patientService.UpdatePhone(*list.Phones)
+	err = app.patientService.UpdatePhone(pID, list.Phones)
 	if err != nil {
 		app.serverError(w, err)
 		return
