@@ -82,7 +82,7 @@ func (r *PatientMockRepo) Create(patient patient.Patient) (*string, error) {
 	case "DB error":
 		return nil, errors.New("DB error")
 	default:
-		return nil, nil
+		return nil, errors.New("DB error")
 	}
 }
 
@@ -250,7 +250,7 @@ func (s PatientMockSvc) UpdatePhone(id string, phones []string) error {
 }
 
 // GetAll return a lista of patients ordered by email
-func (s PatientMockSvc) GetAll(before string, after string, pgSize int) (*patient.Cursor, error) {
+func (s PatientMockSvc) GetAll(before string, after string, pgSize int) (*patient.Page, error) {
 	return nil, nil
 }
 
