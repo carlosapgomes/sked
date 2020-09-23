@@ -43,6 +43,8 @@ func TestCreatePatient(t *testing.T) {
 		wantCode    int
 	}{
 		{"Valid New Patient", "Valid patient", "Main Street 34", "Capital City", "TH", []string{"123456"}, http.StatusOK},
+		{"Empty name", "", "Main Street 34", "Capital City", "TH", []string{"123456"}, http.StatusBadRequest},
+		{"Invalid name length", "no", "Main Street 34", "Capital City", "TH", []string{"123456"}, http.StatusBadRequest},
 	}
 	type patientData struct {
 		ID      string   `json:"ID,omitempty"`
