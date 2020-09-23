@@ -66,9 +66,9 @@ func (app App) patientsNoPath(w http.ResponseWriter, r *http.Request) {
 		name := r.URL.Query().Get("name")
 		switch {
 		case id != "":
-			app.findPatientByName(w, r)
-		case name != "":
 			app.findPatientByID(w, r)
+		case name != "":
+			app.findPatientByName(w, r)
 		default:
 			app.getAllPatients(w, r)
 		}
