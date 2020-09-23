@@ -172,7 +172,14 @@ func (r PatientMockRepo) findPos(patients []patient.Patient, id string) int {
 
 // FindByName returns a list of patients whose names looks like 'name'
 func (r *PatientMockRepo) FindByName(name string) (*[]patient.Patient, error) {
-	return nil, nil
+	var res []patient.Patient
+	for _, p := range r.pDb {
+		pName, n := strings.ToLower(p.Name), strings.ToLower(name)
+		if strings.Contains(pName, n) {
+			res = append(res, p)
+		}
+	}
+	return &res, nil
 }
 
 // PatientMockSvc mocks patient services
