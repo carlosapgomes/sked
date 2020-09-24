@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -209,6 +210,121 @@ func TestCreatePatient(t *testing.T) {
 				t.Errorf("want %d; got %d", tt.wantCode, code)
 			}
 
+		})
+	}
+}
+
+func TestPatientGetAll(t *testing.T) {
+	handlers := web.New(
+		log.New(ioutil.Discard, "", 0),
+		log.New(ioutil.Discard, "", 0),
+		&web.CkProps{
+			Name:     "sid",
+			HTTPOnly: false,
+			Secure:   false,
+		},
+		mocks.NewSessionSvc(),
+		services.NewUserService(mocks.NewUserRepo()),
+		nil,
+		mocks.NewTokenMockSvc(),
+		services.NewPatientService(mocks.NewPatientRepo()),
+		nil,
+		nil,
+	)
+	ts := newTestServer(t, handlers.Routes())
+	defer ts.Close()
+	testCases := []struct {
+		desc          string
+		previous      string
+		next          string
+		pgSize        int
+		wantSize      int
+		hasMore       bool
+		wantCode      int
+		wantContainID string
+	}{
+		{
+			desc:          "Valid Page",
+			previous:      "",
+			next:          "",
+			pgSize:        6,
+			wantSize:      6,
+			hasMore:       false,
+			wantCode:      http.StatusOK,
+			wantContainID: "85f45ff9-d31c-4ff7-94ac-5afb5a1f0fcd",
+		},
+		{
+			desc:          "Valid Cursor next",
+			previous:      "NjhiMWQ1ZTItMzlkZC00NzEzLTg2MzEtYTA4MTAwMzgzYTBm",
+			next:          "",
+			pgSize:        2,
+			wantSize:      1,
+			hasMore:       false,
+			wantCode:      http.StatusOK,
+			wantContainID: "85f45ff9-d31c-4ff7-94ac-5afb5a1f0fcd",
+		},
+		{
+			desc:          "Valid Cursor previous",
+			previous:      "",
+			next:          "NjhiMWQ1ZTItMzlkZC00NzEzLTg2MzEtYTA4MTAwMzgzYTBm",
+			pgSize:        2,
+			wantSize:      2,
+			hasMore:       true,
+			wantCode:      http.StatusOK,
+			wantContainID: "dcce1beb-aee6-4a4d-b724-94d470817323",
+		},
+	}
+	// Page encapsulates data and pagination cursors
+	type page struct {
+		StartCursor     string            `json:"startCursor"`
+		HasPreviousPage bool              `json:"hasPreviousPage"`
+		EndCursor       string            `json:"endCursor"`
+		HasNextPage     bool              `json:"hasNextPage"`
+		Patients        []patient.Patient `json:"patients"`
+	}
+	for _, tC := range testCases {
+		t.Run(tC.desc, func(t *testing.T) {
+			path := ts.URL + "/patients?previous=" + tC.previous + "&next=" + tC.next + "&pgSize=" + strconv.Itoa(tC.pgSize)
+			req, _ := http.NewRequest(http.MethodGet, path, nil)
+			cookie := &http.Cookie{
+				Name:  "sid",
+				Value: "167ced64-af16-45d2-bb08-e35233c04ad1",
+			}
+			req.AddCookie(cookie)
+			rs, err := ts.Client().Do(req)
+			if err != nil {
+				t.Fatal(err)
+			}
+			var cursor page
+			if tC.wantCode == http.StatusOK {
+				defer rs.Body.Close()
+				respBody, _ := ioutil.ReadAll(rs.Body)
+				//t.Logf("respBody: %s\n", respBody)
+				err = json.Unmarshal(respBody, &cursor)
+				if err != nil {
+					t.Error("bad response body")
+				}
+			}
+			//t.Logf("cursor: %v\n", cursor)
+			code := rs.StatusCode
+			if code != tC.wantCode {
+				t.Errorf("Want %v; got %v\n", tC.wantCode, err)
+			}
+			if len(cursor.Patients) != tC.wantSize {
+				t.Errorf("Want %v; got %v\n", tC.wantSize, len(cursor.Patients))
+			}
+			if tC.hasMore && !(cursor.HasNextPage || cursor.HasPreviousPage) {
+				t.Errorf("want %v; got %v\n", tC.hasMore, (cursor.HasNextPage || cursor.HasPreviousPage))
+			}
+			var contain bool
+			for _, p := range cursor.Patients {
+				if p.ID == tC.wantContainID {
+					contain = true
+				}
+			}
+			if !contain {
+				t.Errorf("Want response to contain %v ID;  but it did not\n", tC.wantContainID)
+			}
 		})
 	}
 }
