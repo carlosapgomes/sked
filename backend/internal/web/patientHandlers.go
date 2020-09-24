@@ -154,7 +154,7 @@ func (app App) patientPhones(w http.ResponseWriter, r *http.Request) {
 
 // getPatientPhones returns a list of a patient's phone numbers
 func (app App) getPatientPhones(w http.ResponseWriter, r *http.Request) {
-	pID := app.between(r.URL.Path, "/patients/", "/name")
+	pID := app.between(r.URL.Path, "/patients/", "/phones")
 	if pID == "" {
 		app.clientError(w, http.StatusBadRequest)
 		return
