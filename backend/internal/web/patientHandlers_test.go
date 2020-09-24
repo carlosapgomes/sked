@@ -142,6 +142,87 @@ func TestGetPatientName(t *testing.T) {
 	}
 
 }
+func TestUpdatePatientName(t *testing.T) {
+	handlers := web.New(
+		log.New(ioutil.Discard, "", 0),
+		log.New(ioutil.Discard, "", 0),
+		&web.CkProps{
+			Name:     "sid",
+			HTTPOnly: false,
+			Secure:   false,
+		},
+		mocks.NewSessionSvc(),
+		services.NewUserService(mocks.NewUserRepo()),
+		nil,
+		mocks.NewTokenMockSvc(),
+		services.NewPatientService(mocks.NewPatientRepo()),
+		nil,
+		nil,
+	)
+	ts := newTestServer(t, handlers.Routes())
+	defer ts.Close()
+	var tests = []struct {
+		name      string
+		patientID string
+		newName   string
+		wantCode  int
+	}{
+		{"Valid Update", "85f45ff9-d31c-4ff7-94ac-5afb5a1f0fcd", "New Valid Patient Name", http.StatusOK},
+		{"Invalid Patient ID", "2e134760-2006-4dc7-a315-025dc1081fb0", "New Name", http.StatusInternalServerError},
+		{"Invalid Patient Name", "85f45ff9-d31c-4ff7-94ac-5afb5a1f0fcd", "", http.StatusInternalServerError},
+	}
+	type postBody struct {
+		Name string `json:"name"`
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			path := ts.URL + "/patients/" + tt.patientID + "/name"
+			reqBody := &postBody{Name: tt.newName}
+			body, err := json.Marshal(reqBody)
+			if err != nil {
+				t.Log(err)
+			}
+			req, _ := http.NewRequest(http.MethodPut, path, strings.NewReader(string(body)))
+			cookie := &http.Cookie{
+				Name:  "sid",
+				Value: "167ced64-af16-45d2-bb08-e35233c04ad1",
+			}
+			req.AddCookie(cookie)
+			rs, err := ts.Client().Do(req)
+			if err != nil {
+				t.Fatal(err)
+			}
+			code := rs.StatusCode
+			if code != tt.wantCode {
+				t.Errorf("want %d; got %d", tt.wantCode, code)
+			}
+			if tt.wantCode == http.StatusOK {
+				path = ts.URL + "/patients/" + tt.patientID + "/name"
+				req, _ = http.NewRequest(http.MethodGet, path, nil)
+				req.AddCookie(cookie)
+				rs, err = ts.Client().Do(req)
+				if err != nil {
+					t.Fatal(err)
+				}
+				var response patient.Patient
+				if rs.StatusCode == http.StatusOK {
+					defer rs.Body.Close()
+					respBody, _ := ioutil.ReadAll(rs.Body)
+					//t.Logf("%s\n", respBody)
+					err = json.Unmarshal(respBody, &response)
+					if err != nil {
+						t.Error("bad response body")
+					}
+					if response.Name != tt.newName {
+						t.Errorf("Want new name %s but got %s", tt.newName, response.Name)
+					}
+				}
+			}
+
+		})
+	}
+
+}
 func TestFindPatientByID(t *testing.T) {
 	handlers := web.New(
 		log.New(ioutil.Discard, "", 0),
