@@ -33,6 +33,9 @@ func (app *App) Routes() http.Handler {
 	// patients endpoints
 	mux.Handle("/patients/", app.requireAuthentication(app.patients())) // any verb
 	mux.Handle("/patients", app.requireAuthentication(app.patients()))  // any verb
+	// appointments endpoints
+	mux.Handle("/appointments/", app.requireAuthentication(app.appointments()))
+	mux.Handle("/appointments", app.requireAuthentication(app.appointments()))
 	// health check route
 	mux.Handle("/healthz", app.Healthz())
 	return app.recoverPanic(app.logRequest(app.authenticate(mux)))
