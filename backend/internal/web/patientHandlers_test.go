@@ -432,12 +432,14 @@ func TestFindPatientByID(t *testing.T) {
 				t.Errorf("want %d; got %d", tt.wantCode, code)
 			}
 			var response patient.Patient
-			defer rs.Body.Close()
-			respBody, _ := ioutil.ReadAll(rs.Body)
-			t.Logf("%s\n", respBody)
-			err = json.Unmarshal(respBody, &response)
-			if err != nil {
-				t.Error("bad response body")
+			if tt.wantCode == http.StatusOK {
+				defer rs.Body.Close()
+				respBody, _ := ioutil.ReadAll(rs.Body)
+				t.Logf("%s\n", respBody)
+				err = json.Unmarshal(respBody, &response)
+				if err != nil {
+					t.Error("bad response body")
+				}
 			}
 			if tt.wantBody != nil {
 				if !bytes.Contains([]byte(response.Name), tt.wantBody) {
