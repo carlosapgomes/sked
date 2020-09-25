@@ -1232,10 +1232,6 @@ func TestPasswordResetRequest(t *testing.T) {
 
 // TestGetATestGetAllUsersByAdmin
 func TestGetAllUsersByAdmin(t *testing.T) {
-	// use a mail recorder
-	// https://tmichel.github.io/2014/10/12/golang-send-test-email/
-	rec := new(mocks.EmailRecorder)
-	mailer := mocks.NewMailerMock(rec)
 	handlers := web.New(
 		log.New(ioutil.Discard, "", 0),
 		log.New(ioutil.Discard, "", 0),
@@ -1246,7 +1242,7 @@ func TestGetAllUsersByAdmin(t *testing.T) {
 		},
 		mocks.NewSessionSvc(),
 		services.NewUserService(mocks.NewUserRepo()),
-		mailer,
+		nil,
 		mocks.NewTokenMockSvc(),
 		nil, nil, nil)
 
