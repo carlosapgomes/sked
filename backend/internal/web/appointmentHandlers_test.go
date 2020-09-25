@@ -28,8 +28,8 @@ func TestFindAppointmentByID(t *testing.T) {
 		userSvc,
 		nil,
 		mocks.NewTokenMockSvc(),
-		services.NewAppointmentService(mocks.NewAppointmentRepo(), userSvc),
 		nil,
+		services.NewAppointmentService(mocks.NewAppointmentRepo(), userSvc),
 		nil,
 	)
 	ts := newTestServer(t, handlers.Routes())
@@ -40,7 +40,7 @@ func TestFindAppointmentByID(t *testing.T) {
 		wantBody []byte
 		wantCode int
 	}{
-		{"Valid Search", "85f45ff9-d31c-4ff7-94ac-5afb5a1f0fcd", []byte("John Doe"), http.StatusOK},
+		{"Valid Search", "e521798b-9f33-4a10-8b2a-9677ed1cd1ae", []byte("John Doe"), http.StatusOK},
 		{"Valid Search But Missing Appointment", "2e134760-2006-4dc7-a315-025dc1081fb0", nil, http.StatusInternalServerError},
 	}
 	for _, tt := range tests {
@@ -72,7 +72,7 @@ func TestFindAppointmentByID(t *testing.T) {
 			}
 			if tt.wantBody != nil {
 				if !bytes.Contains([]byte(response.PatientName), tt.wantBody) {
-					t.Errorf("want body %s to contain %q", response, tt.wantBody)
+					t.Errorf("want body %s to contain %q", response.PatientName, tt.wantBody)
 				}
 			}
 		})
