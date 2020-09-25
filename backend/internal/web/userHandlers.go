@@ -211,9 +211,9 @@ func (app App) userPassword(w http.ResponseWriter, r *http.Request) {
 // usersNoPath reroute based on verbs and queries
 func (app App) usersNoPath(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
-	case "GET":
+	case http.MethodGet:
 		app.requireAdmin(app.getUsers()).ServeHTTP(w, r)
-	case "POST":
+	case http.MethodPost:
 		app.requireAdmin(app.addUser()).ServeHTTP(w, r)
 	default:
 		app.clientError(w, http.StatusMethodNotAllowed)
