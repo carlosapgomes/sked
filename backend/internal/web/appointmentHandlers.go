@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strings"
+	"time"
 )
 
 func (app App) appointments() http.Handler {
@@ -102,6 +103,27 @@ func (app App) findAppointmentByPatientID(w http.ResponseWriter, r *http.Request
 }
 
 func (app App) findAppointmentByDate(w http.ResponseWriter, r *http.Request) {
+	date := r.URL.Query().Get("date")
+	if date == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	_, err := time.Parse("YYYY-MM-DD", date)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	appointmt, err := app.appointmentService.FindByDate(date)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	res, err := json.Marshal(*appointmt)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	w.Write(res)
 }
 
 func (app App) getAllAppointments(w http.ResponseWriter, r *http.Request) {
