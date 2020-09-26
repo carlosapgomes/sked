@@ -64,6 +64,22 @@ func (app App) findAppointmentByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app App) findAppointmentByDoctorID(w http.ResponseWriter, r *http.Request) {
+	doctorID := r.URL.Query().Get("doctorID")
+	if doctorID == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	appointmt, err := app.appointmentService.FindByDoctorID(doctorID)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	res, err := json.Marshal(appointmt)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	w.Write(res)
 }
 
 func (app App) findAppointmentByPatientID(w http.ResponseWriter, r *http.Request) {
