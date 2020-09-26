@@ -118,7 +118,7 @@ func (app App) findAppointmentByDate(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
-	res, err := json.Marshal(*appointmt)
+	res, err := json.Marshal(appointmt)
 	if err != nil {
 		app.serverError(w, err)
 		return
