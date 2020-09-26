@@ -115,7 +115,7 @@ func (r AppointmentMockRepo) FindByDate(dateTime time.Time) ([]*appointment.Appo
 		CreatedAt:   time.Date(2020, 9, 6, 12, 0, 0, 0, time.UTC),
 	}
 	searchY, searchM, searchD := dateTime.Date()
-	appointmtY, aappointmtM, apappointmtD = appointmt.DateTime.Date()
+	appointmtY, appointmtM, appointmtD := appointmt.DateTime.Date()
 	if (searchY == appointmtY) && (searchM == appointmtM) && (searchD == appointmtD) {
 		appointmts := []*appointment.Appointment{
 			&appointmt,
