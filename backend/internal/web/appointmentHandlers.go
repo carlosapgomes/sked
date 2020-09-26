@@ -108,12 +108,12 @@ func (app App) findAppointmentByDate(w http.ResponseWriter, r *http.Request) {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
-	_, err := time.Parse("YYYY-MM-DD", date)
+	dateTime, err := time.Parse("YYYY-MM-DD", date)
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
-	appointmt, err := app.appointmentService.FindByDate(date)
+	appointmt, err := app.appointmentService.FindByDate(dateTime)
 	if err != nil {
 		app.serverError(w, err)
 		return
