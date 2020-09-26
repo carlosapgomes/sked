@@ -2,10 +2,24 @@ package web
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"strings"
 	"time"
+
+	"carlosapgomes.com/sked/internal/user"
 )
+
+type appointmentsData struct {
+	ID          string `json:"id,omitempty"`
+	DateTime    string `json:"dateTime"` // iso8601 format
+	PatientName string `json:"patientName"`
+	PatientID   string `json:"patientID"`
+	DoctorName  string `json:"doctorName"`
+	DoctorID    string `json:"doctorID"`
+	Notes       string `json:"notes"`
+	CreatedBy   string `json:"createdBy"`
+}
 
 func (app App) appointments() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -130,4 +144,51 @@ func (app App) getAllAppointments(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app App) createAppointment(w http.ResponseWriter, r *http.Request) {
+	// Read body
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	var newAppointmt appointmentsData
+	err = json.Unmarshal(b, &newAppointmt)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	if newAppointmt.DateTime == "" ||
+		newAppointmt.PatientName == "" ||
+		newAppointmt.PatientID == "" ||
+		newAppointmt.DoctorName == "" ||
+		newAppointmt.DoctorID == "" ||
+		newAppointmt.CreatedBy == "" {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	dateTime, err := time.Parse("2006-01-02T15:04:05Z0700", newAppointmt.DateTime)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	// get logged in user from ctx
+	u, ok := r.Context().Value(ContextKeyUser).(*user.User)
+	if !ok {
+		// no ContextKeyUser -> user is not authenticated
+		app.clientError(w, http.StatusForbidden)
+		return
+	}
+	id, err := app.appointmentService.Create(dateTime, newAppointmt.PatientName, newAppointmt.PatientID, newAppointmt.DoctorName, newAppointmt.DoctorID, newAppointmt.Notes, u.ID)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	newAppointmt.ID = *id
+	output, err := json.Marshal(newAppointmt)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	w.Write(output)
 }
