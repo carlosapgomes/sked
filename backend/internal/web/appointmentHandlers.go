@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -142,6 +143,29 @@ func (app App) findAppointmentByDate(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app App) getAllAppointments(w http.ResponseWriter, r *http.Request) {
+	previous := r.URL.Query().Get("previous")
+	next := r.URL.Query().Get("next")
+	pgSize := r.URL.Query().Get("pgSize")
+	size, err := strconv.Atoi(pgSize)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	res, err := app.appointmentService.GetAll(previous, next, size)
+	if err != nil {
+		if err == appointment.ErrInvalidInputSyntax {
+			app.clientError(w, http.StatusBadRequest)
+		} else {
+			app.serverError(w, err)
+		}
+		return
+	}
+	output, err := json.Marshal(res)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	w.Write(output)
 }
 
 func (app App) createAppointment(w http.ResponseWriter, r *http.Request) {
