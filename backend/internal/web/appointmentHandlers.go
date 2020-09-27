@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"carlosapgomes.com/sked/internal/appointment"
 	"carlosapgomes.com/sked/internal/user"
 )
 
