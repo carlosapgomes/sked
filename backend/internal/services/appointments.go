@@ -177,8 +177,8 @@ func (s *appointmentService) FindByDate(dateTime time.Time) ([]*appointment.Appo
 }
 
 // GetAll - return all appointments
-func (s *appointmentService) GetAll(before string, after string, pgSize int) (*appointment.Cursor, error) {
-	var appointmtsResp appointment.Cursor
+func (s *appointmentService) GetAll(before string, after string, pgSize int) (*appointment.Page, error) {
+	var appointmtsResp appointment.Page
 	var err error
 	var aList *[]appointment.Appointment
 	if pgSize <= 0 {
@@ -192,7 +192,7 @@ func (s *appointmentService) GetAll(before string, after string, pgSize int) (*a
 	case (before == "" && after == ""):
 		// if they are empty
 		// get default list and page size
-		aList, appointmtsResp.HasBefore, err = s.repo.
+		aList, appointmtsResp.HasPreviousPage, err = s.repo.
 			GetAll("", false, pgSize)
 		if err != nil {
 			return nil, err
@@ -203,13 +203,13 @@ func (s *appointmentService) GetAll(before string, after string, pgSize int) (*a
 			}
 		}
 		if len(appointmtsResp.Appointments) > 0 {
-			appointmtsResp.Before = base64.StdEncoding.
+			appointmtsResp.StartCursor = base64.StdEncoding.
 				EncodeToString([]byte(appointmtsResp.Appointments[len(appointmtsResp.Appointments)-1].ID))
 		} else {
-			appointmtsResp.Before = ""
+			appointmtsResp.StartCursor = ""
 		}
-		appointmtsResp.After = ""
-		appointmtsResp.HasAfter = false
+		appointmtsResp.EndCursor = ""
+		appointmtsResp.HasNextPage = false
 		// and return values
 	case (before != ""):
 		// if before is present,
@@ -219,7 +219,7 @@ func (s *appointmentService) GetAll(before string, after string, pgSize int) (*a
 			return nil, err
 		}
 		cursor := string(c)
-		aList, appointmtsResp.HasBefore, err = s.repo.GetAll(cursor, false, pgSize)
+		aList, appointmtsResp.HasPreviousPage, err = s.repo.GetAll(cursor, false, pgSize)
 		if err != nil {
 			return nil, err
 		}
@@ -230,17 +230,17 @@ func (s *appointmentService) GetAll(before string, after string, pgSize int) (*a
 		}
 		if len(appointmtsResp.Appointments) > 0 {
 			befCursor := base64.StdEncoding.EncodeToString([]byte(appointmtsResp.Appointments[len(appointmtsResp.Appointments)-1].ID))
-			appointmtsResp.Before = befCursor
+			appointmtsResp.StartCursor = befCursor
 		} else {
-			appointmtsResp.Before = ""
+			appointmtsResp.StartCursor = ""
 		}
 		// test for 'after data' from the requested cursor
 		// fill the response fields
-		_, appointmtsResp.HasAfter, err = s.repo.GetAll(cursor, true, pgSize)
-		if appointmtsResp.HasAfter {
-			appointmtsResp.After = base64.StdEncoding.EncodeToString([]byte(before))
+		_, appointmtsResp.HasNextPage, err = s.repo.GetAll(cursor, true, pgSize)
+		if appointmtsResp.HasNextPage {
+			appointmtsResp.EndCursor = base64.StdEncoding.EncodeToString([]byte(before))
 		} else {
-			appointmtsResp.After = ""
+			appointmtsResp.EndCursor = ""
 		}
 		// and return it
 	case (after != ""):
@@ -251,7 +251,7 @@ func (s *appointmentService) GetAll(before string, after string, pgSize int) (*a
 			return nil, err
 		}
 		cursor := string(c)
-		aList, appointmtsResp.HasAfter, err = s.repo.
+		aList, appointmtsResp.HasNextPage, err = s.repo.
 			GetAll(cursor, true, pgSize)
 		// and return it
 		if aList != nil {
@@ -260,14 +260,14 @@ func (s *appointmentService) GetAll(before string, after string, pgSize int) (*a
 			}
 		}
 		if len(appointmtsResp.Appointments) > 0 {
-			appointmtsResp.After = base64.StdEncoding.EncodeToString([]byte(appointmtsResp.Appointments[0].ID))
+			appointmtsResp.EndCursor = base64.StdEncoding.EncodeToString([]byte(appointmtsResp.Appointments[0].ID))
 		}
 		// test for 'before data' from the requested cursor
 		// fill the response fields
-		_, appointmtsResp.HasBefore, err = s.repo.
+		_, appointmtsResp.HasPreviousPage, err = s.repo.
 			GetAll(cursor, false, pgSize)
-		if appointmtsResp.HasBefore {
-			appointmtsResp.Before = base64.StdEncoding.EncodeToString([]byte(after))
+		if appointmtsResp.HasPreviousPage {
+			appointmtsResp.StartCursor = base64.StdEncoding.EncodeToString([]byte(after))
 		}
 	}
 	return &appointmtsResp, nil
