@@ -5,12 +5,21 @@ package appointment
 import "time"
 
 // Cursor encapsulates data for pagination
-type Cursor struct {
-	Before       string `json:"before"`
-	HasBefore    bool   `json:"hasbefore"`
-	After        string `json:"after"`
-	HasAfter     bool   `json:"hasafter"`
-	Appointments []Appointment
+//type Cursor struct {
+//Before       string `json:"before"`
+//HasBefore    bool   `json:"hasbefore"`
+//After        string `json:"after"`
+//HasAfter     bool   `json:"hasafter"`
+//Appointments []Appointment
+//}
+
+// Page encapsulates data and pagination cursors
+type Page struct {
+	StartCursor     string        `json:"startCursor"`
+	HasPreviousPage bool          `json:"hasPreviousPage"`
+	EndCursor       string        `json:"endCursor"`
+	HasNextPage     bool          `json:"hasNextPage"`
+	Appointments    []Appointment `json:"patients"`
 }
 
 //Appointment type
