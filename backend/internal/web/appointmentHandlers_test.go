@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -357,6 +358,121 @@ func TestCreateAppointment(t *testing.T) {
 				if !bytes.Contains([]byte(respBody), tt.wantBody) {
 					t.Errorf("want body %s to contain %q\n", respBody, tt.wantBody)
 				}
+			}
+		})
+	}
+}
+func TestGetAllAppointments(t *testing.T) {
+	userSvc := services.NewUserService(mocks.NewUserRepo())
+	handlers := web.New(
+		log.New(ioutil.Discard, "", 0),
+		log.New(ioutil.Discard, "", 0),
+		&web.CkProps{
+			Name:     "sid",
+			HTTPOnly: false,
+			Secure:   false,
+		},
+		mocks.NewSessionSvc(),
+		userSvc,
+		nil,
+		mocks.NewTokenMockSvc(),
+		nil,
+		services.NewAppointmentService(mocks.NewAppointmentRepo(), userSvc),
+		nil,
+	)
+	ts := newTestServer(t, handlers.Routes())
+	defer ts.Close()
+	testCases := []struct {
+		desc          string
+		previous      string
+		next          string
+		pgSize        int
+		wantSize      int
+		hasMore       bool
+		wantCode      int
+		wantContainID string
+	}{
+		{
+			desc:          "Valid Page",
+			previous:      "",
+			next:          "",
+			pgSize:        6,
+			wantSize:      6,
+			hasMore:       false,
+			wantCode:      http.StatusOK,
+			wantContainID: "5e6f7cd1-d8d2-40cd-97a3-aca01a93bfde",
+		},
+		{
+			desc:          "Valid Cursor previous",
+			previous:      "NWU2ZjdjZDEtZDhkMi00MGNkLTk3YTMtYWNhMDFhOTNiZmRl",
+			next:          "",
+			pgSize:        2,
+			wantSize:      1,
+			hasMore:       false,
+			wantCode:      http.StatusOK,
+			wantContainID: "e521798b-9f33-4a10-8b2a-9677ed1cd1ae",
+		},
+		{
+			desc:          "Valid Cursor next",
+			previous:      "",
+			next:          "NWU2ZjdjZDEtZDhkMi00MGNkLTk3YTMtYWNhMDFhOTNiZmRl",
+			pgSize:        2,
+			wantSize:      2,
+			hasMore:       true,
+			wantCode:      http.StatusOK,
+			wantContainID: "7fef3c47-a01a-42a6-ac45-27a440596751",
+		},
+	}
+	// Page encapsulates data and pagination cursors
+	type page struct {
+		StartCursor     string                    `json:"startCursor"`
+		HasPreviousPage bool                      `json:"hasPreviousPage"`
+		EndCursor       string                    `json:"endCursor"`
+		HasNextPage     bool                      `json:"hasNextPage"`
+		Appointments    []appointment.Appointment `json:"patients"`
+	}
+	for _, tC := range testCases {
+		t.Run(tC.desc, func(t *testing.T) {
+			path := ts.URL + "/appointments?previous=" + tC.previous + "&next=" + tC.next + "&pgSize=" + strconv.Itoa(tC.pgSize)
+			req, _ := http.NewRequest(http.MethodGet, path, nil)
+			cookie := &http.Cookie{
+				Name:  "sid",
+				Value: "167ced64-af16-45d2-bb08-e35233c04ad1",
+			}
+			req.AddCookie(cookie)
+			rs, err := ts.Client().Do(req)
+			if err != nil {
+				t.Fatal(err)
+			}
+			var cursor page
+			if tC.wantCode == http.StatusOK {
+				defer rs.Body.Close()
+				respBody, _ := ioutil.ReadAll(rs.Body)
+				//t.Logf("respBody: %s\n", respBody)
+				err = json.Unmarshal(respBody, &cursor)
+				if err != nil {
+					t.Error("bad response body")
+				}
+			}
+			//t.Logf("cursor: %v\n", cursor)
+			code := rs.StatusCode
+			if code != tC.wantCode {
+				t.Errorf("Want %v; got %v\n", tC.wantCode, err)
+			}
+			if len(cursor.Appointments) != tC.wantSize {
+				t.Errorf("Want %v; got %v\n", tC.wantSize, len(cursor.Appointments))
+			}
+			if tC.hasMore && !(cursor.HasNextPage || cursor.HasPreviousPage) {
+				t.Errorf("want %v; got %v\n", tC.hasMore, (cursor.HasNextPage || cursor.HasPreviousPage))
+			}
+			var contain bool
+			for _, p := range cursor.Appointments {
+				if p.ID == tC.wantContainID {
+					contain = true
+				}
+			}
+			if !contain {
+				t.Errorf("Want response to contain %v ID;  but it did not\n", tC.wantContainID)
 			}
 		})
 	}
