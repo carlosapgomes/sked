@@ -6,19 +6,23 @@ import (
 	"fmt"
 	"time"
 
+	"carlosapgomes.com/sked/internal/appointment"
 	"carlosapgomes.com/sked/internal/surgery"
+	"carlosapgomes.com/sked/internal/user"
 	uuid "github.com/satori/go.uuid"
 )
 
 // surgeryService provides implementation of surgery domain interface
 type surgeryService struct {
-	repo surgery.Repository
+	repo    surgery.Repository
+	userSvc user.Service
 }
 
 // NewSurgeryService returns a surgery Service instance
-func NewSurgeryService(repo surgery.Repository) surgery.Service {
+func NewSurgeryService(repo surgery.Repository, userSvc user.Service) surgery.Service {
 	return &surgeryService{
 		repo,
+		userSvc,
 	}
 }
 
@@ -37,6 +41,39 @@ func (s *surgeryService) Create(dateTime time.Time, patientName, patientID, doct
 	if err != nil {
 		return nil, surgery.ErrInvalidInputSyntax
 	}
+	// user with ID == doctorID must have RoleDoctor
+	userDoc, err := s.userSvc.FindByID(doctorID)
+	if err != nil {
+		return nil, err
+	}
+	isDoc := false
+	for i := range userDoc.Roles {
+		if userDoc.Roles[i] == user.RoleDoctor {
+			isDoc = true
+		}
+	}
+	if !isDoc {
+		return nil, appointment.ErrInvalidInputSyntax
+	}
+	// if appointment is not created by the same doctor,
+	// it can only be created by a clerk or admin
+	if doctorID != createdBy {
+		createdByUser, err := s.userSvc.FindByID(createdBy)
+		if err != nil {
+			return nil, err
+		}
+		isClerkOrAdmin := false
+		for i := range createdByUser.Roles {
+			if (createdByUser.Roles[i] == user.RoleAdmin) ||
+				(createdByUser.Roles[i] == user.RoleClerk) {
+				isClerkOrAdmin = true
+			}
+			if !isClerkOrAdmin {
+				return nil, appointment.ErrInvalidInputSyntax
+			}
+		}
+	}
+
 	uid := uuid.NewV4()
 	dt := dateTime.UTC()
 	newSurgery := surgery.Surgery{
