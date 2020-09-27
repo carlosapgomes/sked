@@ -14,6 +14,15 @@ type Cursor struct {
 	HasAfter  bool   `json:"hasafter"`
 	Surgeries []Surgery
 }
+
+// Page encapsulates data and pagination cursors
+type Page struct {
+	StartCursor     string    `json:"startCursor"`
+	HasPreviousPage bool      `json:"hasPreviousPage"`
+	EndCursor       string    `json:"endCursor"`
+	HasNextPage     bool      `json:"hasNextPage"`
+	Surgeries       []Surgery `json:"surgeries"`
+}
 type Surgery struct {
 	ID              string    `json:"id"` //uuidv4
 	DateTime        time.Time `json:"dateTime"`
