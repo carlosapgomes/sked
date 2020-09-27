@@ -2,6 +2,7 @@ package web
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -157,20 +158,26 @@ func (app App) createAppointment(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	fmt.Println(newAppointmt)
 	if newAppointmt.DateTime == "" ||
 		newAppointmt.PatientName == "" ||
 		newAppointmt.PatientID == "" ||
 		newAppointmt.DoctorName == "" ||
 		newAppointmt.DoctorID == "" ||
+		newAppointmt.Notes == "" ||
 		newAppointmt.CreatedBy == "" {
+		fmt.Println("some empty field")
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
-	dateTime, err := time.Parse("2006-01-02T15:04:05Z0700", newAppointmt.DateTime)
+	//dateTime, err := time.Parse("2006-01-02T15:04:05Z0700", newAppointmt.DateTime)
+	dateTime, err := time.Parse("2006-01-02T15:04:05-07:00", newAppointmt.DateTime)
 	if err != nil {
+		fmt.Println("bad date format")
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
+	fmt.Println(dateTime.Format("2006-01-02T15:04:05-07:00"))
 
 	// get logged in user from ctx
 	u, ok := r.Context().Value(ContextKeyUser).(*user.User)
@@ -181,6 +188,7 @@ func (app App) createAppointment(w http.ResponseWriter, r *http.Request) {
 	}
 	id, err := app.appointmentService.Create(dateTime, newAppointmt.PatientName, newAppointmt.PatientID, newAppointmt.DoctorName, newAppointmt.DoctorID, newAppointmt.Notes, u.ID)
 	if err != nil {
+		fmt.Printf("appointmentService error: %v\n", err)
 		app.serverError(w, err)
 		return
 	}
