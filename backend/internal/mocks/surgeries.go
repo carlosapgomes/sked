@@ -116,11 +116,13 @@ func (r SurgeryMockRepo) FindByDate(dateTime time.Time) ([]*surgery.Surgery, err
 		CreatedBy:   "10b9ad06-e86d-4a85-acb1-d7e268d1f21a",
 		CreatedAt:   time.Date(2020, 9, 6, 12, 0, 0, 0, time.UTC),
 	}
-	if dateTime.Equal(surg.DateTime) {
-		surgs := []*surgery.Surgery{
+	searchY, searchM, searchD := dateTime.Date()
+	appointmtY, appointmtM, appointmtD := surg.DateTime.Date()
+	if (searchY == appointmtY) && (searchM == appointmtM) && (searchD == appointmtD) {
+		appointmts := []*surgery.Surgery{
 			&surg,
 		}
-		return surgs, nil
+		return appointmts, nil
 	} else {
 		return nil, surgery.ErrNoRecord
 	}
