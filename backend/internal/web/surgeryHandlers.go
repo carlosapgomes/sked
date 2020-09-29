@@ -152,6 +152,7 @@ func (app App) getAllSurgeries(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	//fmt.Printf("previous: %v\nnext: %v\npgSize: %v\n", previous, next, size)
 	res, err := app.surgeryService.GetAll(previous, next, size)
 	if err != nil {
 		if err == surgery.ErrInvalidInputSyntax {
