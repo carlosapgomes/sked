@@ -421,15 +421,25 @@ func TestGetAllSurgeries(t *testing.T) {
 			wantContainID: "e521798b-9f33-4a10-8b2a-9677ed1cd1ae",
 		},
 		{
-			desc:          "Valid Cursor next",
-			previous:      "",
-			next:          "NWU2ZjdjZDEtZDhkMi00MGNkLTk3YTMtYWNhMDFhOTNiZmRl",
-			pgSize:        2,
-			wantSize:      2,
+			desc:          "Valid Previous Cursor Bigger Response",
+			previous:      "NzIzZTJmYTAtNzBhOS00YzIwLTg5ZDktYjVmNjk0MDViNzcy",
+			next:          "",
+			pgSize:        3,
+			wantSize:      3,
 			hasMore:       true,
 			wantCode:      http.StatusOK,
 			wantContainID: "7fef3c47-a01a-42a6-ac45-27a440596751",
 		},
+		//{
+		//desc:          "Valid Cursor next",
+		//previous:      "",
+		//next:          "NWU2ZjdjZDEtZDhkMi00MGNkLTk3YTMtYWNhMDFhOTNiZmRl",
+		//pgSize:        2,
+		//wantSize:      2,
+		//hasMore:       true,
+		//wantCode:      http.StatusOK,
+		//wantContainID: "7fef3c47-a01a-42a6-ac45-27a440596751",
+		//},
 	}
 	// Page encapsulates data and pagination cursors
 	type page struct {
