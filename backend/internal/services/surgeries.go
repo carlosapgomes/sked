@@ -3,7 +3,6 @@ package services
 import (
 	"encoding/base64"
 	"errors"
-	"fmt"
 	"time"
 
 	"carlosapgomes.com/sked/internal/appointment"
@@ -106,7 +105,6 @@ func (s *surgeryService) Update(surg surgery.Surgery) (*string, error) {
 	// get original surgery
 	original, err := s.repo.FindByID(surg.ID)
 	if err != nil {
-		fmt.Print("could not find surgery\n")
 		return nil, surgery.ErrNoRecord
 	}
 	_, err = uuid.FromString(surg.UpdatedBy)
@@ -187,7 +185,6 @@ func (s *surgeryService) GetAll(before string, after string, pgSize int) (*surge
 	if pgSize <= 0 {
 		pgSize = 15
 	}
-
 	switch {
 	case (before != "" && after != ""):
 		// if both (before & after) are present, returns error

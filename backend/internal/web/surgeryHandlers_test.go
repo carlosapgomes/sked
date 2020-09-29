@@ -437,7 +437,7 @@ func TestGetAllSurgeries(t *testing.T) {
 		HasPreviousPage bool              `json:"hasPreviousPage"`
 		EndCursor       string            `json:"endCursor"`
 		HasNextPage     bool              `json:"hasNextPage"`
-		Surgeries       []surgery.Surgery `json:"patients"`
+		Surgeries       []surgery.Surgery `json:"surgeries"`
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
@@ -456,13 +456,13 @@ func TestGetAllSurgeries(t *testing.T) {
 			if tC.wantCode == http.StatusOK {
 				defer rs.Body.Close()
 				respBody, _ := ioutil.ReadAll(rs.Body)
-				//t.Logf("respBody: %s\n", respBody)
+				t.Logf("respBody: %s\n", respBody)
 				err = json.Unmarshal(respBody, &cursor)
 				if err != nil {
 					t.Error("bad response body")
 				}
 			}
-			//t.Logf("cursor: %v\n", cursor)
+			t.Logf("cursor: %v\n", cursor)
 			code := rs.StatusCode
 			if code != tC.wantCode {
 				t.Errorf("Want %v; got %v\n", tC.wantCode, err)
