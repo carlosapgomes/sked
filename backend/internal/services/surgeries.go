@@ -197,7 +197,7 @@ func (s *surgeryService) GetAll(previous string, next string, pgSize int) (*surg
 		if err != nil {
 			return nil, err
 		}
-		if list != nil {
+		if list != nil && len(*list) > 0 {
 			for _, a := range *list {
 				page.Surgeries = append(page.Surgeries, a)
 			}
@@ -258,7 +258,7 @@ func (s *surgeryService) GetAll(previous string, next string, pgSize int) (*surg
 		if err != nil {
 			return nil, err
 		}
-		if list != nil {
+		if list != nil && len(*list) > 0 {
 			for _, a := range *list {
 				page.Surgeries = append(page.Surgeries, a)
 			}
