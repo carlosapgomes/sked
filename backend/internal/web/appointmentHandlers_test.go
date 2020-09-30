@@ -429,7 +429,7 @@ func TestGetAllAppointments(t *testing.T) {
 		HasPreviousPage bool                      `json:"hasPreviousPage"`
 		EndCursor       string                    `json:"endCursor"`
 		HasNextPage     bool                      `json:"hasNextPage"`
-		Appointments    []appointment.Appointment `json:"patients"`
+		Appointments    []appointment.Appointment `json:"appointments"`
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
