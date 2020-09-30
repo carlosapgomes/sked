@@ -563,7 +563,7 @@ func TestUpdatePhone(t *testing.T) {
 	}
 }
 
-func TestGetAll(t *testing.T) {
+func TestGetAllUsers(t *testing.T) {
 	repo := mocks.NewUserRepo()
 	svc := services.NewUserService(repo)
 	testCases := []struct {
@@ -589,7 +589,7 @@ func TestGetAll(t *testing.T) {
 		{
 			desc:             "Valid Cursor After",
 			before:           "",
-			after:            "ZWNhZGJiMjgtMTRlNi00NTYwLTg1NzQtODA5YzZjNTRiOWNi",
+			after:            "Ym9iYW1hQHNvbWV3aGVyZS5jb20=",
 			pgSize:           2,
 			wantSize:         2,
 			hasMore:          true,
@@ -598,7 +598,7 @@ func TestGetAll(t *testing.T) {
 		},
 		{
 			desc:             "Valid Cursor Before",
-			before:           "ZWNhZGJiMjgtMTRlNi00NTYwLTg1NzQtODA5YzZjNTRiOWNi",
+			before:           "Ym9iYW1hQHNvbWV3aGVyZS5jb20=",
 			after:            "",
 			pgSize:           2,
 			wantSize:         2,
@@ -609,7 +609,6 @@ func TestGetAll(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
-
 			cursor, err := svc.GetAll(tC.before, tC.after, tC.pgSize)
 			if err != tC.wantError {
 				t.Errorf("Want %v; got %v\n", tC.wantError, err)
@@ -618,12 +617,12 @@ func TestGetAll(t *testing.T) {
 				t.Errorf("Want %v; got %v\n", tC.wantSize, len(cursor.Users))
 			}
 			if !tC.hasMore {
-				if cursor.HasAfter || cursor.HasBefore {
-					t.Errorf("want %v; got %v\n", tC.hasMore, (cursor.HasAfter || cursor.HasBefore))
+				if cursor.HasNextPage || cursor.HasPreviousPage {
+					t.Errorf("want %v; got %v\n", tC.hasMore, (cursor.HasNextPage || cursor.HasPreviousPage))
 				}
 			} else {
-				if !(cursor.HasAfter || cursor.HasBefore) {
-					t.Errorf("want %v; got %v\n", tC.hasMore, (cursor.HasAfter || cursor.HasBefore))
+				if !(cursor.HasNextPage || cursor.HasPreviousPage) {
+					t.Errorf("want %v; got %v\n", tC.hasMore, (cursor.HasNextPage || cursor.HasPreviousPage))
 
 				}
 			}
