@@ -111,8 +111,11 @@ Tables:
 - ~~write failing tests for each API (appointments, surgeries and patients)~~
 - ~~write services for each entity~~
 - ~~add postgres container for testing~~
-- validation should be in services implementation
+- ~~validation should be in services implementation~~
 - ~~add role for doctors (doctors are users who can have schedules [appointments|surgeries])~~
 - ~~move pagination to Page struct in all entities GetAll method~~
-- write integration tests for the web driver (primary driver)
+- ~~write integration tests for the web driver (primary driver)~~
+- copy all mocks sample data to the SQL initialization test script
+- write driven ports (repositories implementations)
+- full integration tests will be the same web test but with real repositories
 
