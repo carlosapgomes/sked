@@ -523,7 +523,7 @@ func TestCreatePatient(t *testing.T) {
 	}
 }
 
-func TestPatientGetAll(t *testing.T) {
+func TestGetAllPatients(t *testing.T) {
 	handlers := web.New(
 		log.New(ioutil.Discard, "", 0),
 		log.New(ioutil.Discard, "", 0),

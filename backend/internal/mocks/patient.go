@@ -120,24 +120,28 @@ func (r *PatientMockRepo) FindByID(id string) (*patient.Patient, error) {
 
 // GetAll returns a list of patients ordered by email
 func (r *PatientMockRepo) GetAll(cursor string, after bool, pgSize int) (*[]patient.Patient, bool, error) {
-	if len(r.pDb) < pgSize {
-		pgSize = len(r.pDb)
-	}
+	var res []patient.Patient
+	var hasMore bool
+	hasMore = false
+	var respSize int
 	if cursor == "" {
-		var res []patient.Patient
-		for i := 0; i < pgSize; i++ {
+		if pgSize >= len(r.pDb) {
+			respSize = len(r.pDb)
+			hasMore = false
+		} else {
+			respSize = pgSize
+			hasMore = true
+		}
+		for i := 0; i < respSize; i++ {
 			res = append(res, r.pDb[i])
 		}
-		return &r.pDb, false, nil
+		return &res, hasMore, nil
 	}
 	pos := r.findPos(r.pDb, cursor)
 	if pos == -1 {
 		return nil, false, patient.ErrNoRecord
 	}
 
-	var res []patient.Patient
-	var hasMore bool
-	hasMore = false
 	if after {
 		start := pos + 1
 		for i := start; i < (start + pgSize); i++ {

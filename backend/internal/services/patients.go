@@ -3,7 +3,6 @@ package services
 import (
 	"encoding/base64"
 	"errors"
-	"fmt"
 	"time"
 
 	"carlosapgomes.com/sked/internal/patient"
@@ -115,10 +114,20 @@ func (s *patientService) GetAll(previous string, next string, pgSize int) (*pati
 		if err != nil {
 			return nil, err
 		}
-		if list != nil && len(*list) > 0 {
+		if list != nil {
 			for _, item := range *list {
 				page.Patients = append(page.Patients, item)
 			}
+		}
+		if len(page.Patients) > 0 {
+			page.StartCursor = base64.StdEncoding.
+				EncodeToString([]byte(page.Patients[0].ID))
+			page.EndCursor = base64.StdEncoding.
+				EncodeToString([]byte(page.
+					Patients[len(page.Patients)-1].ID))
+		} else {
+			page.StartCursor = ""
+			page.EndCursor = ""
 		}
 		page.HasPreviousPage = false
 	case (previous != ""):
@@ -130,20 +139,28 @@ func (s *patientService) GetAll(previous string, next string, pgSize int) (*pati
 		cursor := string(c)
 		list, page.HasPreviousPage, err = s.repo.GetAll(cursor, false, pgSize)
 		if err != nil {
-			fmt.Println(err)
+			//fmt.Println(err)
 			return nil, err
 		}
-		// test if list is not empty
-		if list != nil && len(*list) > 0 {
+		if list != nil {
 			for _, item := range *list {
 				page.Patients = append(page.Patients, item)
 			}
-			// test for the presence of data in the opposite direction
-			_, page.HasNextPage, err = s.repo.GetAll(page.Patients[len(page.Patients)-1].ID, true, pgSize)
+		}
+		if len(page.Patients) > 0 {
+			//fmt.Printf("StartCursor: %v\n", page.Patients[0].ID)
+			page.StartCursor = base64.StdEncoding.
+				EncodeToString([]byte(page.Patients[0].ID))
+			page.EndCursor = base64.StdEncoding.
+				EncodeToString([]byte(page.
+					Patients[len(page.Patients)-1].ID))
+			page.HasNextPage = true
+		} else {
+			page.StartCursor = ""
+			page.EndCursor = ""
+			page.HasNextPage = false
 		}
 	case (next != ""):
-		// if next is present,
-		// get an next list
 		c, err := base64.StdEncoding.DecodeString(next)
 		if err != nil {
 			return nil, err
@@ -154,26 +171,23 @@ func (s *patientService) GetAll(previous string, next string, pgSize int) (*pati
 		if err != nil {
 			return nil, err
 		}
-		// test if list is not empty
-		if list != nil && len(*list) > 0 {
+		if list != nil {
 			for _, item := range *list {
 				page.Patients = append(page.Patients, item)
 			}
-			// test for the presence of data in the opposite direction
-			_, page.HasPreviousPage, err = s.repo.
-				GetAll(page.Patients[0].ID, false, pgSize)
 		}
-	}
-	if len(page.Patients) > 0 {
-		page.StartCursor = base64.StdEncoding.
-			EncodeToString([]byte(page.Patients[0].ID))
-		page.EndCursor = base64.StdEncoding.
-			EncodeToString([]byte(page.Patients[len(page.Patients)-1].ID))
-	} else {
-		page.StartCursor = ""
-		page.EndCursor = ""
-		page.HasNextPage = false
-		page.HasPreviousPage = false
+		if len(page.Patients) > 0 {
+			page.StartCursor = base64.StdEncoding.
+				EncodeToString([]byte(page.Patients[0].ID))
+			page.EndCursor = base64.StdEncoding.
+				EncodeToString([]byte(page.
+					Patients[len(page.Patients)-1].ID))
+			page.HasPreviousPage = true
+		} else {
+			page.StartCursor = ""
+			page.EndCursor = ""
+			page.HasPreviousPage = false
+		}
 	}
 	return &page, nil
 }
