@@ -412,8 +412,8 @@ func TestAppointmentGetAll(t *testing.T) {
 			if cursor != nil && len(cursor.Appointments) != tC.wantSize {
 				t.Errorf("Want %v; got %v\n", tC.wantSize, len(cursor.Appointments))
 			}
-			if tC.hasMore && !(cursor.HasAfter || cursor.HasBefore) {
-				t.Errorf("want %v; got %v\n", tC.hasMore, (cursor.HasAfter || cursor.HasBefore))
+			if tC.hasMore && !(cursor.HasNextPage || cursor.HasPreviousPage) {
+				t.Errorf("want %v; got %v\n", tC.hasMore, (cursor.HasNextPage || cursor.HasPreviousPage))
 			}
 			var contain bool
 			for _, u := range cursor.Appointments {
