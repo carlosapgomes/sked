@@ -241,11 +241,13 @@ func (r *UserMockRepo) FindByEmail(email string) (*user.User, error) {
 
 // GetAll returns a list of users ordered by email
 func (r *UserMockRepo) GetAll(cursor string, after bool, pgSize int) (*[]user.User, bool, error) {
+	var res []user.User
+	var hasMore bool
+	hasMore = false
 	if len(r.uDb) < pgSize {
 		pgSize = len(r.uDb)
 	}
 	if cursor == "" {
-		var res []user.User
 		for i := 0; i < pgSize; i++ {
 			res = append(res, r.uDb[i])
 		}
@@ -255,10 +257,6 @@ func (r *UserMockRepo) GetAll(cursor string, after bool, pgSize int) (*[]user.Us
 	if pos == -1 {
 		return nil, false, user.ErrNoRecord
 	}
-
-	var res []user.User
-	var hasMore bool
-	hasMore = false
 	if after {
 		start := pos + 1
 		for i := start; i < (start + pgSize); i++ {
