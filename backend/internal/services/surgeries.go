@@ -178,106 +178,103 @@ func (s *surgeryService) FindByDate(dateTime time.Time) ([]*surgery.Surgery, err
 }
 
 // GetAll - return all surgeries
-func (s *surgeryService) GetAll(before string, after string, pgSize int) (*surgery.Page, error) {
-	var surgeriesResp surgery.Page
+func (s *surgeryService) GetAll(previous string, next string, pgSize int) (*surgery.Page, error) {
+	var page surgery.Page
 	var err error
 	var list *[]surgery.Surgery
 	if pgSize <= 0 {
-		pgSize = 15
+		return nil, surgery.ErrInvalidInputSyntax
 	}
 	switch {
-	case (before != "" && after != ""):
-		// if both (before & after) are present, returns error
+	case (previous != "" && next != ""):
+		// if both (previous & next) are present, returns error
 		return nil, surgery.ErrInvalidInputSyntax
-	case (before == "" && after == ""):
+	case (previous == "" && next == ""):
 		// if they are empty
 		// get default list and page size
-		list, surgeriesResp.HasNextPage, err = s.repo.
+		list, page.HasNextPage, err = s.repo.
 			GetAll("", true, pgSize)
 		if err != nil {
 			return nil, err
 		}
 		if list != nil {
 			for _, a := range *list {
-				surgeriesResp.Surgeries = append(surgeriesResp.Surgeries, a)
+				page.Surgeries = append(page.Surgeries, a)
 			}
 		}
-		if len(surgeriesResp.Surgeries) > 0 {
-			surgeriesResp.StartCursor = base64.StdEncoding.
-				EncodeToString([]byte(surgeriesResp.Surgeries[0].ID))
-			surgeriesResp.EndCursor = base64.StdEncoding.
-				EncodeToString([]byte(surgeriesResp.
-					Surgeries[len(surgeriesResp.Surgeries)-1].ID))
+		if len(page.Surgeries) > 0 {
+			page.StartCursor = base64.StdEncoding.
+				EncodeToString([]byte(page.Surgeries[0].ID))
+			page.EndCursor = base64.StdEncoding.
+				EncodeToString([]byte(page.
+					Surgeries[len(page.Surgeries)-1].ID))
 		} else {
-			surgeriesResp.StartCursor = ""
-			surgeriesResp.EndCursor = ""
+			page.StartCursor = ""
+			page.EndCursor = ""
 		}
-		surgeriesResp.HasPreviousPage = false
+		page.HasPreviousPage = false
 		// and return values
-	case (before != ""):
-		//fmt.Println("entering before case")
-		// if before is present,
-		// get a before list
-		c, err := base64.StdEncoding.DecodeString(before)
+	case (previous != ""):
+		//fmt.Println("entering previous case")
+		// if previous is present, get a previous list
+		c, err := base64.StdEncoding.DecodeString(previous)
 		if err != nil {
 			return nil, err
 		}
 		cursor := string(c)
-		//fmt.Printf("use '%v' as a before cursor\n", cursor)
-		list, surgeriesResp.HasPreviousPage, err = s.repo.
+		//fmt.Printf("use '%v' as a previous cursor\n", cursor)
+		list, page.HasPreviousPage, err = s.repo.
 			GetAll(cursor, false, pgSize)
 		if err != nil {
 			return nil, err
 		}
 		if list != nil {
 			for _, a := range *list {
-				surgeriesResp.Surgeries = append(surgeriesResp.Surgeries, a)
+				page.Surgeries = append(page.Surgeries, a)
 			}
 		}
 		//fmt.Printf("response size: %d\n", len(*list))
-		if len(surgeriesResp.Surgeries) > 0 {
-			//fmt.Printf("StartCursor: %v\n", surgeriesResp.Surgeries[0].ID)
-			surgeriesResp.StartCursor = base64.StdEncoding.
-				EncodeToString([]byte(surgeriesResp.Surgeries[0].ID))
-			surgeriesResp.EndCursor = base64.StdEncoding.
-				EncodeToString([]byte(surgeriesResp.
-					Surgeries[len(surgeriesResp.Surgeries)-1].ID))
-			surgeriesResp.HasNextPage = true
+		if len(page.Surgeries) > 0 {
+			//fmt.Printf("StartCursor: %v\n", page.Surgeries[0].ID)
+			page.StartCursor = base64.StdEncoding.
+				EncodeToString([]byte(page.Surgeries[0].ID))
+			page.EndCursor = base64.StdEncoding.
+				EncodeToString([]byte(page.
+					Surgeries[len(page.Surgeries)-1].ID))
+			page.HasNextPage = true
 		} else {
-			surgeriesResp.StartCursor = ""
-			surgeriesResp.EndCursor = ""
-			surgeriesResp.HasNextPage = false
+			page.StartCursor = ""
+			page.EndCursor = ""
+			page.HasNextPage = false
 		}
-	case (after != ""):
-		// if after is present,
-		// get an after list
-		c, err := base64.StdEncoding.DecodeString(after)
+	case (next != ""):
+		c, err := base64.StdEncoding.DecodeString(next)
 		if err != nil {
 			return nil, err
 		}
 		cursor := string(c)
-		list, surgeriesResp.HasNextPage, err = s.repo.
+		list, page.HasNextPage, err = s.repo.
 			GetAll(cursor, true, pgSize)
 		if err != nil {
 			return nil, err
 		}
 		if list != nil {
 			for _, a := range *list {
-				surgeriesResp.Surgeries = append(surgeriesResp.Surgeries, a)
+				page.Surgeries = append(page.Surgeries, a)
 			}
 		}
-		if len(surgeriesResp.Surgeries) > 0 {
-			surgeriesResp.StartCursor = base64.StdEncoding.
-				EncodeToString([]byte(surgeriesResp.Surgeries[0].ID))
-			surgeriesResp.EndCursor = base64.StdEncoding.
-				EncodeToString([]byte(surgeriesResp.
-					Surgeries[len(surgeriesResp.Surgeries)-1].ID))
-			surgeriesResp.HasPreviousPage = true
+		if len(page.Surgeries) > 0 {
+			page.StartCursor = base64.StdEncoding.
+				EncodeToString([]byte(page.Surgeries[0].ID))
+			page.EndCursor = base64.StdEncoding.
+				EncodeToString([]byte(page.
+					Surgeries[len(page.Surgeries)-1].ID))
+			page.HasPreviousPage = true
 		} else {
-			surgeriesResp.StartCursor = ""
-			surgeriesResp.EndCursor = ""
-			surgeriesResp.HasPreviousPage = false
+			page.StartCursor = ""
+			page.EndCursor = ""
+			page.HasPreviousPage = false
 		}
 	}
-	return &surgeriesResp, nil
+	return &page, nil
 }
