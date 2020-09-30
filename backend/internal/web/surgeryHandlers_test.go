@@ -430,16 +430,16 @@ func TestGetAllSurgeries(t *testing.T) {
 			wantCode:      http.StatusOK,
 			wantContainID: "7fef3c47-a01a-42a6-ac45-27a440596751",
 		},
-		//{
-		//desc:          "Valid Cursor next",
-		//previous:      "",
-		//next:          "NWU2ZjdjZDEtZDhkMi00MGNkLTk3YTMtYWNhMDFhOTNiZmRl",
-		//pgSize:        2,
-		//wantSize:      2,
-		//hasMore:       true,
-		//wantCode:      http.StatusOK,
-		//wantContainID: "7fef3c47-a01a-42a6-ac45-27a440596751",
-		//},
+		{
+			desc:          "Valid Next Cursor",
+			previous:      "",
+			next:          "NWU2ZjdjZDEtZDhkMi00MGNkLTk3YTMtYWNhMDFhOTNiZmRl",
+			pgSize:        3,
+			wantSize:      3,
+			hasMore:       true,
+			wantCode:      http.StatusOK,
+			wantContainID: "19f66dc6-b5c8-497b-bba2-b982bb85ded8",
+		},
 	}
 	// Page encapsulates data and pagination cursors
 	type page struct {
@@ -466,13 +466,13 @@ func TestGetAllSurgeries(t *testing.T) {
 			if tC.wantCode == http.StatusOK {
 				defer rs.Body.Close()
 				respBody, _ := ioutil.ReadAll(rs.Body)
-				t.Logf("respBody: %s\n", respBody)
+				//t.Logf("respBody: %s\n", respBody)
 				err = json.Unmarshal(respBody, &cursor)
 				if err != nil {
 					t.Error("bad response body")
 				}
 			}
-			t.Logf("cursor: %v\n", cursor)
+			//t.Logf("cursor: %v\n", cursor)
 			code := rs.StatusCode
 			if code != tC.wantCode {
 				t.Errorf("Want %v; got %v\n", tC.wantCode, err)
