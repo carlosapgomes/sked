@@ -183,10 +183,20 @@ func (s *userService) GetAll(previous string, next string, pgSize int) (*user.Pa
 		if err != nil {
 			return nil, err
 		}
-		if list != nil && len(*list) > 0 {
+		if list != nil {
 			for _, u := range *list {
 				page.Users = append(page.Users, u)
 			}
+		}
+		if len(page.Users) > 0 {
+			page.StartCursor = base64.StdEncoding.
+				EncodeToString([]byte(page.Users[0].ID))
+			page.EndCursor = base64.StdEncoding.
+				EncodeToString([]byte(page.
+					Users[len(page.Users)-1].ID))
+		} else {
+			page.StartCursor = ""
+			page.EndCursor = ""
 		}
 		page.HasPreviousPage = false
 	case (previous != ""):
@@ -205,8 +215,19 @@ func (s *userService) GetAll(previous string, next string, pgSize int) (*user.Pa
 			for _, item := range *list {
 				page.Users = append(page.Users, item)
 			}
-			// test for the presence of data in the opposite direction
-			_, page.HasNextPage, err = s.repo.GetAll(page.Users[len(page.Users)-1].Email, true, pgSize)
+		}
+		if len(page.Users) > 0 {
+			//fmt.Printf("StartCursor: %v\n", page.Users[0].ID)
+			page.StartCursor = base64.StdEncoding.
+				EncodeToString([]byte(page.Users[0].ID))
+			page.EndCursor = base64.StdEncoding.
+				EncodeToString([]byte(page.
+					Users[len(page.Users)-1].ID))
+			page.HasNextPage = true
+		} else {
+			page.StartCursor = ""
+			page.EndCursor = ""
+			page.HasNextPage = false
 		}
 	case (next != ""):
 		// if next is present,
@@ -226,21 +247,19 @@ func (s *userService) GetAll(previous string, next string, pgSize int) (*user.Pa
 			for _, item := range *list {
 				page.Users = append(page.Users, item)
 			}
-			// test for the presence of data in the opposite direction
-			_, page.HasPreviousPage, err = s.repo.
-				GetAll(page.Users[0].Email, false, pgSize)
 		}
-	}
-	if len(page.Users) > 0 {
-		page.StartCursor = base64.StdEncoding.
-			EncodeToString([]byte(page.Users[0].Email))
-		page.EndCursor = base64.StdEncoding.
-			EncodeToString([]byte(page.Users[len(page.Users)-1].Email))
-	} else {
-		page.StartCursor = ""
-		page.EndCursor = ""
-		page.HasNextPage = false
-		page.HasPreviousPage = false
+		if len(page.Users) > 0 {
+			page.StartCursor = base64.StdEncoding.
+				EncodeToString([]byte(page.Users[0].ID))
+			page.EndCursor = base64.StdEncoding.
+				EncodeToString([]byte(page.
+					Users[len(page.Users)-1].ID))
+			page.HasPreviousPage = true
+		} else {
+			page.StartCursor = ""
+			page.EndCursor = ""
+			page.HasPreviousPage = false
+		}
 	}
 	return &page, nil
 }
