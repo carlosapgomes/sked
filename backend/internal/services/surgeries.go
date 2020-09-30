@@ -192,8 +192,8 @@ func (s *surgeryService) GetAll(before string, after string, pgSize int) (*surge
 	case (before == "" && after == ""):
 		// if they are empty
 		// get default list and page size
-		aList, surgeriesResp.HasPreviousPage, err = s.repo.
-			GetAll("", false, pgSize)
+		aList, surgeriesResp.HasNextPage, err = s.repo.
+			GetAll("", true, pgSize)
 		if err != nil {
 			return nil, err
 		}
@@ -204,12 +204,15 @@ func (s *surgeryService) GetAll(before string, after string, pgSize int) (*surge
 		}
 		if len(surgeriesResp.Surgeries) > 0 {
 			surgeriesResp.StartCursor = base64.StdEncoding.
-				EncodeToString([]byte(surgeriesResp.Surgeries[len(surgeriesResp.Surgeries)-1].ID))
+				EncodeToString([]byte(surgeriesResp.Surgeries[0].ID))
+			surgeriesResp.EndCursor = base64.StdEncoding.
+				EncodeToString([]byte(surgeriesResp.
+					Surgeries[len(surgeriesResp.Surgeries)-1].ID))
 		} else {
 			surgeriesResp.StartCursor = ""
+			surgeriesResp.EndCursor = ""
 		}
-		surgeriesResp.EndCursor = ""
-		surgeriesResp.HasNextPage = false
+		surgeriesResp.HasPreviousPage = false
 		// and return values
 	case (before != ""):
 		//fmt.Println("entering before case")
@@ -221,7 +224,8 @@ func (s *surgeryService) GetAll(before string, after string, pgSize int) (*surge
 		}
 		cursor := string(c)
 		//fmt.Printf("use '%v' as a before cursor\n", cursor)
-		aList, surgeriesResp.HasPreviousPage, err = s.repo.GetAll(cursor, false, pgSize)
+		aList, surgeriesResp.HasPreviousPage, err = s.repo.
+			GetAll(cursor, false, pgSize)
 		if err != nil {
 			return nil, err
 		}
@@ -233,30 +237,17 @@ func (s *surgeryService) GetAll(before string, after string, pgSize int) (*surge
 		//fmt.Printf("response size: %d\n", len(*aList))
 		if len(surgeriesResp.Surgeries) > 0 {
 			//fmt.Printf("StartCursor: %v\n", surgeriesResp.Surgeries[0].ID)
-			befCursor := base64.StdEncoding.EncodeToString([]byte(surgeriesResp.Surgeries[0].ID))
-			surgeriesResp.StartCursor = befCursor
-		} else {
-			surgeriesResp.StartCursor = ""
-		}
-		// test for data after the provided cursor
-		// fill the response fields
-		//fmt.Println("testing for data after the cursor")
-		testList, _, err := s.repo.GetAll(cursor, true, 1)
-		if err != nil {
-			//fmt.Printf("error testing for more data %v\n", err)
-			return nil, err
-		}
-		if len(*testList) > 0 {
-			//fmt.Println("test list > 0")
-			//fmt.Printf("EndCursor: %v\n", surgeriesResp.Surgeries[len(surgeriesResp.Surgeries)-1].ID)
-			surgeriesResp.EndCursor = base64.StdEncoding.EncodeToString([]byte(surgeriesResp.Surgeries[len(surgeriesResp.Surgeries)-1].ID))
+			surgeriesResp.StartCursor = base64.StdEncoding.
+				EncodeToString([]byte(surgeriesResp.Surgeries[0].ID))
+			surgeriesResp.EndCursor = base64.StdEncoding.
+				EncodeToString([]byte(surgeriesResp.
+					Surgeries[len(surgeriesResp.Surgeries)-1].ID))
 			surgeriesResp.HasNextPage = true
 		} else {
-			//fmt.Println("test list = 0")
+			surgeriesResp.StartCursor = ""
 			surgeriesResp.EndCursor = ""
 			surgeriesResp.HasNextPage = false
 		}
-		// and return it
 	case (after != ""):
 		// if after is present,
 		// get an after list
@@ -267,21 +258,25 @@ func (s *surgeryService) GetAll(before string, after string, pgSize int) (*surge
 		cursor := string(c)
 		aList, surgeriesResp.HasNextPage, err = s.repo.
 			GetAll(cursor, true, pgSize)
-		// and return it
+		if err != nil {
+			return nil, err
+		}
 		if aList != nil {
 			for _, a := range *aList {
 				surgeriesResp.Surgeries = append(surgeriesResp.Surgeries, a)
 			}
 		}
 		if len(surgeriesResp.Surgeries) > 0 {
-			surgeriesResp.EndCursor = base64.StdEncoding.EncodeToString([]byte(surgeriesResp.Surgeries[0].ID))
-		}
-		// test for 'before data' from the requested cursor
-		// fill the response fields
-		_, surgeriesResp.HasPreviousPage, err = s.repo.
-			GetAll(cursor, false, pgSize)
-		if surgeriesResp.HasPreviousPage {
-			surgeriesResp.StartCursor = base64.StdEncoding.EncodeToString([]byte(after))
+			surgeriesResp.StartCursor = base64.StdEncoding.
+				EncodeToString([]byte(surgeriesResp.Surgeries[0].ID))
+			surgeriesResp.EndCursor = base64.StdEncoding.
+				EncodeToString([]byte(surgeriesResp.
+					Surgeries[len(surgeriesResp.Surgeries)-1].ID))
+			surgeriesResp.HasPreviousPage = true
+		} else {
+			surgeriesResp.StartCursor = ""
+			surgeriesResp.EndCursor = ""
+			surgeriesResp.HasPreviousPage = false
 		}
 	}
 	return &surgeriesResp, nil
