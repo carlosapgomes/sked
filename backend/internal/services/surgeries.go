@@ -181,7 +181,7 @@ func (s *surgeryService) FindByDate(dateTime time.Time) ([]*surgery.Surgery, err
 func (s *surgeryService) GetAll(before string, after string, pgSize int) (*surgery.Page, error) {
 	var surgeriesResp surgery.Page
 	var err error
-	var aList *[]surgery.Surgery
+	var list *[]surgery.Surgery
 	if pgSize <= 0 {
 		pgSize = 15
 	}
@@ -192,13 +192,13 @@ func (s *surgeryService) GetAll(before string, after string, pgSize int) (*surge
 	case (before == "" && after == ""):
 		// if they are empty
 		// get default list and page size
-		aList, surgeriesResp.HasNextPage, err = s.repo.
+		list, surgeriesResp.HasNextPage, err = s.repo.
 			GetAll("", true, pgSize)
 		if err != nil {
 			return nil, err
 		}
-		if aList != nil {
-			for _, a := range *aList {
+		if list != nil {
+			for _, a := range *list {
 				surgeriesResp.Surgeries = append(surgeriesResp.Surgeries, a)
 			}
 		}
@@ -224,17 +224,17 @@ func (s *surgeryService) GetAll(before string, after string, pgSize int) (*surge
 		}
 		cursor := string(c)
 		//fmt.Printf("use '%v' as a before cursor\n", cursor)
-		aList, surgeriesResp.HasPreviousPage, err = s.repo.
+		list, surgeriesResp.HasPreviousPage, err = s.repo.
 			GetAll(cursor, false, pgSize)
 		if err != nil {
 			return nil, err
 		}
-		if aList != nil {
-			for _, a := range *aList {
+		if list != nil {
+			for _, a := range *list {
 				surgeriesResp.Surgeries = append(surgeriesResp.Surgeries, a)
 			}
 		}
-		//fmt.Printf("response size: %d\n", len(*aList))
+		//fmt.Printf("response size: %d\n", len(*list))
 		if len(surgeriesResp.Surgeries) > 0 {
 			//fmt.Printf("StartCursor: %v\n", surgeriesResp.Surgeries[0].ID)
 			surgeriesResp.StartCursor = base64.StdEncoding.
@@ -256,13 +256,13 @@ func (s *surgeryService) GetAll(before string, after string, pgSize int) (*surge
 			return nil, err
 		}
 		cursor := string(c)
-		aList, surgeriesResp.HasNextPage, err = s.repo.
+		list, surgeriesResp.HasNextPage, err = s.repo.
 			GetAll(cursor, true, pgSize)
 		if err != nil {
 			return nil, err
 		}
-		if aList != nil {
-			for _, a := range *aList {
+		if list != nil {
+			for _, a := range *list {
 				surgeriesResp.Surgeries = append(surgeriesResp.Surgeries, a)
 			}
 		}
