@@ -212,8 +212,8 @@ func TestPatientGetAll(t *testing.T) {
 			if cursor != nil && len(cursor.Patients) != tC.wantSize {
 				t.Errorf("Want %v; got %v\n", tC.wantSize, len(cursor.Patients))
 			}
-			if tC.hasMore && !(cursor.HasAfter || cursor.HasBefore) {
-				t.Errorf("want %v; got %v\n", tC.hasMore, (cursor.HasAfter || cursor.HasBefore))
+			if tC.hasMore && !(cursor.HasNextPage || cursor.HasPreviousPage) {
+				t.Errorf("want %v; got %v\n", tC.hasMore, (cursor.HasNextPage || cursor.HasPreviousPage))
 			}
 			var contain bool
 			for _, p := range cursor.Patients {
