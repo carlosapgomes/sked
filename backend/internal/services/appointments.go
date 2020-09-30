@@ -184,7 +184,6 @@ func (s *appointmentService) GetAll(before string, after string, pgSize int) (*a
 	if pgSize <= 0 {
 		pgSize = 15
 	}
-
 	switch {
 	case (before != "" && after != ""):
 		// if both (before & after) are present, returns error
@@ -192,8 +191,8 @@ func (s *appointmentService) GetAll(before string, after string, pgSize int) (*a
 	case (before == "" && after == ""):
 		// if they are empty
 		// get default list and page size
-		aList, appointmtsResp.HasPreviousPage, err = s.repo.
-			GetAll("", false, pgSize)
+		aList, appointmtsResp.HasNextPage, err = s.repo.
+			GetAll("", true, pgSize)
 		if err != nil {
 			return nil, err
 		}
@@ -203,14 +202,13 @@ func (s *appointmentService) GetAll(before string, after string, pgSize int) (*a
 			}
 		}
 		if len(appointmtsResp.Appointments) > 0 {
-			appointmtsResp.StartCursor = base64.StdEncoding.
-				EncodeToString([]byte(appointmtsResp.Appointments[len(appointmtsResp.Appointments)-1].ID))
+			appointmtsResp.StartCursor = base64.StdEncoding.EncodeToString([]byte(appointmtsResp.Appointments[0].ID))
+			appointmtsResp.EndCursor = base64.RawStdEncoding.EncodeToString([]byte(appointmtsResp.Appointments[len(appointmtsResp.Appointments)-1].ID))
 		} else {
 			appointmtsResp.StartCursor = ""
+			appointmtsResp.EndCursor = ""
 		}
-		appointmtsResp.EndCursor = ""
-		appointmtsResp.HasNextPage = false
-		// and return values
+		appointmtsResp.HasPreviousPage = false
 	case (before != ""):
 		// if before is present,
 		// get a before list
@@ -229,20 +227,14 @@ func (s *appointmentService) GetAll(before string, after string, pgSize int) (*a
 			}
 		}
 		if len(appointmtsResp.Appointments) > 0 {
-			befCursor := base64.StdEncoding.EncodeToString([]byte(appointmtsResp.Appointments[len(appointmtsResp.Appointments)-1].ID))
-			appointmtsResp.StartCursor = befCursor
+			appointmtsResp.StartCursor = base64.StdEncoding.EncodeToString([]byte(appointmtsResp.Appointments[0].ID))
+			appointmtsResp.EndCursor = base64.StdEncoding.EncodeToString([]byte(appointmtsResp.Appointments[len(appointmtsResp.Appointments)-1].ID))
+			appointmtsResp.HasPreviousPage = true
 		} else {
 			appointmtsResp.StartCursor = ""
-		}
-		// test for 'after data' from the requested cursor
-		// fill the response fields
-		_, appointmtsResp.HasNextPage, err = s.repo.GetAll(cursor, true, pgSize)
-		if appointmtsResp.HasNextPage {
-			appointmtsResp.EndCursor = base64.StdEncoding.EncodeToString([]byte(before))
-		} else {
 			appointmtsResp.EndCursor = ""
+			appointmtsResp.HasNextPage = false
 		}
-		// and return it
 	case (after != ""):
 		// if after is present,
 		// get an after list
@@ -253,21 +245,23 @@ func (s *appointmentService) GetAll(before string, after string, pgSize int) (*a
 		cursor := string(c)
 		aList, appointmtsResp.HasNextPage, err = s.repo.
 			GetAll(cursor, true, pgSize)
-		// and return it
+		if err != nil {
+			return nil, err
+		}
 		if aList != nil {
 			for _, a := range *aList {
 				appointmtsResp.Appointments = append(appointmtsResp.Appointments, a)
 			}
 		}
 		if len(appointmtsResp.Appointments) > 0 {
-			appointmtsResp.EndCursor = base64.StdEncoding.EncodeToString([]byte(appointmtsResp.Appointments[0].ID))
-		}
-		// test for 'before data' from the requested cursor
-		// fill the response fields
-		_, appointmtsResp.HasPreviousPage, err = s.repo.
-			GetAll(cursor, false, pgSize)
-		if appointmtsResp.HasPreviousPage {
-			appointmtsResp.StartCursor = base64.StdEncoding.EncodeToString([]byte(after))
+			appointmtsResp.StartCursor = base64.StdEncoding.EncodeToString([]byte(appointmtsResp.Appointments[0].ID))
+			appointmtsResp.EndCursor = base64.StdEncoding.EncodeToString([]byte(appointmtsResp.Appointments[len(appointmtsResp.Appointments)-1].ID))
+			appointmtsResp.HasPreviousPage = true
+		} else {
+
+			appointmtsResp.StartCursor = ""
+			appointmtsResp.EndCursor = ""
+			appointmtsResp.HasPreviousPage = false
 		}
 	}
 	return &appointmtsResp, nil
