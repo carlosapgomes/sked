@@ -180,7 +180,7 @@ func (s *appointmentService) FindByDate(dateTime time.Time) ([]*appointment.Appo
 func (s *appointmentService) GetAll(before string, after string, pgSize int) (*appointment.Page, error) {
 	var appointmtsResp appointment.Page
 	var err error
-	var aList *[]appointment.Appointment
+	var list *[]appointment.Appointment
 	if pgSize <= 0 {
 		pgSize = 15
 	}
@@ -191,13 +191,13 @@ func (s *appointmentService) GetAll(before string, after string, pgSize int) (*a
 	case (before == "" && after == ""):
 		// if they are empty
 		// get default list and page size
-		aList, appointmtsResp.HasNextPage, err = s.repo.
+		list, appointmtsResp.HasNextPage, err = s.repo.
 			GetAll("", true, pgSize)
 		if err != nil {
 			return nil, err
 		}
-		if aList != nil {
-			for _, a := range *aList {
+		if list != nil && len(*list) > 0 {
+			for _, a := range *list {
 				appointmtsResp.Appointments = append(appointmtsResp.Appointments, a)
 			}
 		}
@@ -217,12 +217,12 @@ func (s *appointmentService) GetAll(before string, after string, pgSize int) (*a
 			return nil, err
 		}
 		cursor := string(c)
-		aList, appointmtsResp.HasPreviousPage, err = s.repo.GetAll(cursor, false, pgSize)
+		list, appointmtsResp.HasPreviousPage, err = s.repo.GetAll(cursor, false, pgSize)
 		if err != nil {
 			return nil, err
 		}
-		if aList != nil {
-			for _, a := range *aList {
+		if list != nil && len(*list) > 0 {
+			for _, a := range *list {
 				appointmtsResp.Appointments = append(appointmtsResp.Appointments, a)
 			}
 		}
@@ -243,13 +243,13 @@ func (s *appointmentService) GetAll(before string, after string, pgSize int) (*a
 			return nil, err
 		}
 		cursor := string(c)
-		aList, appointmtsResp.HasNextPage, err = s.repo.
+		list, appointmtsResp.HasNextPage, err = s.repo.
 			GetAll(cursor, true, pgSize)
 		if err != nil {
 			return nil, err
 		}
-		if aList != nil {
-			for _, a := range *aList {
+		if list != nil && len(*list) > 0 {
+			for _, a := range *list {
 				appointmtsResp.Appointments = append(appointmtsResp.Appointments, a)
 			}
 		}

@@ -114,7 +114,7 @@ func (s *patientService) GetAll(previous string, next string, pgSize int) (*pati
 		if err != nil {
 			return nil, err
 		}
-		if list != nil {
+		if list != nil && len(*list) > 0 {
 			for _, item := range *list {
 				page.Patients = append(page.Patients, item)
 			}
@@ -142,7 +142,7 @@ func (s *patientService) GetAll(previous string, next string, pgSize int) (*pati
 			//fmt.Println(err)
 			return nil, err
 		}
-		if list != nil {
+		if list != nil && len(*list) > 0 {
 			for _, item := range *list {
 				page.Patients = append(page.Patients, item)
 			}
@@ -171,7 +171,7 @@ func (s *patientService) GetAll(previous string, next string, pgSize int) (*pati
 		if err != nil {
 			return nil, err
 		}
-		if list != nil {
+		if list != nil && len(*list) > 0 {
 			for _, item := range *list {
 				page.Patients = append(page.Patients, item)
 			}
