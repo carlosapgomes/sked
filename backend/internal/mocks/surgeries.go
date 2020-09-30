@@ -199,17 +199,28 @@ func (r SurgeryMockRepo) GetAll(cursor string, after bool, pgSize int) (*[]surge
 		CreatedAt:       time.Date(2020, 9, 6, 12, 0, 0, 0, time.UTC),
 	},
 	)
+	var res []surgery.Surgery
+	var hasMore bool
+	hasMore = false
+	var respSize int
 	if cursor == "" {
-		return &db, false, nil
+		if pgSize >= len(db) {
+			respSize = len(db)
+			hasMore = false
+		} else {
+			respSize = pgSize
+			hasMore = true
+		}
+		for i := 0; i < respSize; i++ {
+			res = append(res, db[i])
+		}
+		return &res, hasMore, nil
 	}
 	pos := r.findPos(db, cursor)
 	if pos == -1 {
 		return nil, false, surgery.ErrNoRecord
 	}
 
-	var res []surgery.Surgery
-	var hasMore bool
-	hasMore = false
 	if after {
 		start := pos + 1
 		for i := start; i < (start + pgSize); i++ {
