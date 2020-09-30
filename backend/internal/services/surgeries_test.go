@@ -13,7 +13,8 @@ import (
 
 func TestSurgeryCreate(t *testing.T) {
 	repo := mocks.NewSurgeryRepo()
-	svc := services.NewSurgeryService(repo)
+	userSvc := services.NewUserService(mocks.NewUserRepo())
+	svc := services.NewSurgeryService(repo, userSvc)
 
 	tests := []struct {
 		name            string
@@ -27,28 +28,43 @@ func TestSurgeryCreate(t *testing.T) {
 		createdByID     string
 		wantError       []byte
 	}{
-		{"Valid surgery", time.Now(), "John Doe", "22070f56-5d52-43f0-9f59-5de61c1db506", "Dr House", "f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes", "saphenectomy", "10b9ad06-e86d-4a85-acb1-d7e268d1f21a", nil},
-		{"Invalid patientID format", time.Now(), "John Doe", "22070f56--43f0-9f59-5de61c1db506", "Dr House", "f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes", "saphenectomy", "10b9ad06-e86d-4a85-acb1-d7e268d1f21a", []byte("invalid input syntax")},
-		{"Invalid doctorID format", time.Now(), "John Doe", "22070f56-5d52-43f0-9f59-5de61c1db506", "Dr House", "f06244b9-97e5--bae0-3b6da7a0b604", "some notes", "saphenectomy", "10b9ad06-e86d-4a85-acb1-d7e268d1f21a", []byte("invalid input syntax")},
-		{"Invalid createdByID format", time.Now(), "John Doe", "22070f56-5d52-43f0-9f59-5de61c1db506", "Dr House", "f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes", "saphenectomy", "10b9ad06-e86d--acb1-d7e268d1f21a", []byte("invalid input syntax")},
+		{"Valid surgery", time.Now(), "John Doe",
+			"22070f56-5d52-43f0-9f59-5de61c1db506", "Dr House",
+			"f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes",
+			"saphenectomy", "ecadbb28-14e6-4560-8574-809c6c54b9cb", nil},
+		{"Invalid patientID format", time.Now(), "John Doe",
+			"22070f56--43f0-9f59-5de61c1db506", "Dr House",
+			"f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes",
+			"saphenectomy", "10b9ad06-e86d-4a85-acb1-d7e268d1f21a",
+			[]byte("invalid input syntax")},
+		{"Invalid doctorID format", time.Now(), "John Doe",
+			"22070f56-5d52-43f0-9f59-5de61c1db506", "Dr House",
+			"f06244b9-97e5--bae0-3b6da7a0b604", "some notes", "saphenectomy",
+			"10b9ad06-e86d-4a85-acb1-d7e268d1f21a",
+			[]byte("invalid input syntax")},
+		{"Invalid createdByID format", time.Now(), "John Doe",
+			"22070f56-5d52-43f0-9f59-5de61c1db506", "Dr House",
+			"f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes",
+			"saphenectomy", "10b9ad06-e86d--acb1-d7e268d1f21a",
+			[]byte("invalid input syntax")},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			id, err := svc.Create(tt.dateTime, tt.patientName, tt.patientID, tt.doctorName, tt.doctorID, tt.notes, tt.proposedSurgery, tt.createdByID)
 
 			if (tt.wantError != nil) && (err != nil) {
-				t.Log("wantError and error != nil")
+				//t.Log("wantError and error != nil")
 				e := err.Error()
 				if !bytes.Contains([]byte(e), tt.wantError) {
 					t.Errorf("want error msg %s to contain %q", e, tt.wantError)
 				}
 			}
 			if (tt.wantError == nil) && (err != nil) {
-				t.Log("wantError == nil and error != nil")
+				//t.Log("wantError == nil and error != nil")
 				t.Errorf("want error equal 'nil'; got %s", err)
 			}
 			if (tt.wantError == nil) && (err == nil) {
-				t.Log("wantError and error == nil")
+				//t.Log("wantError and error == nil")
 				if id != nil {
 					_, err = uuid.FromString(*id)
 					if err != nil {
@@ -65,7 +81,8 @@ func TestSurgeryCreate(t *testing.T) {
 
 func TestSurgeryUpdate(t *testing.T) {
 	repo := mocks.NewSurgeryRepo()
-	svc := services.NewSurgeryService(repo)
+	userSvc := services.NewUserService(mocks.NewUserRepo())
+	svc := services.NewSurgeryService(repo, userSvc)
 
 	tests := []struct {
 		name            string
@@ -152,7 +169,8 @@ func TestSurgeryUpdate(t *testing.T) {
 
 func TestSurgeryFindByID(t *testing.T) {
 	repo := mocks.NewSurgeryRepo()
-	svc := services.NewSurgeryService(repo)
+	userSvc := services.NewUserService(mocks.NewUserRepo())
+	svc := services.NewSurgeryService(repo, userSvc)
 
 	tests := []struct {
 		name        string
@@ -202,7 +220,8 @@ func TestSurgeryFindByID(t *testing.T) {
 
 func TestSurgeryFindByPatientID(t *testing.T) {
 	repo := mocks.NewSurgeryRepo()
-	svc := services.NewSurgeryService(repo)
+	userSvc := services.NewUserService(mocks.NewUserRepo())
+	svc := services.NewSurgeryService(repo, userSvc)
 
 	tests := []struct {
 		name        string
@@ -256,7 +275,8 @@ func TestSurgeryFindByPatientID(t *testing.T) {
 
 func TestSurgeryFindByDoctorID(t *testing.T) {
 	repo := mocks.NewSurgeryRepo()
-	svc := services.NewSurgeryService(repo)
+	userSvc := services.NewUserService(mocks.NewUserRepo())
+	svc := services.NewSurgeryService(repo, userSvc)
 
 	tests := []struct {
 		name        string
@@ -310,7 +330,8 @@ func TestSurgeryFindByDoctorID(t *testing.T) {
 
 func TestSurgeryFindByDate(t *testing.T) {
 	repo := mocks.NewSurgeryRepo()
-	svc := services.NewSurgeryService(repo)
+	userSvc := services.NewUserService(mocks.NewUserRepo())
+	svc := services.NewSurgeryService(repo, userSvc)
 
 	tests := []struct {
 		name        string
@@ -364,7 +385,8 @@ func TestSurgeryFindByDate(t *testing.T) {
 
 func TestSurgeryGetAll(t *testing.T) {
 	repo := mocks.NewSurgeryRepo()
-	svc := services.NewSurgeryService(repo)
+	userSvc := services.NewUserService(mocks.NewUserRepo())
+	svc := services.NewSurgeryService(repo, userSvc)
 	testCases := []struct {
 		desc          string
 		before        string
@@ -426,8 +448,8 @@ func TestSurgeryGetAll(t *testing.T) {
 			if cursor != nil && len(cursor.Surgeries) != tC.wantSize {
 				t.Errorf("Want %v; got %v\n", tC.wantSize, len(cursor.Surgeries))
 			}
-			if tC.hasMore && !(cursor.HasAfter || cursor.HasBefore) {
-				t.Errorf("want %v; got %v\n", tC.hasMore, (cursor.HasAfter || cursor.HasBefore))
+			if tC.hasMore && !(cursor.HasNextPage || cursor.HasPreviousPage) {
+				t.Errorf("want %v; got %v\n", tC.hasMore, (cursor.HasNextPage || cursor.HasPreviousPage))
 			}
 			var contain bool
 			for _, u := range cursor.Surgeries {
