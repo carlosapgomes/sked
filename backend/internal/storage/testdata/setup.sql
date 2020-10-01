@@ -39,7 +39,7 @@ CREATE TABLE appointments{
     created_at TIMESTAMP WITH TIME ZONE,
     updated_by UUID NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE
-}
+};
 
 CREATE TABLE surgeries{
     id UUID NOT NULL PRIMARY KEY UNIQUE,
@@ -56,7 +56,8 @@ CREATE TABLE surgeries{
     created_at TIMESTAMP WITH TIME ZONE,
     updated_by UUID NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE
-}
+};
+
 CREATE TABLE sessions (
   id UUID NOT NULL PRIMARY KEY UNIQUE,
   userid UUID NOT NULL,
@@ -71,7 +72,6 @@ CREATE TABLE tokens (
   expires_at TIMESTAMP WITH TIME ZONE,
   kind TEXT
 );
-
 
 \i insert_tokes.sql
 \i insert_sessions.sql
