@@ -7,13 +7,13 @@ import (
 )
 
 // Cursor encapsulates data for pagination
-type Cursor struct {
-	Before    string `json:"before"`
-	HasBefore bool   `json:"hasbefore"`
-	After     string `json:"after"`
-	HasAfter  bool   `json:"hasafter"`
-	Surgeries []Surgery
-}
+//type Cursor struct {
+//Before    string `json:"before"`
+//HasBefore bool   `json:"hasbefore"`
+//After     string `json:"after"`
+//HasAfter  bool   `json:"hasafter"`
+//Surgeries []Surgery
+//}
 
 // Page encapsulates data and pagination cursors
 type Page struct {
