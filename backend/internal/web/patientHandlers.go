@@ -237,12 +237,15 @@ func (app App) createPatient(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var id *string
-	id, err = app.patientService.Create(newPatient.Name, newPatient.Address, newPatient.City, newPatient.State, newPatient.Phones, u.ID)
+	id, err = app.patientService.Create(newPatient.Name, newPatient.Address,
+		newPatient.City, newPatient.State, newPatient.Phones, u.ID)
 	if err != nil {
 		if errors.As(err, &patient.ErrDuplicateField) {
 			w.Header().Set("Content-type", "application/json")
 			app.clientError(w, http.StatusBadRequest)
-			js, err := json.Marshal(&map[string]string{"Name": "there is a patient record with that name"})
+			js, err := json.Marshal(&map[string]string{
+				"Name": "there is a patient record with that name",
+			})
 			if err != nil {
 				app.serverError(w, err)
 				return
