@@ -76,6 +76,7 @@ CREATE TABLE tokens (
 \i insert_tokes.sql
 \i insert_sessions.sql
 \i insert_users.sql
+\i insert_patients.sql
 \i insert_appointments.sql
 \i insert_surgeries.sql
 
