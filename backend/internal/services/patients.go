@@ -92,15 +92,19 @@ func (s *patientService) UpdateName(id string, name, updatedBy string) error {
 }
 
 // UpdatePhone updates patient email
-func (s *patientService) UpdatePhone(id string, phones []string) error {
+func (s *patientService) UpdatePhone(id string, phones []string, updatedBy string) error {
 	_, err := uuid.FromString(id)
+	if err != nil {
+		return patient.ErrInvalidInputSyntax
+	}
+	_, err = uuid.FromString(updatedBy)
 	if err != nil {
 		return patient.ErrInvalidInputSyntax
 	}
 	if len(phones) > 10 {
 		return patient.ErrInvalidInputSyntax
 	}
-	return s.repo.UpdatePhone(id, phones)
+	return s.repo.UpdatePhone(id, phones, updatedBy)
 }
 
 // GetAll returns a paginated list of all patients ordered byname
