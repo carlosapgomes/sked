@@ -133,7 +133,14 @@ func (app App) updatePatientName(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
-	err = app.patientService.UpdateName(pID, newName.Name)
+	// get logged in user from ctx
+	u, ok := r.Context().Value(ContextKeyUser).(*user.User)
+	if !ok {
+		// no ContextKeyUser -> user is not authenticated
+		app.clientError(w, http.StatusForbidden)
+		return
+	}
+	err = app.patientService.UpdateName(pID, newName.Name, u.ID)
 	if err != nil {
 		app.serverError(w, err)
 		return

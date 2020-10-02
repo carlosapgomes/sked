@@ -76,11 +76,19 @@ func (s *patientService) FindByID(id string) (*patient.Patient, error) {
 }
 
 // UpdateName, updates patient name
-func (s *patientService) UpdateName(id string, name string) error {
+func (s *patientService) UpdateName(id string, name, updatedBy string) error {
+	_, err := uuid.FromString(id)
+	if err != nil {
+		return patient.ErrInvalidInputSyntax
+	}
+	_, err = uuid.FromString(updatedBy)
+	if err != nil {
+		return patient.ErrInvalidInputSyntax
+	}
 	if name == "" {
 		return patient.ErrInvalidInputSyntax
 	}
-	return s.repo.UpdateName(id, name)
+	return s.repo.UpdateName(id, name, updatedBy)
 }
 
 // UpdatePhone updates patient email
