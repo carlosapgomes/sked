@@ -23,11 +23,13 @@ func NewPgUserRepository(db *sql.DB) user.Repository {
 
 // CreateUser creates a new user
 func (r userRepository) Create(u user.User) (*string, error) {
-	stmt := `INSERT INTO users (id, name, email, phone, hashedpw, created_at, updated_at,
- Roles ) VALUES($1, $2, $3, $4, $5, $6, $7, $8) Returning id;`
+	stmt := `INSERT INTO users (id, name, email, phone, hashedpw, 
+			 created_at, updated_at, Roles) VALUES($1, $2, $3, $4,
+			 $5, $6, $7, $8) Returning id;`
 
 	var id string
-	err := r.DB.QueryRow(stmt, u.ID, u.Name, u.Email, u.Phone, u.HashedPw, u.CreatedAt, u.UpdatedAt, pq.Array(u.Roles)).Scan(&id)
+	err := r.DB.QueryRow(stmt, u.ID, u.Name, u.Email, u.Phone, u.HashedPw,
+		u.CreatedAt, u.UpdatedAt, pq.Array(u.Roles)).Scan(&id)
 	if pqErr, ok := err.(*pq.Error); ok {
 		switch pqErr.Code {
 		case "23505":
