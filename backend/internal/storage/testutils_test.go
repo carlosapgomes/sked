@@ -122,14 +122,25 @@ func newTestDB(t *testing.T) (*sql.DB, func()) {
 		t.Fatal(err)
 	}
 
-	// Read the setup SQL script from file and execute the statements.
-	script, err := ioutil.ReadFile("./testdata/setup.sql")
-	if err != nil {
-		t.Fatal(err)
+	// Read setup SQL scripts and execute
+	scripts := []string{
+		"./_dbsetup.sql",
+		"./testdata/insert_tokens.sql",
+		"./testdata/insert_sessions.sql",
+		"./testdata/insert_users.sql",
+		"./testdata/insert_patients.sql",
+		"./testdata/insert_appointments.sql",
+		"./testdata/insert_surgeries.sql",
 	}
-	_, err = db.Exec(string(script))
-	if err != nil {
-		t.Fatal(err)
+	for _, scrpt := range scripts {
+		script, err := ioutil.ReadFile(scrpt)
+		if err != nil {
+			t.Fatal(err)
+		}
+		_, err = db.Exec(string(script))
+		if err != nil {
+			t.Fatal(err)
+		}
 	}
 
 	// Return the connection pool and an anonymous function which reads and
