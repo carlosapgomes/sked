@@ -141,7 +141,7 @@ func TestUpdatePatientName(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
-			err := svc.UpdateName(tC.id, tC.newPatientName)
+			err := svc.UpdateName(tC.id, tC.newPatientName, "f06244b9-97e5-4f1a-bae0-3b6da7a0b604")
 			if err != tC.wantError {
 				t.Errorf("want %v; got %v", tC.wantError, err)
 			}

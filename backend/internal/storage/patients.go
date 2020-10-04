@@ -25,7 +25,7 @@ func NewPgPatientRepository(db *sql.DB) patient.Repository {
 // Create - creates a new patient record
 func (r patientRepository) Create(p patient.Patient) (*string, error) {
 	stmt := `INSERT INTO patients (id, name, address, city, state, phones, 
-             created_by,	created_at, updated_by, updated_at) VALUES($1,
+             created_by, created_at, updated_by, updated_at) VALUES($1,
 			 $2, $3, $4, $5, $6, $7, $8, $9, $10) Returning id;`
 	var id string
 	err := r.DB.QueryRow(stmt, p.ID, p.Name, p.Address, p.City, p.State,

@@ -87,10 +87,12 @@ func (r *PatientMockRepo) Create(patient patient.Patient) (*string, error) {
 }
 
 // UpdateName mocks updating patient's Name
-func (r *PatientMockRepo) UpdateName(id string, name string) error {
+func (r *PatientMockRepo) UpdateName(id string, name string, updatedBy string) error {
 	for i, u := range r.pDb {
 		if u.ID == id {
 			r.pDb[i].Name = name
+			r.pDb[i].UpdatedBy = updatedBy
+			r.pDb[i].UpdatedAt = time.Now()
 			return nil
 		}
 	}
@@ -98,10 +100,12 @@ func (r *PatientMockRepo) UpdateName(id string, name string) error {
 }
 
 // UpdatePhone mocks updating patient's Phone
-func (r *PatientMockRepo) UpdatePhone(id string, phones []string) error {
+func (r *PatientMockRepo) UpdatePhone(id string, phones []string, updatedBy string) error {
 	for i, u := range r.pDb {
 		if u.ID == id {
 			r.pDb[i].Phones = phones
+			r.pDb[i].UpdatedBy = updatedBy
+			r.pDb[i].UpdatedAt = time.Now()
 			return nil
 		}
 	}
