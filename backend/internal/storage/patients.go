@@ -136,7 +136,7 @@ func (r patientRepository) GetAll(cursor string, next bool,
 	if pgSize <= 0 {
 		pgSize = 15
 	}
-	patient, err := r.FindByID(cursor)
+	p, err := r.FindByID(cursor)
 	if err != nil {
 		return nil, false, err
 	}
@@ -153,7 +153,7 @@ func (r patientRepository) GetAll(cursor string, next bool,
 			created_at, updated_by, updated_at FROM patients 
 			WHERE  name < $1 ORDER BY name LIMIT $2`
 	}
-	rows, err := r.DB.Query(stmt, patient.Name, (pgSize + 1))
+	rows, err := r.DB.Query(stmt, p.Name, (pgSize + 1))
 	if err != nil {
 		return nil, false, err
 	}
@@ -165,9 +165,9 @@ func (r patientRepository) GetAll(cursor string, next bool,
 			pq.Array(&p.Phones), &p.CreatedBy, &p.CreatedAt,
 			&p.UpdatedBy, &p.UpdatedAt)
 		if err == sql.ErrNoRows {
-			return nil, user.ErrNoRecord
+			return nil, false, user.ErrNoRecord
 		} else if err != nil {
-			return nil, err
+			return nil, false, err
 		}
 		patients = append(patients, p)
 	}
