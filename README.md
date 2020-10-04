@@ -118,4 +118,4 @@ Tables:
 - ~~copy all mocks sample data to the SQL initialization test script~~
 - write driven ports (repositories implementations)
 - full integration tests will be the same web test but with real repositories
-
+- consider adding created_by and updated_by to users entity

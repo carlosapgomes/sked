@@ -85,7 +85,6 @@ CREATE TABLE sessions (
   created_at TIMESTAMP WITH TIME ZONE NOT NULL,
   expires_at TIMESTAMP WITH TIME ZONE NOT NULL
 );
-
 CREATE INDEX sessions_id_index ON sessions (id);
 CREATE INDEX sessions_userid_index ON sessions (userid);
 
@@ -97,6 +96,5 @@ CREATE TABLE tokens (
   expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
   kind TEXT
 );
-
 CREATE INDEX tokens_id_index ON tokens (id);
 CREATE INDEX tokens_userid_index ON tokens (userid);
