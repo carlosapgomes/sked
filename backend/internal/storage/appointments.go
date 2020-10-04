@@ -61,15 +61,16 @@ func (r appointmentRepository) Update(a appointment.Appointment) (*string, error
 }
 
 // FindByID - finds an appointment by its ID
-func (r appointmentRepository) FindByID(id string) (*appointment.Appointment, error) {
+func (r appointmentRepository) FindByID(id string) (*appointment.Appointment,
+	error) {
 	var a appointment.Appointment
-	stmt := `SELECT id, date_time, patient_name, patient_id, doctor_name, doctor_id,
-			notes, canceled, completed, created_by, created_at, 
+	stmt := `SELECT id, date_time, patient_name, patient_id, doctor_name,
+			doctor_id, notes, canceled, completed, created_by, created_at, 
 			updated_by, updated_at WHERE id = $1`
 	row := r.DB.QueryRow(stmt, id)
-	err := row.Scan(&a.ID, &a.DateTime, &a.PatientName, &a.PatientID, &a.DoctorName,
-		&a.DoctorID, &a.Notes, &a.Canceled, &a.Completed, &a.CreatedBy,
-		&a.CreatedAt, &a.UpdatedBy, &a.UpdatedAt)
+	err := row.Scan(&a.ID, &a.DateTime, &a.PatientName, &a.PatientID,
+		&a.DoctorName, &a.DoctorID, &a.Notes, &a.Canceled, &a.Completed,
+		&a.CreatedBy, &a.CreatedAt, &a.UpdatedBy, &a.UpdatedAt)
 	if err == sql.ErrNoRows {
 		return nil, user.ErrNoRecord
 	} else if err != nil {
@@ -83,7 +84,8 @@ func (r appointmentRepository) FindByID(id string) (*appointment.Appointment, er
 }
 
 // FindByPatientID - finds an appointment by its patientID
-func (r appointmentRepository) FindByPatientID(patientID string) ([]appointment.Appointment, error) {
+func (r appointmentRepository) FindByPatientID(patientID string) ([]appointment.Appointment,
+	error) {
 	var apptmts []appointment.Appointment
 	stmt := `SELECT id, date_time, patient_name, patient_id, doctor_name, doctor_id,
 			notes, canceled, completed, created_by, created_at, 
@@ -96,9 +98,9 @@ func (r appointmentRepository) FindByPatientID(patientID string) ([]appointment.
 	defer rows.Close()
 	for rows.Next() {
 		var a appointment.Appointment
-		err = rows.Scan(&a.ID, &a.DateTime, &a.PatientName, &a.PatientID, &a.DoctorName,
-			&a.DoctorID, &a.Notes, &a.Canceled, &a.Completed, &a.CreatedBy,
-			&a.CreatedAt, &a.UpdatedBy, &a.UpdatedAt)
+		err = rows.Scan(&a.ID, &a.DateTime, &a.PatientName, &a.PatientID,
+			&a.DoctorName, &a.DoctorID, &a.Notes, &a.Canceled, &a.Completed,
+			&a.CreatedBy, &a.CreatedAt, &a.UpdatedBy, &a.UpdatedAt)
 		if err == sql.ErrNoRows {
 			return nil, user.ErrNoRecord
 		} else if err != nil {
@@ -109,37 +111,123 @@ func (r appointmentRepository) FindByPatientID(patientID string) ([]appointment.
 		apptmts = append(apptmts, a)
 	}
 	// every date/time was saved as UTC, so use them as UTC
-	return &apptmts, err
+	return apptmts, err
 }
 
 // FindFindByDoctorID - finds an appointment by its doctorID
-func (r appointmentRepository) FindByDoctorID(doctorID string) ([]*appointment.Appointment, error) {
-	var a appointment.Appointment
+func (r appointmentRepository) FindByDoctorID(doctorID string) ([]appointment.Appointment,
+	error) {
+	var apptmts []appointment.Appointment
 	stmt := `SELECT id, date_time, patient_name, patient_id, doctor_name, doctor_id,
 			notes, canceled, completed, created_by, created_at, 
 			updated_by, updated_at WHERE doctor_id = $1`
-	row := r.DB.QueryRow(stmt, doctorID)
-	err := row.Scan(&a.ID, &a.DateTime, &a.PatientName, &a.PatientID, &a.DoctorName,
-		&a.DoctorID, &a.Notes, &a.Canceled, &a.Completed, &a.CreatedBy,
-		&a.CreatedAt, &a.UpdatedBy, &a.UpdatedAt)
-	if err == sql.ErrNoRows {
-		return nil, user.ErrNoRecord
-	} else if err != nil {
+	rows, err := r.DB.Query(stmt, doctorID)
+	if err != nil {
 		return nil, err
 	}
-	// every date/time was saved as UTC, so use them as UTC
 	loc, _ := time.LoadLocation("UTC")
-	a.CreatedAt = a.CreatedAt.In(loc)
-	a.UpdatedAt = a.UpdatedAt.In(loc)
-	return &a, err
+	defer rows.Close()
+	for rows.Next() {
+		var a appointment.Appointment
+		err = rows.Scan(&a.ID, &a.DateTime, &a.PatientName, &a.PatientID,
+			&a.DoctorName, &a.DoctorID, &a.Notes, &a.Canceled, &a.Completed,
+			&a.CreatedBy, &a.CreatedAt, &a.UpdatedBy, &a.UpdatedAt)
+		if err == sql.ErrNoRows {
+			return nil, user.ErrNoRecord
+		} else if err != nil {
+			return nil, err
+		}
+		a.CreatedAt = a.CreatedAt.In(loc)
+		a.UpdatedAt = a.UpdatedAt.In(loc)
+		apptmts = append(apptmts, a)
+	}
+	return apptmts, err
 }
 
 // FindByDate - finds appointments in a date
-func (r appointmentRepository) FindByDate(date time.Time) ([]*appointment.Appointment, error) {
-	return nil, nil
+func (r appointmentRepository) FindByDate(date time.Time) ([]appointment.Appointment, error) {
+	var apptmts []appointment.Appointment
+	searchDate := date.Format("2006-01-02")
+	stmt := `SELECT id, date_time, patient_name, patient_id, doctor_name, doctor_id,
+			notes, canceled, completed, created_by, created_at, 
+			updated_by, updated_at WHERE date(date_time) = $1`
+	rows, err := r.DB.Query(stmt, searchDate)
+	if err != nil {
+		return nil, err
+	}
+	loc, _ := time.LoadLocation("UTC")
+	defer rows.Close()
+	for rows.Next() {
+		var a appointment.Appointment
+		err = rows.Scan(&a.ID, &a.DateTime, &a.PatientName, &a.PatientID,
+			&a.DoctorName, &a.DoctorID, &a.Notes, &a.Canceled, &a.Completed,
+			&a.CreatedBy, &a.CreatedAt, &a.UpdatedBy, &a.UpdatedAt)
+		if err == sql.ErrNoRows {
+			return nil, user.ErrNoRecord
+		} else if err != nil {
+			return nil, err
+		}
+		a.CreatedAt = a.CreatedAt.In(loc)
+		a.UpdatedAt = a.UpdatedAt.In(loc)
+		apptmts = append(apptmts, a)
+	}
+	return apptmts, err
 }
 
 // GetAll - returns a paginated list of appointments
-func (r appointmentRepository) GetAll(cursor string, after bool, pgSize int) (*[]appointment.Appointment, bool, error) {
-	return nil, false, nil
+func (r appointmentRepository) GetAll(cursor string, next bool,
+	pgSize int) ([]appointment.Appointment, bool, error) {
+	if pgSize <= 0 {
+		pgSize = 15
+	}
+	appointmt, err := r.FindByID(cursor)
+	if err != nil {
+		return nil, false, err
+	}
+
+	cursorDate := appointmt.DateTime.Format("2006-01-02")
+	var stmt string
+	if next {
+		// Get next result page
+		stmt = `SELECT id, date_time, patient_name, patient_id, doctor_name,
+			doctor_id, notes, canceled, completed, created_by, created_at, 
+			updated_by, updated_at from appointments 
+			WHERE date(date_time) > $1 ORDER BY date_time LIMIT $2`
+	} else {
+		// Get previous result page
+		stmt = `SELECT id, date_time, patient_name, patient_id, doctor_name,
+			doctor_id, notes, canceled, completed, created_by, created_at, 
+			updated_by, updated_at from appointments 
+			WHERE date(date_time) < $1 ORDER BY date_time LIMIT $2`
+	}
+	rows, err := r.DB.Query(stmt, cursorDate, (pgSize + 1))
+	if err != nil {
+		return nil, false, err
+	}
+	var appointmts []appointment.Appointment
+	defer rows.Close()
+	for rows.Next() {
+		var a appointment.Appointment
+		err = rows.Scan(&a.ID, &a.DateTime, &a.PatientName, &a.PatientID,
+			&a.DoctorName, &a.DoctorID, &a.Notes, &a.Canceled, &a.Completed,
+			&a.CreatedBy, &a.CreatedAt, &a.UpdatedBy, &a.UpdatedAt)
+		if err == sql.ErrNoRows {
+			return nil, false, user.ErrNoRecord
+		} else if err != nil {
+			return nil, false, err
+		}
+		appointmts = append(appointmts, a)
+	}
+	// get any error encountered during iteration
+	err = rows.Err()
+	if err != nil {
+		return nil, false, err
+	}
+	hasMore := false
+	if len(appointmts) == pgSize {
+		// remove last slice item, because it was not requested
+		appointmts = appointmts[:len(appointmts)-1]
+		hasMore = true
+	}
+	return appointmts, hasMore, nil
 }
