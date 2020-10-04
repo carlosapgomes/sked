@@ -142,7 +142,7 @@ func (s *appointmentService) FindByID(id string) (*appointment.Appointment, erro
 }
 
 // FindFindByPatientID - look for appointments by its patientID
-func (s *appointmentService) FindByPatientID(patientID string) ([]*appointment.Appointment, error) {
+func (s *appointmentService) FindByPatientID(patientID string) ([]appointment.Appointment, error) {
 	_, err := uuid.FromString(patientID)
 	if err != nil {
 		return nil, appointment.ErrInvalidInputSyntax
@@ -155,7 +155,7 @@ func (s *appointmentService) FindByPatientID(patientID string) ([]*appointment.A
 }
 
 // FindByDoctorID - look for appointments by doctorID
-func (s *appointmentService) FindByDoctorID(doctorID string) ([]*appointment.Appointment, error) {
+func (s *appointmentService) FindByDoctorID(doctorID string) ([]appointment.Appointment, error) {
 	_, err := uuid.FromString(doctorID)
 	if err != nil {
 		return nil, appointment.ErrInvalidInputSyntax
@@ -168,7 +168,7 @@ func (s *appointmentService) FindByDoctorID(doctorID string) ([]*appointment.App
 }
 
 // FindByDate - look for appointments by date
-func (s *appointmentService) FindByDate(dateTime time.Time) ([]*appointment.Appointment, error) {
+func (s *appointmentService) FindByDate(dateTime time.Time) ([]appointment.Appointment, error) {
 	appointmts, err := s.repo.FindByDate(dateTime)
 	if err != nil {
 		return nil, err

@@ -56,7 +56,7 @@ func (r AppointmentMockRepo) FindByID(id string) (*appointment.Appointment, erro
 }
 
 // FindByPatientID
-func (r AppointmentMockRepo) FindByPatientID(patientID string) ([]*appointment.Appointment, error) {
+func (r AppointmentMockRepo) FindByPatientID(patientID string) ([]appointment.Appointment, error) {
 	appointmt := appointment.Appointment{
 		ID:          "e521798b-9f33-4a10-8b2a-9677ed1cd1ae",
 		DateTime:    time.Now(),
@@ -69,8 +69,8 @@ func (r AppointmentMockRepo) FindByPatientID(patientID string) ([]*appointment.A
 		CreatedAt:   time.Now(),
 	}
 	if patientID == appointmt.PatientID {
-		appointmts := []*appointment.Appointment{
-			&appointmt,
+		appointmts := []appointment.Appointment{
+			appointmt,
 		}
 		return appointmts, nil
 	} else {
@@ -79,7 +79,7 @@ func (r AppointmentMockRepo) FindByPatientID(patientID string) ([]*appointment.A
 }
 
 // FindByDoctorID
-func (r AppointmentMockRepo) FindByDoctorID(doctorID string) ([]*appointment.Appointment, error) {
+func (r AppointmentMockRepo) FindByDoctorID(doctorID string) ([]appointment.Appointment, error) {
 	appointmt := appointment.Appointment{
 		ID:          "e521798b-9f33-4a10-8b2a-9677ed1cd1ae",
 		DateTime:    time.Now(),
@@ -92,8 +92,8 @@ func (r AppointmentMockRepo) FindByDoctorID(doctorID string) ([]*appointment.App
 		CreatedAt:   time.Now(),
 	}
 	if doctorID == appointmt.DoctorID {
-		appointmts := []*appointment.Appointment{
-			&appointmt,
+		appointmts := []appointment.Appointment{
+			appointmt,
 		}
 		return appointmts, nil
 	} else {
@@ -102,7 +102,7 @@ func (r AppointmentMockRepo) FindByDoctorID(doctorID string) ([]*appointment.App
 }
 
 // FindByDate
-func (r AppointmentMockRepo) FindByDate(dateTime time.Time) ([]*appointment.Appointment, error) {
+func (r AppointmentMockRepo) FindByDate(dateTime time.Time) ([]appointment.Appointment, error) {
 	appointmt := appointment.Appointment{
 		ID:          "e521798b-9f33-4a10-8b2a-9677ed1cd1ae",
 		DateTime:    time.Date(2020, 9, 6, 12, 0, 0, 0, time.UTC),
@@ -117,8 +117,8 @@ func (r AppointmentMockRepo) FindByDate(dateTime time.Time) ([]*appointment.Appo
 	searchY, searchM, searchD := dateTime.Date()
 	appointmtY, appointmtM, appointmtD := appointmt.DateTime.Date()
 	if (searchY == appointmtY) && (searchM == appointmtM) && (searchD == appointmtD) {
-		appointmts := []*appointment.Appointment{
-			&appointmt,
+		appointmts := []appointment.Appointment{
+			appointmt,
 		}
 		return appointmts, nil
 	} else {
