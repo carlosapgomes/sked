@@ -1,7 +1,7 @@
-/* This is the databse setup script 
- execute it with the following command:
- psql -U sked -d sked -a -f _dbsetup.sql
-*/
+ -- This is the databse setup script 
+ -- execute it with the following command:
+ -- psql -U sked -d sked -a -f _dbsetup.sql
+
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
   id UUID NOT NULL PRIMARY KEY UNIQUE,
@@ -38,6 +38,7 @@ DROP TABLE IF EXISTS appointments;
 CREATE TABLE appointments (
   id UUID NOT NULL PRIMARY KEY UNIQUE,
   date_time TIMESTAMP WITH TIME ZONE NOT NULL,
+  date_txt TEXT, 
   patient_name TEXT NOT NULL,
   patient_id UUID NOT NULL,
   doctor_name TEXT NOT NULL,
@@ -49,11 +50,32 @@ CREATE TABLE appointments (
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   updated_by UUID NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
-)
+);
+CREATE OR REPLACE FUNCTION my_to_char(some_time timestamp with time zone) 
+  RETURNS text
+AS
+$BODY$
+    select to_char($1, 'yyyy-mm-dd');
+    $BODY$
+    LANGUAGE sql
+    IMMUTABLE;
 CREATE INDEX appointments_id_index ON appointments (id);
 CREATE INDEX appointments_patient_id_index ON appointments (patient_id);
 CREATE INDEX appointments_doctor_id_index ON appointments (doctor_id);
-CREATE INDEX appointments_date_index ON appointments (date(date_time));
+-- CREATE INDEX appointments_date_index ON appointments (date_txt);
+CREATE INDEX appointments_date_index ON appointments (my_to_char(date_time));
+-- CREATE FUNCTION  insert_date_time_as_text()
+ -- RETURNS TRIGGER AS $insert_date_time_as_text$
+-- BEGIN
+        -- NEW.date_time_txt := date(timezone('UTC', NEW.date_time)); 
+        -- RETURN NEW;
+-- END;
+-- $insert_date_time_as_text$ LANGUAGE PLPGSQL IMMUTABLE;
+
+-- CREATE TRIGGER date_time_text BEFORE INSERT OR UPDATE
+    -- ON appointments 
+    -- FOR EACH ROW
+    -- EXECUTE PROCEDURE insert_date_time_as_text();
 
 DROP TABLE IF EXISTS surgeries;
 CREATE TABLE surgeries (
@@ -68,14 +90,14 @@ CREATE TABLE surgeries (
   canceled BOOL DEFAULT FALSE,
   done BOOL DEFAULT FALSE,
   created_by UUID NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-  updated_by UUID NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(), 
+  updated_by UUID NOT NULL, 
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
-)
+);
 CREATE INDEX surgeries_id_index ON surgeries (id);
 CREATE INDEX surgeries_patient_id_index ON surgeries (patient_id);
 CREATE INDEX surgeries_doctor_id_index ON surgeries (doctor_id);
-CREATE INDEX surgeries_date_time_index ON surgeries (date(date_time));
+CREATE INDEX surgeries_date_time_index ON surgeries (my_to_char(date_time));
 
 
 DROP TABLE IF EXISTS sessions;

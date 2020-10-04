@@ -10,7 +10,7 @@ INSERT INTO patients (id, name, address, city, state, phones, created_by,
 'dcce1beb-aee6-4a4d-b724-94d470817323',
 '2019-06-23 17:25:00 UTC',
 'dcce1beb-aee6-4a4d-b724-94d470817323',
-'2019-06-23 17:25:00 UTC',
+'2019-06-23 17:25:00 UTC'
 );
 
 INSERT INTO patients (id, name, address, city, state, phones, created_by,

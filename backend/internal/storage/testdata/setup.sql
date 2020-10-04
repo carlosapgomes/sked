@@ -88,8 +88,7 @@
 -- );
 -- CREATE INDEX tokens_id_index ON tokens (id);
 -- CREATE INDEX tokens_userid_index ON tokens (userid);
-\i ../_dbsetup.sql
-\i insert_tokes.sql
+\i insert_tokens.sql
 \i insert_sessions.sql
 \i insert_users.sql
 \i insert_patients.sql
