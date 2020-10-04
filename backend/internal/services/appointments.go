@@ -180,7 +180,7 @@ func (s *appointmentService) FindByDate(dateTime time.Time) ([]appointment.Appoi
 func (s *appointmentService) GetAll(before string, after string, pgSize int) (*appointment.Page, error) {
 	var appointmtsResp appointment.Page
 	var err error
-	var list *[]appointment.Appointment
+	var list []appointment.Appointment
 	if pgSize <= 0 {
 		pgSize = 15
 	}
@@ -196,8 +196,8 @@ func (s *appointmentService) GetAll(before string, after string, pgSize int) (*a
 		if err != nil {
 			return nil, err
 		}
-		if list != nil && len(*list) > 0 {
-			for _, a := range *list {
+		if list != nil && len(list) > 0 {
+			for _, a := range list {
 				appointmtsResp.Appointments = append(appointmtsResp.Appointments, a)
 			}
 		}
@@ -221,8 +221,8 @@ func (s *appointmentService) GetAll(before string, after string, pgSize int) (*a
 		if err != nil {
 			return nil, err
 		}
-		if list != nil && len(*list) > 0 {
-			for _, a := range *list {
+		if list != nil && len(list) > 0 {
+			for _, a := range list {
 				appointmtsResp.Appointments = append(appointmtsResp.Appointments, a)
 			}
 		}
@@ -248,8 +248,8 @@ func (s *appointmentService) GetAll(before string, after string, pgSize int) (*a
 		if err != nil {
 			return nil, err
 		}
-		if list != nil && len(*list) > 0 {
-			for _, a := range *list {
+		if list != nil && len(list) > 0 {
+			for _, a := range list {
 				appointmtsResp.Appointments = append(appointmtsResp.Appointments, a)
 			}
 		}

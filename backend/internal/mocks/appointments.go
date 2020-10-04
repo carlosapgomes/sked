@@ -127,7 +127,7 @@ func (r AppointmentMockRepo) FindByDate(dateTime time.Time) ([]appointment.Appoi
 }
 
 // GetAll
-func (r AppointmentMockRepo) GetAll(cursor string, after bool, pgSize int) (*[]appointment.Appointment, bool, error) {
+func (r AppointmentMockRepo) GetAll(cursor string, after bool, pgSize int) ([]appointment.Appointment, bool, error) {
 	var db []appointment.Appointment
 	db = append(db, appointment.Appointment{
 		ID:          "e521798b-9f33-4a10-8b2a-9677ed1cd1ae",
@@ -206,7 +206,7 @@ func (r AppointmentMockRepo) GetAll(cursor string, after bool, pgSize int) (*[]a
 		for i := 0; i < respSize; i++ {
 			res = append(res, db[i])
 		}
-		return &res, hasMore, nil
+		return res, hasMore, nil
 	}
 	pos := r.findPos(db, cursor)
 	if pos == -1 {
@@ -233,7 +233,7 @@ func (r AppointmentMockRepo) GetAll(cursor string, after bool, pgSize int) (*[]a
 			hasMore = true
 		}
 	}
-	return &res, hasMore, nil
+	return res, hasMore, nil
 }
 func (r AppointmentMockRepo) findPos(appointmts []appointment.Appointment, id string) int {
 	for i, el := range appointmts {
