@@ -66,7 +66,7 @@ func (r appointmentRepository) FindByID(id string) (*appointment.Appointment,
 	var a appointment.Appointment
 	stmt := `SELECT id, date_time, patient_name, patient_id, doctor_name,
 			doctor_id, notes, canceled, completed, created_by, created_at, 
-			updated_by, updated_at WHERE id = $1`
+			updated_by, updated_at FROM appointments WHERE id = $1`
 	row := r.DB.QueryRow(stmt, id)
 	err := row.Scan(&a.ID, &a.DateTime, &a.PatientName, &a.PatientID,
 		&a.DoctorName, &a.DoctorID, &a.Notes, &a.Canceled, &a.Completed,
@@ -89,7 +89,7 @@ func (r appointmentRepository) FindByPatientID(patientID string) ([]appointment.
 	var apptmts []appointment.Appointment
 	stmt := `SELECT id, date_time, patient_name, patient_id, doctor_name, doctor_id,
 			notes, canceled, completed, created_by, created_at, 
-			updated_by, updated_at WHERE patient_id = $1`
+			updated_by, updated_at FROM appointments WHERE patient_id = $1`
 	rows, err := r.DB.Query(stmt, patientID)
 	if err != nil {
 		return nil, err
@@ -120,7 +120,7 @@ func (r appointmentRepository) FindByDoctorID(doctorID string) ([]appointment.Ap
 	var apptmts []appointment.Appointment
 	stmt := `SELECT id, date_time, patient_name, patient_id, doctor_name, doctor_id,
 			notes, canceled, completed, created_by, created_at, 
-			updated_by, updated_at WHERE doctor_id = $1`
+			updated_by, updated_at FROM appointments WHERE doctor_id = $1`
 	rows, err := r.DB.Query(stmt, doctorID)
 	if err != nil {
 		return nil, err
@@ -150,7 +150,7 @@ func (r appointmentRepository) FindByDate(date time.Time) ([]appointment.Appoint
 	searchDate := date.Format("2006-01-02")
 	stmt := `SELECT id, date_time, patient_name, patient_id, doctor_name, doctor_id,
 			notes, canceled, completed, created_by, created_at, 
-			updated_by, updated_at WHERE date(date_time) = $1`
+			updated_by, updated_at FROM appointments WHERE date(date_time) = $1`
 	rows, err := r.DB.Query(stmt, searchDate)
 	if err != nil {
 		return nil, err
