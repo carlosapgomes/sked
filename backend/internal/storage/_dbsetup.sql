@@ -98,7 +98,7 @@ CREATE TABLE surgeries (
 CREATE INDEX surgeries_id_index ON surgeries (id);
 CREATE INDEX surgeries_patient_id_index ON surgeries (patient_id);
 CREATE INDEX surgeries_doctor_id_index ON surgeries (doctor_id);
-CREATE INDEX surgeries_date_time_index ON surgeries (my_to_char(date_time));
+CREATE INDEX surgeries_date_time_index ON surgeries (sked_date_to_char(date_time));
 
 
 DROP TABLE IF EXISTS sessions;
