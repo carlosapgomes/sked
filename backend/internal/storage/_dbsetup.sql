@@ -2,6 +2,15 @@
  -- execute it with the following command:
  -- psql -U sked -d sked -a -f _dbsetup.sql
 
+CREATE OR REPLACE FUNCTION sked_date_to_char(some_time timestamp with time zone) 
+  RETURNS text
+AS
+$BODY$
+    select to_char($1, 'yyyy-mm-dd');
+    $BODY$
+    LANGUAGE sql
+    IMMUTABLE;
+
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
   id UUID NOT NULL PRIMARY KEY UNIQUE,
@@ -51,19 +60,11 @@ CREATE TABLE appointments (
   updated_by UUID NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
-CREATE OR REPLACE FUNCTION my_to_char(some_time timestamp with time zone) 
-  RETURNS text
-AS
-$BODY$
-    select to_char($1, 'yyyy-mm-dd');
-    $BODY$
-    LANGUAGE sql
-    IMMUTABLE;
 CREATE INDEX appointments_id_index ON appointments (id);
 CREATE INDEX appointments_patient_id_index ON appointments (patient_id);
 CREATE INDEX appointments_doctor_id_index ON appointments (doctor_id);
 -- CREATE INDEX appointments_date_index ON appointments (date_txt);
-CREATE INDEX appointments_date_index ON appointments (my_to_char(date_time));
+CREATE INDEX appointments_date_index ON appointments (sked_date_to_char(date_time));
 -- CREATE FUNCTION  insert_date_time_as_text()
  -- RETURNS TRIGGER AS $insert_date_time_as_text$
 -- BEGIN
