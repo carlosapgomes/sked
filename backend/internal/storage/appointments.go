@@ -50,7 +50,7 @@ func (r appointmentRepository) Create(a appointment.Appointment) (*string, error
 // Update - updates an appointment
 func (r appointmentRepository) Update(a appointment.Appointment) (*string, error) {
 	stmt := `UPDATE appointments SET date_time = $1, notes = $2, canceled = $3,
-		completed = $4, updated_by = $5, updated_at = $6 WHERE id = $7`
+		completed = $4, updated_by = $5, updated_at = %6 WHERE id = 7`
 	_, err := r.DB.Exec(stmt, a.DateTime, a.Notes, a.Canceled, a.Completed,
 		a.UpdatedBy, a.UpdatedAt, a.ID)
 	if err != nil {
@@ -148,10 +148,9 @@ func (r appointmentRepository) FindByDoctorID(doctorID string) ([]appointment.Ap
 func (r appointmentRepository) FindByDate(date time.Time) ([]appointment.Appointment, error) {
 	var apptmts []appointment.Appointment
 	searchDate := date.Format("2006-01-02")
-	stmt := `SELECT id, date_time, patient_name, patient_id, doctor_name,
-			doctor_id, notes, canceled, completed, created_by, created_at, 
-			updated_by, updated_at FROM appointments
-			WHERE sked_date_to_char(date_time) = $1`
+	stmt := `SELECT id, date_time, patient_name, patient_id, doctor_name, doctor_id,
+			notes, canceled, completed, created_by, created_at, 
+			updated_by, updated_at FROM appointments WHERE date(date_time) = $1`
 	rows, err := r.DB.Query(stmt, searchDate)
 	if err != nil {
 		return nil, err
@@ -193,13 +192,15 @@ func (r appointmentRepository) GetAll(cursor string, next bool,
 		stmt = `SELECT id, date_time, patient_name, patient_id, doctor_name,
 			doctor_id, notes, canceled, completed, created_by, created_at, 
 			updated_by, updated_at from appointments 
-			WHERE date(date_time) > $1 ORDER BY date_time LIMIT $2`
+			WHERE sked_date_to_char(date_time) > $1
+			ORDER BY date_time LIMIT $2`
 	} else {
 		// Get previous result page
 		stmt = `SELECT id, date_time, patient_name, patient_id, doctor_name,
 			doctor_id, notes, canceled, completed, created_by, created_at, 
 			updated_by, updated_at from appointments 
-			WHERE date(date_time) < $1 ORDER BY date_time LIMIT $2`
+			WHERE sked_date_to_char(date_time) < $1 
+			ORDER BY date_time LIMIT $2`
 	}
 	rows, err := r.DB.Query(stmt, cursorDate, (pgSize + 1))
 	if err != nil {
