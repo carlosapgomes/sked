@@ -173,7 +173,7 @@ func (r surgeryRepository) FindByDate(date time.Time) ([]surgery.Surgery, error)
 		}
 		s.CreatedAt = s.CreatedAt.In(loc)
 		s.UpdatedAt = s.UpdatedAt.In(loc)
-		surgs = append(surgs, a)
+		surgs = append(surgs, s)
 	}
 	return surgs, err
 }
@@ -223,7 +223,7 @@ func (r surgeryRepository) GetAll(cursor string, next bool, pgSize int) ([]surge
 		} else if err != nil {
 			return nil, false, err
 		}
-		surgs = append(surgs, a)
+		surgs = append(surgs, s)
 	}
 	// get any error encountered during iteration
 	err = rows.Err()
