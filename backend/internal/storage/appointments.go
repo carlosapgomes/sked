@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"carlosapgomes.com/sked/internal/appointment"
-	"carlosapgomes.com/sked/internal/user"
 	"github.com/lib/pq"
 )
 
@@ -72,7 +71,7 @@ func (r appointmentRepository) FindByID(id string) (*appointment.Appointment,
 		&a.DoctorName, &a.DoctorID, &a.Notes, &a.Canceled, &a.Completed,
 		&a.CreatedBy, &a.CreatedAt, &a.UpdatedBy, &a.UpdatedAt)
 	if err == sql.ErrNoRows {
-		return nil, user.ErrNoRecord
+		return nil, appointment.ErrNoRecord
 	} else if err != nil {
 		return nil, err
 	}
@@ -102,7 +101,7 @@ func (r appointmentRepository) FindByPatientID(patientID string) ([]appointment.
 			&a.DoctorName, &a.DoctorID, &a.Notes, &a.Canceled, &a.Completed,
 			&a.CreatedBy, &a.CreatedAt, &a.UpdatedBy, &a.UpdatedAt)
 		if err == sql.ErrNoRows {
-			return nil, user.ErrNoRecord
+			return nil, appointment.ErrNoRecord
 		} else if err != nil {
 			return nil, err
 		}
@@ -133,7 +132,7 @@ func (r appointmentRepository) FindByDoctorID(doctorID string) ([]appointment.Ap
 			&a.DoctorName, &a.DoctorID, &a.Notes, &a.Canceled, &a.Completed,
 			&a.CreatedBy, &a.CreatedAt, &a.UpdatedBy, &a.UpdatedAt)
 		if err == sql.ErrNoRows {
-			return nil, user.ErrNoRecord
+			return nil, appointment.ErrNoRecord
 		} else if err != nil {
 			return nil, err
 		}
@@ -164,7 +163,7 @@ func (r appointmentRepository) FindByDate(date time.Time) ([]appointment.Appoint
 			&a.DoctorName, &a.DoctorID, &a.Notes, &a.Canceled, &a.Completed,
 			&a.CreatedBy, &a.CreatedAt, &a.UpdatedBy, &a.UpdatedAt)
 		if err == sql.ErrNoRows {
-			return nil, user.ErrNoRecord
+			return nil, appointment.ErrNoRecord
 		} else if err != nil {
 			return nil, err
 		}
@@ -217,7 +216,7 @@ func (r appointmentRepository) GetAll(cursor string, next bool,
 			&a.DoctorName, &a.DoctorID, &a.Notes, &a.Canceled, &a.Completed,
 			&a.CreatedBy, &a.CreatedAt, &a.UpdatedBy, &a.UpdatedAt)
 		if err == sql.ErrNoRows {
-			return nil, false, user.ErrNoRecord
+			return nil, false, appointment.ErrNoRecord
 		} else if err != nil {
 			return nil, false, err
 		}
