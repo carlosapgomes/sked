@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"carlosapgomes.com/sked/internal/patient"
-	"carlosapgomes.com/sked/internal/user"
 	"github.com/lib/pq"
 )
 
@@ -82,7 +81,7 @@ func (r patientRepository) FindByID(id string) (*patient.Patient, error) {
 		pq.Array(&p.Phones), &p.CreatedBy, &p.CreatedAt,
 		&p.UpdatedBy, &p.UpdatedAt)
 	if err == sql.ErrNoRows {
-		return nil, user.ErrNoRecord
+		return nil, patient.ErrNoRecord
 	} else if err != nil {
 		return nil, err
 	}
@@ -116,7 +115,7 @@ func (r patientRepository) FindByName(name string) (*[]patient.Patient, error) {
 			pq.Array(&p.Phones), &p.CreatedBy, &p.CreatedAt,
 			&p.UpdatedBy, &p.UpdatedAt)
 		if err == sql.ErrNoRows {
-			return nil, user.ErrNoRecord
+			return nil, patient.ErrNoRecord
 		} else if err != nil {
 			return nil, err
 		}
@@ -165,7 +164,7 @@ func (r patientRepository) GetAll(cursor string, next bool,
 			pq.Array(&p.Phones), &p.CreatedBy, &p.CreatedAt,
 			&p.UpdatedBy, &p.UpdatedAt)
 		if err == sql.ErrNoRows {
-			return nil, false, user.ErrNoRecord
+			return nil, false, patient.ErrNoRecord
 		} else if err != nil {
 			return nil, false, err
 		}
