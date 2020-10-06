@@ -52,7 +52,8 @@ func (r surgeryRepository) Update(surg surgery.Surgery) (*string, error) {
 	stmt := `UPDATE surgeries SET date_time = $1, notes = $2, 
 		proposed_surgery = $3, canceled = $4,
 		done = $5, updated_by = $6, updated_at = $7 WHERE id = $8`
-	_, err := r.DB.Exec(stmt, surg.DateTime, surg.Notes, surg.Canceled, surg.Done,
+	_, err := r.DB.Exec(stmt, surg.DateTime, surg.Notes,
+		surg.ProposedSurgery, surg.Canceled, surg.Done,
 		surg.UpdatedBy, surg.UpdatedAt, surg.ID)
 	if err != nil {
 		pqErr := err.(*pq.Error)
