@@ -276,5 +276,46 @@ func TestFindAppointmentsByDate(t *testing.T) {
 			}
 		})
 	}
+}
 
+func TestGetAllAppointments(t *testing.T) {
+	var tests = []struct {
+		name        string
+		cursorID    string
+		next        bool
+		pgSize      int
+		wantSize    int
+		wantHasMore bool
+		wantError   error
+	}{
+		{
+			"Valid Update",
+			"723e2fa0-70a9-4c20-89d9-b5f69405b772",
+			true,
+			3,
+			3,
+			true,
+			nil,
+		},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			db, teardown := newTestDB(t)
+			defer teardown()
+			repo := storage.NewPgAppointmentRepository(db)
+			appointmts, hasMore, err := repo.GetAll(tt.cursorID,
+				tt.next, tt.pgSize)
+			if !errors.Is(err, tt.wantError) {
+				t.Errorf("want %v; got %v", tt.wantError, err)
+			}
+			if len(appointmts) != tt.wantSize {
+				t.Errorf("want answer size of %d; got %d\n",
+					tt.wantSize, len(appointmts))
+			}
+			if hasMore != tt.wantHasMore {
+				t.Errorf("want hasMore = %v; got %v\n", tt.wantHasMore, hasMore)
+			}
+		})
+	}
 }
