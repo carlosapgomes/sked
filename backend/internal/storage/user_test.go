@@ -12,7 +12,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func TestCreate(t *testing.T) {
+func TestCreateUser(t *testing.T) {
 	if testing.Short() {
 		t.Skip("postgres: skipping integration test")
 	}
@@ -102,7 +102,7 @@ func TestCreate(t *testing.T) {
 	}
 }
 
-func TestFindByID(t *testing.T) {
+func TestFindUserByID(t *testing.T) {
 	if testing.Short() {
 		t.Skip("postgres: skipping integration test")
 	}
@@ -156,7 +156,7 @@ func TestFindByID(t *testing.T) {
 	}
 }
 
-func TestFindByEmail(t *testing.T) {
+func TestFindUserByEmail(t *testing.T) {
 	if testing.Short() {
 		t.Skip("postgres: skipping integration test")
 	}
@@ -216,7 +216,7 @@ func TestFindByEmail(t *testing.T) {
 	}
 }
 
-func TestUpdatePw(t *testing.T) {
+func TestUpdateUserPw(t *testing.T) {
 	testCases := []struct {
 		desc      string
 		uid       string
@@ -259,7 +259,7 @@ func TestUpdatePw(t *testing.T) {
 	}
 }
 
-func TestUpdateStatus(t *testing.T) {
+func TestUpdateUserStatus(t *testing.T) {
 	testCases := []struct {
 		desc      string
 		uid       string
@@ -343,7 +343,7 @@ func TestUpdateEmailValidated(t *testing.T) {
 	}
 }
 
-func TestUpdateName(t *testing.T) {
+func TestUpdateUserName(t *testing.T) {
 	testCases := []struct {
 		desc      string
 		uid       string
@@ -385,7 +385,7 @@ func TestUpdateName(t *testing.T) {
 	}
 }
 
-func TestUpdatePhone(t *testing.T) {
+func TestUpdateUserPhone(t *testing.T) {
 	testCases := []struct {
 		desc      string
 		uid       string
@@ -428,7 +428,7 @@ func TestUpdatePhone(t *testing.T) {
 	}
 }
 
-func TestUpdateEmail(t *testing.T) {
+func TestUpdateUserEmail(t *testing.T) {
 	testCases := []struct {
 		desc      string
 		uid       string
@@ -465,7 +465,7 @@ func TestUpdateEmail(t *testing.T) {
 	}
 }
 
-func TestUpdateRoles(t *testing.T) {
+func TestUpdateUserRoles(t *testing.T) {
 	testCases := []struct {
 		desc      string
 		uid       string
@@ -501,7 +501,7 @@ func TestUpdateRoles(t *testing.T) {
 		})
 	}
 }
-func TestGetAll(t *testing.T) {
+func TestGetAllUsers(t *testing.T) {
 	testCases := []struct {
 		desc             string
 		cursor           string
