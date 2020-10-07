@@ -101,11 +101,13 @@ func TestUpdateAppointment(t *testing.T) {
 
 func TestFindAppointmentByID(t *testing.T) {
 	var tests = []struct {
-		name      string
-		appointmt appointment.Appointment
-		wantError error
+		name        string
+		appointmtID string
+		appointmt   appointment.Appointment
+		wantError   error
 	}{
 		{"Valid Appointment",
+			"5e6f7cd1-d8d2-40cd-97a3-aca01a93bfde",
 			appointment.Appointment{
 				ID:          "5e6f7cd1-d8d2-40cd-97a3-aca01a93bfde",
 				DateTime:    time.Date(2020, 9, 7, 12, 0, 0, 0, time.UTC),
@@ -125,9 +127,8 @@ func TestFindAppointmentByID(t *testing.T) {
 		},
 		{
 			"Invalid Appointment",
-			appointment.Appointment{
-				ID: "ed06f7f9-5fc4-4cfe-ad71-3efd24bf748a",
-			},
+			"ed06f7f9-5fc4-4cfe-ad71-3efd24bf748a",
+			appointment.Appointment{},
 			appointment.ErrNoRecord,
 		},
 	}
@@ -137,7 +138,7 @@ func TestFindAppointmentByID(t *testing.T) {
 			db, teardown := newTestDB(t)
 			defer teardown()
 			repo := storage.NewPgAppointmentRepository(db)
-			appointmt, err := repo.FindByID(tt.appointmt.ID)
+			appointmt, err := repo.FindByID(tt.appointmtID)
 			if !errors.Is(err, tt.wantError) {
 				t.Errorf("want %v; got %v", tt.wantError, err)
 			}
@@ -153,11 +154,13 @@ func TestFindAppointmentByID(t *testing.T) {
 func TestFindAppointmentsByPatientID(t *testing.T) {
 	var tests = []struct {
 		name      string
+		patientID string
 		appointmt appointment.Appointment
 		wantSize  int
 		wantError error
 	}{
 		{"Valid Update",
+			"22070f56-5d52-43f0-9f59-5de61c1db506",
 			appointment.Appointment{
 				ID:          "5e6f7cd1-d8d2-40cd-97a3-aca01a93bfde",
 				DateTime:    time.Date(2020, 9, 7, 12, 0, 0, 0, time.UTC),
@@ -178,9 +181,8 @@ func TestFindAppointmentsByPatientID(t *testing.T) {
 		},
 		{
 			"Patient without appointments",
-			appointment.Appointment{
-				PatientID: "ed06f7f9-5fc4-4cfe-ad71-3efd24bf748a",
-			},
+			"ed06f7f9-5fc4-4cfe-ad71-3efd24bf748a",
+			appointment.Appointment{},
 			0,
 			nil,
 		},
@@ -191,13 +193,24 @@ func TestFindAppointmentsByPatientID(t *testing.T) {
 			db, teardown := newTestDB(t)
 			defer teardown()
 			repo := storage.NewPgAppointmentRepository(db)
-			appointmts, err := repo.FindByPatientID(tt.appointmt.PatientID)
+			appointmts, err := repo.FindByPatientID(tt.patientID)
 			if !errors.Is(err, tt.wantError) {
 				t.Errorf("want %v; got %v", tt.wantError, err)
 			}
 			if len(appointmts) != tt.wantSize {
 				t.Errorf("want answer size of %d; got %d\n",
 					tt.wantSize, len(appointmts))
+			}
+			if tt.wantSize > 0 {
+				hasAppointmt := false
+				for _, s := range appointmts {
+					if s == tt.appointmt {
+						hasAppointmt = true
+					}
+				}
+				if !hasAppointmt {
+					t.Errorf("did not receive the expected appointment object")
+				}
 			}
 		})
 	}
@@ -253,14 +266,14 @@ func TestFindAppointmentsByDoctorID(t *testing.T) {
 					tt.wantSize, len(appointmts))
 			}
 			if tt.wantSize > 0 {
-				hasSurg := false
+				hasAppointmt := false
 				for _, s := range appointmts {
 					if s == tt.appointmt {
-						hasSurg = true
+						hasAppointmt = true
 					}
 				}
-				if !hasSurg {
-					t.Errorf("did not receive wanted surgery")
+				if !hasAppointmt {
+					t.Errorf("did not receive the expected appointment object")
 				}
 			}
 		})
@@ -317,13 +330,13 @@ func TestFindAppointmentsByDate(t *testing.T) {
 					tt.wantSize, len(appointmts))
 			}
 			if tt.wantSize > 0 {
-				hasSurg := false
+				hasAppointmt := false
 				for _, s := range appointmts {
 					if s == tt.appointmt {
-						hasSurg = true
+						hasAppointmt = true
 					}
 				}
-				if !hasSurg {
+				if !hasAppointmt {
 					t.Errorf("did not receive wanted surgery")
 				}
 			}
