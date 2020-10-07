@@ -126,6 +126,12 @@ func TestFindSurgeryByID(t *testing.T) {
 			},
 			nil,
 		},
+		{"Non Existing Surgery",
+			surgery.Surgery{
+				ID: "3b5c10cc-ca7c-46b3-a83e-060515e7e162",
+			},
+			surgery.ErrNoRecord,
+		},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -137,7 +143,7 @@ func TestFindSurgeryByID(t *testing.T) {
 			if !errors.Is(err, tt.wantError) {
 				t.Errorf("want %v; got %v", tt.wantError, err)
 			}
-			if *surg != tt.surg {
+			if tt.wantError == nil && *surg != tt.surg {
 				t.Errorf("want %s; got id = nil", tt.surg.ID)
 			}
 
@@ -149,11 +155,13 @@ func TestFindSurgeryByID(t *testing.T) {
 func TestFindSurgeryByPatientID(t *testing.T) {
 	var tests = []struct {
 		name      string
+		patientID string
 		surg      surgery.Surgery
 		wantSize  int
 		wantError error
 	}{
 		{"Valid Update",
+			"22070f56-5d52-43f0-9f59-5de61c1db506",
 			surgery.Surgery{
 				ID:              "5e6f7cd1-d8d2-40cd-97a3-aca01a93bfde",
 				DateTime:        time.Date(2020, 9, 7, 12, 0, 0, 0, time.UTC),
@@ -173,6 +181,13 @@ func TestFindSurgeryByPatientID(t *testing.T) {
 			5,
 			nil,
 		},
+		{
+			"PatientID With No Surgery",
+			"3f7573a9-26a0-44ea-932e-f83f480f964f",
+			surgery.Surgery{},
+			0,
+			nil,
+		},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -180,7 +195,7 @@ func TestFindSurgeryByPatientID(t *testing.T) {
 			db, teardown := newTestDB(t)
 			defer teardown()
 			repo := storage.NewPgSurgeryRepository(db)
-			surgs, err := repo.FindByPatientID(tt.surg.PatientID)
+			surgs, err := repo.FindByPatientID(tt.patientID)
 			if !errors.Is(err, tt.wantError) {
 				t.Errorf("want %v; got %v", tt.wantError, err)
 			}
@@ -188,7 +203,7 @@ func TestFindSurgeryByPatientID(t *testing.T) {
 				t.Errorf("want answer size of %d; got %d\n",
 					tt.wantSize, len(surgs))
 			}
-			if tt.wantError == nil {
+			if tt.wantSize > 0 {
 				hasSurg := false
 				for _, s := range surgs {
 					if s == tt.surg {
@@ -196,7 +211,7 @@ func TestFindSurgeryByPatientID(t *testing.T) {
 					}
 				}
 				if !hasSurg {
-					t.Errorf("did not receive wanted surgery")
+					t.Errorf("did not receive the expected surgery object")
 				}
 			}
 		})
@@ -206,11 +221,13 @@ func TestFindSurgeryByPatientID(t *testing.T) {
 func TestFindSurgeryByDoctorID(t *testing.T) {
 	var tests = []struct {
 		name      string
+		doctorID  string
 		surg      surgery.Surgery
 		wantSize  int
 		wantError error
 	}{
 		{"Valid Update",
+			"f06244b9-97e5-4f1a-bae0-3b6da7a0b604",
 			surgery.Surgery{
 				ID:              "5e6f7cd1-d8d2-40cd-97a3-aca01a93bfde",
 				DateTime:        time.Date(2020, 9, 7, 12, 0, 0, 0, time.UTC),
@@ -230,6 +247,13 @@ func TestFindSurgeryByDoctorID(t *testing.T) {
 			5,
 			nil,
 		},
+		{
+			"DoctorID With No Surgery",
+			"3f7573a9-26a0-44ea-932e-f83f480f964f",
+			surgery.Surgery{},
+			0,
+			nil,
+		},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -237,7 +261,7 @@ func TestFindSurgeryByDoctorID(t *testing.T) {
 			db, teardown := newTestDB(t)
 			defer teardown()
 			repo := storage.NewPgSurgeryRepository(db)
-			surgs, err := repo.FindByDoctorID(tt.surg.DoctorID)
+			surgs, err := repo.FindByDoctorID(tt.doctorID)
 			if !errors.Is(err, tt.wantError) {
 				t.Errorf("want %v; got %v", tt.wantError, err)
 			}
@@ -245,7 +269,7 @@ func TestFindSurgeryByDoctorID(t *testing.T) {
 				t.Errorf("want answer size of %d; got %d\n",
 					tt.wantSize, len(surgs))
 			}
-			if tt.wantError == nil {
+			if tt.wantSize > 0 {
 				hasSurg := false
 				for _, s := range surgs {
 					if s == tt.surg {
@@ -253,7 +277,7 @@ func TestFindSurgeryByDoctorID(t *testing.T) {
 					}
 				}
 				if !hasSurg {
-					t.Errorf("did not receive wanted surgery")
+					t.Errorf("did not receive the expected surgery object")
 				}
 			}
 		})
@@ -263,11 +287,13 @@ func TestFindSurgeryByDoctorID(t *testing.T) {
 func TestFindSurgeryByDate(t *testing.T) {
 	var tests = []struct {
 		name      string
+		dateTime  time.Time
 		surg      surgery.Surgery
 		wantSize  int
 		wantError error
 	}{
 		{"Valid Update",
+			time.Date(2020, 9, 7, 12, 0, 0, 0, time.UTC),
 			surgery.Surgery{
 				ID:              "5e6f7cd1-d8d2-40cd-97a3-aca01a93bfde",
 				DateTime:        time.Date(2020, 9, 7, 12, 0, 0, 0, time.UTC),
@@ -287,6 +313,13 @@ func TestFindSurgeryByDate(t *testing.T) {
 			1,
 			nil,
 		},
+		{
+			"Date With No Scheduled Surgery",
+			time.Date(2020, 4, 6, 12, 0, 0, 0, time.UTC),
+			surgery.Surgery{},
+			0,
+			nil,
+		},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -294,7 +327,7 @@ func TestFindSurgeryByDate(t *testing.T) {
 			db, teardown := newTestDB(t)
 			defer teardown()
 			repo := storage.NewPgSurgeryRepository(db)
-			surgs, err := repo.FindByDate(tt.surg.DateTime)
+			surgs, err := repo.FindByDate(tt.dateTime)
 			if !errors.Is(err, tt.wantError) {
 				t.Errorf("want %v; got %v", tt.wantError, err)
 			}
@@ -302,7 +335,7 @@ func TestFindSurgeryByDate(t *testing.T) {
 				t.Errorf("want answer size of %d; got %d\n",
 					tt.wantSize, len(surgs))
 			}
-			if tt.wantError == nil {
+			if tt.wantSize > 0 {
 				hasSurg := false
 				for _, s := range surgs {
 					if s == tt.surg {
@@ -310,7 +343,7 @@ func TestFindSurgeryByDate(t *testing.T) {
 					}
 				}
 				if !hasSurg {
-					t.Errorf("did not receive wanted surgery")
+					t.Errorf("did not receive the expected surgery object")
 				}
 			}
 		})
