@@ -361,11 +361,20 @@ func TestGetAllSurgeries(t *testing.T) {
 		wantError   error
 	}{
 		{
-			"Valid Update",
+			"Next Request",
 			"723e2fa0-70a9-4c20-89d9-b5f69405b772",
 			true,
 			3,
 			3,
+			true,
+			nil,
+		},
+		{
+			"Previous Request",
+			"00707378-7fd5-4cbe-92e1-ca93301eda49",
+			false,
+			2,
+			2,
 			true,
 			nil,
 		},
