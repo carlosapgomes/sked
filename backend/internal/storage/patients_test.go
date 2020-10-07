@@ -35,48 +35,38 @@ func TestCreatePatient(t *testing.T) {
 			},
 			wantError: nil,
 		},
-		//{
-		//name: "Bad userID",
-		//newUser: &patient.Patient{
-		//ID:        "5b28f739-e372-4622-9992f3c7b0e9",
-		//Name:      "Muhamed Ali",
-		//Address:   "Main Street, 45",
-		//HashedPw:  []byte("$2a$12$NuTjWXm3KKntReFwyBVHyuf/to.HEwTy.eS206TNfkGfr6HzGJSWG"),
-		//CreatedAt: time.Now().UTC(),
-		//UpdatedAt: time.Now().UTC(),
-		//Active:    true,
-		//Roles:     []string{},
-		//},
-		//wantError: user.ErrInvalidInputSyntax,
-		//},
-		//{
-		//name: "Duplicate ID",
-		//newUser: &patient.Patient{
-		//ID:        "dcce1beb-aee6-4a4d-b724-94d470817323",
-		//Name:      "Alice Jones",
-		//Address:   "alice@example.com",
-		//HashedPw:  []byte("$2a$12$I9BW22CbzLHzY9ORTRhkEuEtq8ufJVMf1dX9CKFlo4W9cIaAjD0Je"),
-		//CreatedAt: time.Now().UTC(),
-		//UpdatedAt: time.Now().UTC(),
-		//Active:    true,
-		//Roles:     []string{},
-		//},
-		//wantError: user.ErrDuplicateField,
-		//},
-		//{
-		//name: "Duplicate email",
-		//newUser: &patient.Patient{
-		//ID:        "75499ef5-bde6-4f39-81b8-daf181942741",
-		//Name:      "Alice Jones",
-		//Address:   "alice@example.com",
-		//HashedPw:  []byte("$2a$12$I9BW22CbzLHzY9ORTRhkEuEtq8ufJVMf1dX9CKFlo4W9cIaAjD0Je"),
-		//CreatedAt: time.Now().UTC(),
-		//UpdatedAt: time.Now().UTC(),
-		//Active:    true,
-		//Roles:     []string{},
-		//},
-		//wantError: user.ErrDuplicateField,
-		//},
+		{
+			name: "Bad patientID",
+			newPatient: &patient.Patient{
+				ID:        "5b28f739-e372-4622-9992f3c7b0e9",
+				Name:      "Alice Jones",
+				Address:   "MainStreet, 42",
+				City:      "MainCity",
+				State:     "MN",
+				Phones:    []string{"2323234"},
+				CreatedBy: "dcce1beb-aee6-4a4d-b724-94d470817323",
+				CreatedAt: time.Now().UTC(),
+				UpdatedBy: "dcce1beb-aee6-4a4d-b724-94d470817323",
+				UpdatedAt: time.Now().UTC(),
+			},
+			wantError: patient.ErrInvalidInputSyntax,
+		},
+		{
+			name: "Duplicate ID",
+			newPatient: &patient.Patient{
+				ID:        "68b1d5e2-39dd-4713-8631-a08100383a0f",
+				Name:      "Alice Jones",
+				Address:   "MainStreet, 42",
+				City:      "MainCity",
+				State:     "MN",
+				Phones:    []string{"2323234"},
+				CreatedBy: "dcce1beb-aee6-4a4d-b724-94d470817323",
+				CreatedAt: time.Now().UTC(),
+				UpdatedBy: "dcce1beb-aee6-4a4d-b724-94d470817323",
+				UpdatedAt: time.Now().UTC(),
+			},
+			wantError: patient.ErrDuplicateField,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -85,19 +75,13 @@ func TestCreatePatient(t *testing.T) {
 
 			repo := storage.NewPgPatientRepository(db)
 
-			uid, err := repo.Create(*tt.newPatient)
+			id, err := repo.Create(*tt.newPatient)
 			if !errors.Is(err, tt.wantError) {
 				t.Errorf("want %v; got %v", tt.wantError, err)
 			}
-			if (uid == nil) && (tt.wantError == nil) {
+			if (id == nil) && (tt.wantError == nil) {
 				t.Errorf("want %s; got uid = nil", tt.newPatient.ID)
 			}
-			//if uid != nil {
-			//user, _ := repo.FindByID(*uid)
-			//if (tt.newPatient.Name != user.Name) || (tt.newPatient.Email != user.Email) {
-			//t.Errorf("want \n%v\n; got \n%v\n", tt.newPatient.Name, user.Name)
-			//}
-			//}
 		})
 	}
 }
@@ -171,7 +155,7 @@ func TestUpdatePatientName(t *testing.T) {
 			wantError: nil,
 		},
 		{
-			desc:      "Invalid uid",
+			desc:      "Invalid id",
 			id:        "68b1d5e2-8631-a08100383a0f",
 			newName:   "Johnny Smith",
 			wantError: errors.New("Any error"),
