@@ -176,9 +176,15 @@ func (r patientRepository) GetAll(cursor string, next bool,
 		return nil, false, err
 	}
 	hasMore := false
-	if len(patients) == pgSize {
-		// remove last slice item, because it was not requested
-		patients = patients[:len(patients)-1]
+	if len(patients) == (pgSize + 1) {
+		// remove the element that was not requested
+		if next {
+			// remove last element
+			patients = patients[:len(patients)-1]
+		} else {
+			// remove first element
+			patients = patients[1:]
+		}
 		hasMore = true
 	}
 	return &patients, hasMore, nil

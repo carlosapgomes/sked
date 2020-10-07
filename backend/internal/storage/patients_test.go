@@ -228,71 +228,72 @@ func TestUpdatePatientPhones(t *testing.T) {
 
 func TestGetAllPatients(t *testing.T) {
 	testCases := []struct {
-		desc             string
-		cursor           string
-		after            bool
-		pgSize           int
-		wantSize         int
-		hasMore          bool
-		wantError        error
-		wantContainEmail string
+		desc            string
+		cursor          string
+		next            bool
+		pgSize          int
+		wantSize        int
+		wantHasMore     bool
+		wantError       error
+		wantContainName string
 	}{
 		{
-			desc:             "Valid Page",
-			cursor:           "",
-			after:            true,
-			pgSize:           6,
-			wantSize:         6,
-			hasMore:          false,
-			wantError:        nil,
-			wantContainEmail: "spongebob@somewhere.com",
+			desc:            "Next Request",
+			cursor:          "dcce1beb-aee6-4a4d-b724-94d470817323",
+			next:            true,
+			pgSize:          5,
+			wantSize:        5,
+			wantHasMore:     false,
+			wantError:       nil,
+			wantContainName: "SpongeBob Squarepants",
 		},
 		{
-			desc:             "Valid Cursor After",
-			cursor:           "bobama@somewhere.com",
-			after:            true,
-			pgSize:           2,
-			wantSize:         2,
-			hasMore:          true,
-			wantError:        nil,
-			wantContainEmail: "spongebob@somewhere.com",
+			desc:            "Next Request With HasMore",
+			cursor:          "dcce1beb-aee6-4a4d-b724-94d470817323",
+			next:            true,
+			pgSize:          3,
+			wantSize:        3,
+			wantHasMore:     true,
+			wantError:       nil,
+			wantContainName: "SpongeBob Squarepants",
 		},
 		{
-			desc:             "Valid Cursor Before",
-			cursor:           "bobama@somewhere.com",
-			after:            false,
-			pgSize:           2,
-			wantSize:         2,
-			hasMore:          false,
-			wantError:        nil,
-			wantContainEmail: "alice@example.com",
+			desc:            "Previous Request",
+			cursor:          "27f9802b-acb3-4852-bf97-c4ed4c3b3658",
+			next:            false,
+			pgSize:          3,
+			wantSize:        3,
+			wantHasMore:     true,
+			wantError:       nil,
+			wantContainName: "SpongeBob Squarepants",
 		},
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
 			db, teardown := newTestDB(t)
 			defer teardown()
-			repo := storage.NewPgUserRepository(db)
+			repo := storage.NewPgPatientRepository(db)
 
-			users, hasMore, err := repo.GetAll(tC.cursor, tC.after, tC.pgSize)
+			patients, hasMore, err := repo.GetAll(tC.cursor, tC.next, tC.pgSize)
 			if err != tC.wantError {
 				t.Errorf("Want %v; got %v\n", tC.wantError, err)
 			}
-			if users != nil && len(*users) != tC.wantSize {
-				t.Errorf("Want %v; got %v\n", tC.wantSize, len(*users))
+			if patients != nil && len(*patients) != tC.wantSize {
+				t.Errorf("Want %v; got %v\n", tC.wantSize, len(*patients))
 			}
-			if tC.hasMore != hasMore {
-				t.Errorf("Want %v; got %v\n", tC.hasMore, hasMore)
+			if tC.wantHasMore != hasMore {
+				t.Errorf("Want hasMore = %v; got %v\n", tC.wantHasMore, hasMore)
 			}
 			var contain bool
-			for _, u := range *users {
-				t.Logf("%v\n", u.Email)
-				if u.Email == tC.wantContainEmail {
+			for _, p := range *patients {
+				t.Logf("%v\n", p.Name)
+				if p.Name == tC.wantContainName {
 					contain = true
 				}
 			}
 			if !contain {
-				t.Errorf("Want response to contain %v address;  but it did not\n", tC.wantContainEmail)
+				t.Errorf("Want response to contain %v;  but it did not\n",
+					tC.wantContainName)
 			}
 		})
 	}
