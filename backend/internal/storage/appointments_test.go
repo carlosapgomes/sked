@@ -105,7 +105,7 @@ func TestFindAppointmentByID(t *testing.T) {
 		appointmt appointment.Appointment
 		wantError error
 	}{
-		{"Valid Update",
+		{"Valid Appointment",
 			appointment.Appointment{
 				ID:          "5e6f7cd1-d8d2-40cd-97a3-aca01a93bfde",
 				DateTime:    time.Date(2020, 9, 7, 12, 0, 0, 0, time.UTC),
@@ -123,6 +123,13 @@ func TestFindAppointmentByID(t *testing.T) {
 			},
 			nil,
 		},
+		{
+			"Invalid Appointment",
+			appointment.Appointment{
+				ID: "ed06f7f9-5fc4-4cfe-ad71-3efd24bf748a",
+			},
+			appointment.ErrNoRecord,
+		},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -132,9 +139,10 @@ func TestFindAppointmentByID(t *testing.T) {
 			repo := storage.NewPgAppointmentRepository(db)
 			appointmt, err := repo.FindByID(tt.appointmt.ID)
 			if !errors.Is(err, tt.wantError) {
+				t.Logf("error: %v\n", err)
 				t.Errorf("want %v; got %v", tt.wantError, err)
 			}
-			if *appointmt != tt.appointmt {
+			if err == nil && *appointmt != tt.appointmt {
 				t.Errorf("want %s; got id = nil", tt.appointmt.ID)
 			}
 
