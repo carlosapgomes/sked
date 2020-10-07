@@ -146,7 +146,7 @@ func TestFindSurgeryByID(t *testing.T) {
 
 }
 
-func TestFindSurgerysByPatientID(t *testing.T) {
+func TestFindSurgeryByPatientID(t *testing.T) {
 	var tests = []struct {
 		name      string
 		appointmt surgery.Surgery
@@ -192,7 +192,7 @@ func TestFindSurgerysByPatientID(t *testing.T) {
 	}
 }
 
-func TestFindSurgerysByDoctorID(t *testing.T) {
+func TestFindSurgeryByDoctorID(t *testing.T) {
 	var tests = []struct {
 		name      string
 		appointmt surgery.Surgery
@@ -238,7 +238,7 @@ func TestFindSurgerysByDoctorID(t *testing.T) {
 	}
 }
 
-func TestFindSurgerysByDate(t *testing.T) {
+func TestFindSurgeryByDate(t *testing.T) {
 	var tests = []struct {
 		name      string
 		appointmt surgery.Surgery
@@ -284,7 +284,7 @@ func TestFindSurgerysByDate(t *testing.T) {
 	}
 }
 
-func TestGetAllSurgerys(t *testing.T) {
+func TestGetAllSurgeries(t *testing.T) {
 	var tests = []struct {
 		name        string
 		cursorID    string
