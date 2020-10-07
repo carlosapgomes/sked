@@ -11,9 +11,9 @@ import (
 
 func TestCreateSurgery(t *testing.T) {
 	var tests = []struct {
-		name         string
-		newAppointmt *surgery.Surgery
-		wantError    error
+		name       string
+		newSurgery *surgery.Surgery
+		wantError  error
 	}{
 		{"Valid Surgery",
 			&surgery.Surgery{
@@ -40,18 +40,18 @@ func TestCreateSurgery(t *testing.T) {
 			db, teardown := newTestDB(t)
 			defer teardown()
 			repo := storage.NewPgSurgeryRepository(db)
-			id, err := repo.Create(*tt.newAppointmt)
+			id, err := repo.Create(*tt.newSurgery)
 			if !errors.Is(err, tt.wantError) {
 				t.Errorf("want %v; got %v", tt.wantError, err)
 			}
 			if (id == nil) && (tt.wantError == nil) {
-				t.Errorf("want %s; got id = nil", tt.newAppointmt.ID)
+				t.Errorf("want %s; got id = nil", tt.newSurgery.ID)
 			}
 			if tt.wantError == nil &&
 				id != nil &&
-				*id != tt.newAppointmt.ID {
+				*id != tt.newSurgery.ID {
 				t.Errorf("want \n%v\n; got \n%v\n",
-					tt.newAppointmt.ID, id)
+					tt.newSurgery.ID, id)
 			}
 		})
 	}
@@ -60,7 +60,7 @@ func TestCreateSurgery(t *testing.T) {
 func TestUpdateSurgery(t *testing.T) {
 	var tests = []struct {
 		name      string
-		appointmt surgery.Surgery
+		surg      surgery.Surgery
 		wantError error
 	}{
 		{"Valid Update",
@@ -89,12 +89,12 @@ func TestUpdateSurgery(t *testing.T) {
 			db, teardown := newTestDB(t)
 			defer teardown()
 			repo := storage.NewPgSurgeryRepository(db)
-			id, err := repo.Update(tt.appointmt)
+			id, err := repo.Update(tt.surg)
 			if !errors.Is(err, tt.wantError) {
 				t.Errorf("want %v; got %v", tt.wantError, err)
 			}
 			if (id == nil) && (tt.wantError == nil) {
-				t.Errorf("want %s; got id = nil", tt.appointmt.ID)
+				t.Errorf("want %s; got id = nil", tt.surg.ID)
 			}
 
 		})
@@ -104,7 +104,7 @@ func TestUpdateSurgery(t *testing.T) {
 func TestFindSurgeryByID(t *testing.T) {
 	var tests = []struct {
 		name      string
-		appointmt surgery.Surgery
+		surg      surgery.Surgery
 		wantError error
 	}{
 		{"Valid Update",
@@ -133,12 +133,12 @@ func TestFindSurgeryByID(t *testing.T) {
 			db, teardown := newTestDB(t)
 			defer teardown()
 			repo := storage.NewPgSurgeryRepository(db)
-			appointmt, err := repo.FindByID(tt.appointmt.ID)
+			surg, err := repo.FindByID(tt.surg.ID)
 			if !errors.Is(err, tt.wantError) {
 				t.Errorf("want %v; got %v", tt.wantError, err)
 			}
-			if *appointmt != tt.appointmt {
-				t.Errorf("want %s; got id = nil", tt.appointmt.ID)
+			if *surg != tt.surg {
+				t.Errorf("want %s; got id = nil", tt.surg.ID)
 			}
 
 		})
@@ -149,7 +149,7 @@ func TestFindSurgeryByID(t *testing.T) {
 func TestFindSurgeryByPatientID(t *testing.T) {
 	var tests = []struct {
 		name      string
-		appointmt surgery.Surgery
+		surg      surgery.Surgery
 		wantSize  int
 		wantError error
 	}{
@@ -180,13 +180,24 @@ func TestFindSurgeryByPatientID(t *testing.T) {
 			db, teardown := newTestDB(t)
 			defer teardown()
 			repo := storage.NewPgSurgeryRepository(db)
-			appointmts, err := repo.FindByPatientID(tt.appointmt.PatientID)
+			surgs, err := repo.FindByPatientID(tt.surg.PatientID)
 			if !errors.Is(err, tt.wantError) {
 				t.Errorf("want %v; got %v", tt.wantError, err)
 			}
-			if len(appointmts) != tt.wantSize {
+			if len(surgs) != tt.wantSize {
 				t.Errorf("want answer size of %d; got %d\n",
-					tt.wantSize, len(appointmts))
+					tt.wantSize, len(surgs))
+			}
+			if tt.wantError == nil {
+				hasSurg := false
+				for _, s := range surgs {
+					if s == tt.surg {
+						hasSurg = true
+					}
+				}
+				if !hasSurg {
+					t.Errorf("did not receive wanted surgery")
+				}
 			}
 		})
 	}
@@ -195,7 +206,7 @@ func TestFindSurgeryByPatientID(t *testing.T) {
 func TestFindSurgeryByDoctorID(t *testing.T) {
 	var tests = []struct {
 		name      string
-		appointmt surgery.Surgery
+		surg      surgery.Surgery
 		wantSize  int
 		wantError error
 	}{
@@ -226,13 +237,24 @@ func TestFindSurgeryByDoctorID(t *testing.T) {
 			db, teardown := newTestDB(t)
 			defer teardown()
 			repo := storage.NewPgSurgeryRepository(db)
-			appointmts, err := repo.FindByDoctorID(tt.appointmt.DoctorID)
+			surgs, err := repo.FindByDoctorID(tt.surg.DoctorID)
 			if !errors.Is(err, tt.wantError) {
 				t.Errorf("want %v; got %v", tt.wantError, err)
 			}
-			if len(appointmts) != tt.wantSize {
+			if len(surgs) != tt.wantSize {
 				t.Errorf("want answer size of %d; got %d\n",
-					tt.wantSize, len(appointmts))
+					tt.wantSize, len(surgs))
+			}
+			if tt.wantError == nil {
+				hasSurg := false
+				for _, s := range surgs {
+					if s == tt.surg {
+						hasSurg = true
+					}
+				}
+				if !hasSurg {
+					t.Errorf("did not receive wanted surgery")
+				}
 			}
 		})
 	}
@@ -241,7 +263,7 @@ func TestFindSurgeryByDoctorID(t *testing.T) {
 func TestFindSurgeryByDate(t *testing.T) {
 	var tests = []struct {
 		name      string
-		appointmt surgery.Surgery
+		surg      surgery.Surgery
 		wantSize  int
 		wantError error
 	}{
@@ -272,13 +294,24 @@ func TestFindSurgeryByDate(t *testing.T) {
 			db, teardown := newTestDB(t)
 			defer teardown()
 			repo := storage.NewPgSurgeryRepository(db)
-			appointmts, err := repo.FindByDate(tt.appointmt.DateTime)
+			surgs, err := repo.FindByDate(tt.surg.DateTime)
 			if !errors.Is(err, tt.wantError) {
 				t.Errorf("want %v; got %v", tt.wantError, err)
 			}
-			if len(appointmts) != tt.wantSize {
+			if len(surgs) != tt.wantSize {
 				t.Errorf("want answer size of %d; got %d\n",
-					tt.wantSize, len(appointmts))
+					tt.wantSize, len(surgs))
+			}
+			if tt.wantError == nil {
+				hasSurg := false
+				for _, s := range surgs {
+					if s == tt.surg {
+						hasSurg = true
+					}
+				}
+				if !hasSurg {
+					t.Errorf("did not receive wanted surgery")
+				}
 			}
 		})
 	}
@@ -310,14 +343,14 @@ func TestGetAllSurgeries(t *testing.T) {
 			db, teardown := newTestDB(t)
 			defer teardown()
 			repo := storage.NewPgSurgeryRepository(db)
-			appointmts, hasMore, err := repo.GetAll(tt.cursorID,
+			surgs, hasMore, err := repo.GetAll(tt.cursorID,
 				tt.next, tt.pgSize)
 			if !errors.Is(err, tt.wantError) {
 				t.Errorf("want %v; got %v", tt.wantError, err)
 			}
-			if len(appointmts) != tt.wantSize {
+			if len(surgs) != tt.wantSize {
 				t.Errorf("want answer size of %d; got %d\n",
-					tt.wantSize, len(appointmts))
+					tt.wantSize, len(surgs))
 			}
 			if hasMore != tt.wantHasMore {
 				t.Errorf("want hasMore = %v; got %v\n", tt.wantHasMore, hasMore)
