@@ -182,7 +182,7 @@ func TestFindSurgeryByPatientID(t *testing.T) {
 			nil,
 		},
 		{
-			"PatientID With No Surgery",
+			"PatientID With No Scheduled Surgery",
 			"3f7573a9-26a0-44ea-932e-f83f480f964f",
 			surgery.Surgery{},
 			0,
@@ -248,7 +248,7 @@ func TestFindSurgeryByDoctorID(t *testing.T) {
 			nil,
 		},
 		{
-			"DoctorID With No Surgery",
+			"DoctorID With No Scheduled Surgery",
 			"3f7573a9-26a0-44ea-932e-f83f480f964f",
 			surgery.Surgery{},
 			0,
