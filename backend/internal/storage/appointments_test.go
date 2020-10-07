@@ -139,7 +139,6 @@ func TestFindAppointmentByID(t *testing.T) {
 			repo := storage.NewPgAppointmentRepository(db)
 			appointmt, err := repo.FindByID(tt.appointmt.ID)
 			if !errors.Is(err, tt.wantError) {
-				t.Logf("error: %v\n", err)
 				t.Errorf("want %v; got %v", tt.wantError, err)
 			}
 			if err == nil && *appointmt != tt.appointmt {
@@ -175,6 +174,14 @@ func TestFindAppointmentsByPatientID(t *testing.T) {
 				UpdatedAt:   time.Date(2020, 9, 6, 12, 0, 0, 0, time.UTC),
 			},
 			5,
+			nil,
+		},
+		{
+			"Patient without appointments",
+			appointment.Appointment{
+				PatientID: "ed06f7f9-5fc4-4cfe-ad71-3efd24bf748a",
+			},
+			0,
 			nil,
 		},
 	}
@@ -222,6 +229,14 @@ func TestFindAppointmentsByDoctorID(t *testing.T) {
 			5,
 			nil,
 		},
+		{
+			"Doctor without appointments",
+			appointment.Appointment{
+				DoctorID: "ed06f7f9-5fc4-4cfe-ad71-3efd24bf748a",
+			},
+			0,
+			nil,
+		},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -236,6 +251,17 @@ func TestFindAppointmentsByDoctorID(t *testing.T) {
 			if len(appointmts) != tt.wantSize {
 				t.Errorf("want answer size of %d; got %d\n",
 					tt.wantSize, len(appointmts))
+			}
+			if tt.wantSize > 0 {
+				hasSurg := false
+				for _, s := range appointmts {
+					if s == tt.appointmt {
+						hasSurg = true
+					}
+				}
+				if !hasSurg {
+					t.Errorf("did not receive wanted surgery")
+				}
 			}
 		})
 	}
@@ -267,6 +293,14 @@ func TestFindAppointmentsByDate(t *testing.T) {
 			1,
 			nil,
 		},
+		{
+			"Date Without Appointments",
+			appointment.Appointment{
+				DateTime: time.Date(2020, 8, 7, 12, 0, 0, 0, time.UTC),
+			},
+			0,
+			nil,
+		},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -281,6 +315,17 @@ func TestFindAppointmentsByDate(t *testing.T) {
 			if len(appointmts) != tt.wantSize {
 				t.Errorf("want answer size of %d; got %d\n",
 					tt.wantSize, len(appointmts))
+			}
+			if tt.wantSize > 0 {
+				hasSurg := false
+				for _, s := range appointmts {
+					if s == tt.appointmt {
+						hasSurg = true
+					}
+				}
+				if !hasSurg {
+					t.Errorf("did not receive wanted surgery")
+				}
 			}
 		})
 	}
