@@ -355,11 +355,20 @@ func TestGetAllAppointments(t *testing.T) {
 		wantError   error
 	}{
 		{
-			"Valid Update",
+			"Next request",
 			"723e2fa0-70a9-4c20-89d9-b5f69405b772",
 			true,
 			3,
 			3,
+			true,
+			nil,
+		},
+		{
+			"Previous Request",
+			"640583f6-7727-4024-8b49-00be8d195a23",
+			false,
+			2,
+			2,
 			true,
 			nil,
 		},
