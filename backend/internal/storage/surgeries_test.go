@@ -12,6 +12,8 @@ import (
 func TestCreateSurgery(t *testing.T) {
 	var tests = []struct {
 		name         string
+        :q
+        :q
 		newAppointmt *surgery.Surgery
 		wantError    error
 	}{
@@ -146,7 +148,7 @@ func TestFindSurgeryByID(t *testing.T) {
 
 }
 
-func TestFindSurgeryByPatientID(t *testing.T) {
+func TestFindSurgerysByPatientID(t *testing.T) {
 	var tests = []struct {
 		name      string
 		appointmt surgery.Surgery
@@ -192,7 +194,7 @@ func TestFindSurgeryByPatientID(t *testing.T) {
 	}
 }
 
-func TestFindSurgeryByDoctorID(t *testing.T) {
+func TestFindSurgerysByDoctorID(t *testing.T) {
 	var tests = []struct {
 		name      string
 		appointmt surgery.Surgery
@@ -238,7 +240,7 @@ func TestFindSurgeryByDoctorID(t *testing.T) {
 	}
 }
 
-func TestFindSurgeryByDate(t *testing.T) {
+func TestFindSurgerysByDate(t *testing.T) {
 	var tests = []struct {
 		name      string
 		appointmt surgery.Surgery
@@ -284,7 +286,7 @@ func TestFindSurgeryByDate(t *testing.T) {
 	}
 }
 
-func TestGetAllSurgeries(t *testing.T) {
+func TestGetAllSurgerys(t *testing.T) {
 	var tests = []struct {
 		name        string
 		cursorID    string
