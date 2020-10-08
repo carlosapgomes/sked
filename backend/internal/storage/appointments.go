@@ -229,8 +229,14 @@ func (r appointmentRepository) GetAll(cursor string, next bool,
 	}
 	hasMore := false
 	if len(appointmts) == (pgSize + 1) {
-		// remove last slice item, because it was not requested
-		appointmts = appointmts[:len(appointmts)-1]
+		// remove the element that was not requested
+		if next {
+			// remove last element
+			appointmts = appointmts[:len(appointmts)-1]
+		} else {
+			// remove first element
+			appointmts = appointmts[1:]
+		}
 		hasMore = true
 	}
 	return appointmts, hasMore, nil
