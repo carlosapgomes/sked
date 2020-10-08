@@ -505,7 +505,7 @@ func TestGetAllUsers(t *testing.T) {
 	testCases := []struct {
 		desc             string
 		cursor           string
-		after            bool
+		next             bool
 		pgSize           int
 		wantSize         int
 		hasMore          bool
@@ -515,32 +515,42 @@ func TestGetAllUsers(t *testing.T) {
 		{
 			desc:             "Valid Page",
 			cursor:           "",
-			after:            true,
-			pgSize:           6,
-			wantSize:         6,
+			next:             true,
+			pgSize:           8,
+			wantSize:         8,
 			hasMore:          false,
 			wantError:        nil,
 			wantContainEmail: "spongebob@somewhere.com",
 		},
 		{
-			desc:             "Valid Cursor After",
+			desc:             "Valid Next Cursor",
 			cursor:           "bobama@somewhere.com",
-			after:            true,
+			next:             true,
 			pgSize:           2,
 			wantSize:         2,
 			hasMore:          true,
 			wantError:        nil,
-			wantContainEmail: "spongebob@somewhere.com",
+			wantContainEmail: "house@doctor.com",
 		},
 		{
 			desc:             "Valid Cursor Before",
 			cursor:           "bobama@somewhere.com",
-			after:            false,
+			next:             false,
 			pgSize:           2,
 			wantSize:         2,
 			hasMore:          false,
 			wantError:        nil,
 			wantContainEmail: "alice@example.com",
+		},
+		{
+			desc:             "Valid Cursor Before With HasMore",
+			cursor:           "shaun@thegooddoctor.com",
+			next:             false,
+			pgSize:           3,
+			wantSize:         3,
+			hasMore:          true,
+			wantError:        nil,
+			wantContainEmail: "house@doctor.com",
 		},
 	}
 	for _, tC := range testCases {
@@ -549,7 +559,7 @@ func TestGetAllUsers(t *testing.T) {
 			defer teardown()
 			repo := storage.NewPgUserRepository(db)
 
-			users, hasMore, err := repo.GetAll(tC.cursor, tC.after, tC.pgSize)
+			users, hasMore, err := repo.GetAll(tC.cursor, tC.next, tC.pgSize)
 			if err != tC.wantError {
 				t.Errorf("Want %v; got %v\n", tC.wantError, err)
 			}

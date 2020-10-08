@@ -165,18 +165,21 @@ func (r userRepository) FindByEmail(email string) (*user.User, error) {
 }
 
 // GetAll returns a paginated list of all users ordered by email and a bool if there are more results in this direction
-func (r userRepository) GetAll(cursor string, next bool, pgSize int) (*[]user.User, bool, error) {
+func (r userRepository) GetAll(cursor string, next bool,
+	pgSize int) (*[]user.User, bool, error) {
 	if pgSize <= 0 {
 		pgSize = 15
 	}
 	var stmt string
 	if next {
 		// Get next result page
-		stmt = `SELECT id, name, email, phone, created_at, updated_at, active, email_was_validated, roles
+		stmt = `SELECT id, name, email, phone, created_at, updated_at, 
+		active, email_was_validated, roles
 		FROM users WHERE email > $1 ORDER BY email LIMIT $2`
 	} else {
 		// Get previous result page
-		stmt = `SELECT id, name, email, phone, created_at, updated_at, active, email_was_validated, roles
+		stmt = `SELECT id, name, email, phone, created_at, updated_at, 
+		active, email_was_validated, roles
 		FROM users WHERE email < $1 ORDER BY email LIMIT $2`
 	}
 	rows, err := r.DB.Query(stmt, cursor, (pgSize + 1))
@@ -187,8 +190,8 @@ func (r userRepository) GetAll(cursor string, next bool, pgSize int) (*[]user.Us
 	defer rows.Close()
 	for rows.Next() {
 		var u user.User
-		err = rows.Scan(&u.ID, &u.Name, &u.Email, &u.Phone, &u.CreatedAt, &u.UpdatedAt,
-			&u.Active, &u.EmailWasValidated, pq.Array(&u.Roles))
+		err = rows.Scan(&u.ID, &u.Name, &u.Email, &u.Phone, &u.CreatedAt,
+			&u.UpdatedAt, &u.Active, &u.EmailWasValidated, pq.Array(&u.Roles))
 		if err == sql.ErrNoRows {
 			return nil, false, user.ErrNoRecord
 		} else if err != nil {
@@ -202,9 +205,15 @@ func (r userRepository) GetAll(cursor string, next bool, pgSize int) (*[]user.Us
 		return nil, false, err
 	}
 	hasMore := false
-	if len(users) == pgSize {
-		// remove last slice item, because it was not requested
-		users = users[:len(users)-1]
+	if len(users) == (pgSize + 1) {
+		// remove the element that was not requested
+		if next {
+			// remove last element
+			users = users[:len(users)-1]
+		} else {
+			// remove first element
+			users = users[1:]
+		}
 		hasMore = true
 	}
 	return &users, hasMore, nil
