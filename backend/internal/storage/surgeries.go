@@ -233,8 +233,14 @@ func (r surgeryRepository) GetAll(cursor string, next bool, pgSize int) ([]surge
 	}
 	hasMore := false
 	if len(surgs) == (pgSize + 1) {
-		// remove last slice item, because it was not requested
-		surgs = surgs[:len(surgs)-1]
+		// remove the element that was not requested
+		if next {
+			// remove last element
+			surgs = surgs[:len(surgs)-1]
+		} else {
+			// remove first element
+			surgs = surgs[1:]
+		}
 		hasMore = true
 	}
 	return surgs, hasMore, nil

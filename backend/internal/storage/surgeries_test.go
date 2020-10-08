@@ -352,13 +352,14 @@ func TestFindSurgeryByDate(t *testing.T) {
 
 func TestGetAllSurgeries(t *testing.T) {
 	var tests = []struct {
-		name        string
-		cursorID    string
-		next        bool
-		pgSize      int
-		wantSize    int
-		wantHasMore bool
-		wantError   error
+		name            string
+		cursorID        string
+		next            bool
+		pgSize          int
+		wantSize        int
+		wantHasMore     bool
+		wantError       error
+		wantContainDate time.Time
 	}{
 		{
 			"Next Request",
@@ -368,6 +369,7 @@ func TestGetAllSurgeries(t *testing.T) {
 			3,
 			true,
 			nil,
+			time.Date(2020, 9, 7, 12, 0, 0, 0, time.UTC),
 		},
 		{
 			"Previous Request",
@@ -377,6 +379,7 @@ func TestGetAllSurgeries(t *testing.T) {
 			2,
 			true,
 			nil,
+			time.Date(2020, 9, 8, 12, 0, 0, 0, time.UTC),
 		},
 	}
 	for _, tt := range tests {
@@ -396,6 +399,17 @@ func TestGetAllSurgeries(t *testing.T) {
 			}
 			if hasMore != tt.wantHasMore {
 				t.Errorf("want hasMore = %v; got %v\n", tt.wantHasMore, hasMore)
+			}
+			var contain bool
+			for _, a := range surgs {
+				//t.Logf("%v\n", p.Name)
+				if a.DateTime == tt.wantContainDate {
+					contain = true
+				}
+			}
+			if !contain {
+				t.Errorf("Want response to contain %v;  but it did not\n",
+					tt.wantContainDate)
 			}
 		})
 	}
