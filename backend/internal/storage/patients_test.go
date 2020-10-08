@@ -286,7 +286,7 @@ func TestGetAllPatients(t *testing.T) {
 			}
 			var contain bool
 			for _, p := range *patients {
-				t.Logf("%v\n", p.Name)
+				//t.Logf("%v\n", p.Name)
 				if p.Name == tC.wantContainName {
 					contain = true
 				}
