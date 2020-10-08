@@ -395,7 +395,7 @@ func TestGetAllAppointments(t *testing.T) {
 				t.Errorf("want hasMore = %v; got %v\n", tt.wantHasMore, hasMore)
 			}
 			var contain bool
-			for _, a := range *&appointmts {
+			for _, a := range appointmts {
 				//t.Logf("%v\n", p.Name)
 				if a.DateTime == tt.wantContainDate {
 					contain = true
