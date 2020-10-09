@@ -223,6 +223,7 @@ func (r userRepository) GetAll(cursor string, next bool,
 
 // FindByName returns a list of users whose names looks like 'name'
 func (r userRepository) FindByName(name string) (*[]user.User, error) {
+	// max result size
 	maxLstSize := 20
 	var users []user.User
 	stmt := `SELECT id, name, email, phone, created_at, updated_at, 

@@ -156,6 +156,56 @@ func TestFindUserByID(t *testing.T) {
 	}
 }
 
+func TestFindUserByName(t *testing.T) {
+	tests := []struct {
+		name            string
+		userName        string
+		wantContainName string
+		wantError       error
+	}{
+		{
+			"Valid Single Result",
+			"Alice",
+			"Alice Jones",
+			nil,
+		},
+		{
+			"Valid Multiple Results",
+			"Bob",
+			"SpongeBob Squarepants",
+			nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			db, teardown := newTestDB(t)
+			defer teardown()
+
+			repo := storage.NewPgUserRepository(db)
+
+			users, err := repo.FindByName(tt.userName)
+
+			if err != tt.wantError {
+				t.Errorf("want %v; got %v", tt.wantError, err)
+			}
+			if users != nil {
+				contain := false
+				for _, u := range *users {
+					if u.Name == tt.wantContainName {
+						contain = true
+					}
+				}
+				if !contain {
+					t.Errorf("want result to contain %v, but it did not\n",
+						tt.wantContainName)
+				}
+			} else {
+				t.Logf("users = nil\n")
+			}
+		})
+	}
+}
+
 func TestFindUserByEmail(t *testing.T) {
 	if testing.Short() {
 		t.Skip("postgres: skipping integration test")
