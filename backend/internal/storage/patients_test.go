@@ -112,14 +112,14 @@ func TestFindPatientByName(t *testing.T) {
 
 			repo := storage.NewPgPatientRepository(db)
 
-			users, err := repo.FindByName(tt.patientName)
+			patients, err := repo.FindByName(tt.patientName)
 
 			if err != tt.wantError {
 				t.Errorf("want %v; got %v", tt.wantError, err)
 			}
-			if users != nil {
+			if patients != nil {
 				contain := false
-				for _, u := range *users {
+				for _, u := range *patients {
 					if u.Name == tt.wantContainName {
 						contain = true
 					}
@@ -129,7 +129,7 @@ func TestFindPatientByName(t *testing.T) {
 						tt.wantContainName)
 				}
 			} else {
-				t.Logf("users = nil\n")
+				t.Logf("patients = nil\n")
 			}
 		})
 	}
