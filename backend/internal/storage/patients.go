@@ -95,7 +95,8 @@ func (r patientRepository) FindByID(id string) (*patient.Patient, error) {
 
 // FindByName - find a patient by its name
 func (r patientRepository) FindByName(name string) (*[]patient.Patient, error) {
-	maxLstSize := 20
+	// max result size
+	maxLstSize := 50
 	var patients []patient.Patient
 	stmt := `SELECT id, name, address, city, state, phones, created_by, 
 			created_at, updated_by, updated_at FROM patients 
