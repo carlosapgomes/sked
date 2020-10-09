@@ -57,7 +57,7 @@ func (r SurgeryMockRepo) FindByID(id string) (*surgery.Surgery, error) {
 }
 
 // FindByPatientID
-func (r SurgeryMockRepo) FindByPatientID(patientID string) ([]*surgery.Surgery, error) {
+func (r SurgeryMockRepo) FindByPatientID(patientID string) ([]surgery.Surgery, error) {
 	surg := surgery.Surgery{
 		ID:              "e521798b-9f33-4a10-8b2a-9677ed1cd1ae",
 		DateTime:        time.Now(),
@@ -71,8 +71,8 @@ func (r SurgeryMockRepo) FindByPatientID(patientID string) ([]*surgery.Surgery, 
 		CreatedAt:       time.Now(),
 	}
 	if patientID == surg.PatientID {
-		surgs := []*surgery.Surgery{
-			&surg,
+		surgs := []surgery.Surgery{
+			surg,
 		}
 		return surgs, nil
 	} else {
@@ -81,7 +81,7 @@ func (r SurgeryMockRepo) FindByPatientID(patientID string) ([]*surgery.Surgery, 
 }
 
 // FindByDoctorID
-func (r SurgeryMockRepo) FindByDoctorID(doctorID string) ([]*surgery.Surgery, error) {
+func (r SurgeryMockRepo) FindByDoctorID(doctorID string) ([]surgery.Surgery, error) {
 	surg := surgery.Surgery{
 		ID:          "e521798b-9f33-4a10-8b2a-9677ed1cd1ae",
 		DateTime:    time.Now(),
@@ -94,8 +94,8 @@ func (r SurgeryMockRepo) FindByDoctorID(doctorID string) ([]*surgery.Surgery, er
 		CreatedAt:   time.Now(),
 	}
 	if doctorID == surg.DoctorID {
-		surgs := []*surgery.Surgery{
-			&surg,
+		surgs := []surgery.Surgery{
+			surg,
 		}
 		return surgs, nil
 	} else {
@@ -104,7 +104,7 @@ func (r SurgeryMockRepo) FindByDoctorID(doctorID string) ([]*surgery.Surgery, er
 }
 
 // FindByDate
-func (r SurgeryMockRepo) FindByDate(dateTime time.Time) ([]*surgery.Surgery, error) {
+func (r SurgeryMockRepo) FindByDate(dateTime time.Time) ([]surgery.Surgery, error) {
 	surg := surgery.Surgery{
 		ID:          "e521798b-9f33-4a10-8b2a-9677ed1cd1ae",
 		DateTime:    time.Date(2020, 9, 6, 12, 0, 0, 0, time.UTC),
@@ -119,8 +119,8 @@ func (r SurgeryMockRepo) FindByDate(dateTime time.Time) ([]*surgery.Surgery, err
 	searchY, searchM, searchD := dateTime.Date()
 	appointmtY, appointmtM, appointmtD := surg.DateTime.Date()
 	if (searchY == appointmtY) && (searchM == appointmtM) && (searchD == appointmtD) {
-		appointmts := []*surgery.Surgery{
-			&surg,
+		appointmts := []surgery.Surgery{
+			surg,
 		}
 		return appointmts, nil
 	} else {
@@ -129,7 +129,7 @@ func (r SurgeryMockRepo) FindByDate(dateTime time.Time) ([]*surgery.Surgery, err
 }
 
 // GetAll
-func (r SurgeryMockRepo) GetAll(cursor string, after bool, pgSize int) (*[]surgery.Surgery, bool, error) {
+func (r SurgeryMockRepo) GetAll(cursor string, after bool, pgSize int) ([]surgery.Surgery, bool, error) {
 	var db []surgery.Surgery
 	db = append(db, surgery.Surgery{
 		ID:              "e521798b-9f33-4a10-8b2a-9677ed1cd1ae",
@@ -214,7 +214,7 @@ func (r SurgeryMockRepo) GetAll(cursor string, after bool, pgSize int) (*[]surge
 		for i := 0; i < respSize; i++ {
 			res = append(res, db[i])
 		}
-		return &res, hasMore, nil
+		return res, hasMore, nil
 	}
 	pos := r.findPos(db, cursor)
 	if pos == -1 {
@@ -241,7 +241,7 @@ func (r SurgeryMockRepo) GetAll(cursor string, after bool, pgSize int) (*[]surge
 			hasMore = true
 		}
 	}
-	return &res, hasMore, nil
+	return res, hasMore, nil
 }
 func (r SurgeryMockRepo) findPos(surgs []surgery.Surgery, id string) int {
 	for i, el := range surgs {

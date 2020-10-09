@@ -143,7 +143,8 @@ func (s *surgeryService) FindByID(id string) (*surgery.Surgery, error) {
 }
 
 // FindFindByPatientID - look for surgeries by its patientID
-func (s *surgeryService) FindByPatientID(patientID string) ([]*surgery.Surgery, error) {
+func (s *surgeryService) FindByPatientID(patientID string) ([]surgery.Surgery,
+	error) {
 	_, err := uuid.FromString(patientID)
 	if err != nil {
 		return nil, surgery.ErrInvalidInputSyntax
@@ -156,7 +157,8 @@ func (s *surgeryService) FindByPatientID(patientID string) ([]*surgery.Surgery, 
 }
 
 // FindByDoctorID - look for surgeries by doctorID
-func (s *surgeryService) FindByDoctorID(doctorID string) ([]*surgery.Surgery, error) {
+func (s *surgeryService) FindByDoctorID(doctorID string) ([]surgery.Surgery,
+	error) {
 	_, err := uuid.FromString(doctorID)
 	if err != nil {
 		return nil, surgery.ErrInvalidInputSyntax
@@ -169,7 +171,8 @@ func (s *surgeryService) FindByDoctorID(doctorID string) ([]*surgery.Surgery, er
 }
 
 // FindByDate - look for surgeries by date
-func (s *surgeryService) FindByDate(dateTime time.Time) ([]*surgery.Surgery, error) {
+func (s *surgeryService) FindByDate(dateTime time.Time) ([]surgery.Surgery,
+	error) {
 	surgeries, err := s.repo.FindByDate(dateTime)
 	if err != nil {
 		return nil, err
@@ -178,10 +181,11 @@ func (s *surgeryService) FindByDate(dateTime time.Time) ([]*surgery.Surgery, err
 }
 
 // GetAll - return all surgeries
-func (s *surgeryService) GetAll(previous string, next string, pgSize int) (*surgery.Page, error) {
+func (s *surgeryService) GetAll(previous string, next string,
+	pgSize int) (*surgery.Page, error) {
 	var page surgery.Page
 	var err error
-	var list *[]surgery.Surgery
+	var list []surgery.Surgery
 	if pgSize <= 0 {
 		return nil, surgery.ErrInvalidInputSyntax
 	}
@@ -197,8 +201,8 @@ func (s *surgeryService) GetAll(previous string, next string, pgSize int) (*surg
 		if err != nil {
 			return nil, err
 		}
-		if list != nil && len(*list) > 0 {
-			for _, a := range *list {
+		if list != nil && len(list) > 0 {
+			for _, a := range list {
 				page.Surgeries = append(page.Surgeries, a)
 			}
 		}
@@ -228,8 +232,8 @@ func (s *surgeryService) GetAll(previous string, next string, pgSize int) (*surg
 		if err != nil {
 			return nil, err
 		}
-		if list != nil && len(*list) > 0 {
-			for _, a := range *list {
+		if list != nil && len(list) > 0 {
+			for _, a := range list {
 				page.Surgeries = append(page.Surgeries, a)
 			}
 		}
@@ -258,8 +262,8 @@ func (s *surgeryService) GetAll(previous string, next string, pgSize int) (*surg
 		if err != nil {
 			return nil, err
 		}
-		if list != nil && len(*list) > 0 {
-			for _, a := range *list {
+		if list != nil && len(list) > 0 {
+			for _, a := range list {
 				page.Surgeries = append(page.Surgeries, a)
 			}
 		}

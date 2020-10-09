@@ -13,8 +13,8 @@ type Service interface {
 		ProposedSurgery, createdBy string) (*string, error)
 	Update(surgery Surgery) (*string, error)
 	FindByID(id string) (*Surgery, error)
-	FindByPatientID(patientID string) ([]*Surgery, error)
-	FindByDoctorID(doctorID string) ([]*Surgery, error)
-	FindByDate(date time.Time) ([]*Surgery, error)
+	FindByPatientID(patientID string) ([]Surgery, error)
+	FindByDoctorID(doctorID string) ([]Surgery, error)
+	FindByDate(date time.Time) ([]Surgery, error)
 	GetAll(before string, after string, pgSize int) (*Page, error)
 }
