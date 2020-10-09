@@ -3,8 +3,10 @@ package storage
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 	"time"
 
+	"carlosapgomes.com/sked/internal/patient"
 	"carlosapgomes.com/sked/internal/user"
 	"github.com/lib/pq"
 )
@@ -221,5 +223,35 @@ func (r userRepository) GetAll(cursor string, next bool,
 
 // FindByName returns a list of users whose names looks like 'name'
 func (r userRepository) FindByName(name string) (*[]user.User, error) {
-	return nil, nil
+	maxLstSize := 20
+	var users []user.User
+	stmt := `SELECT id, name, email, phone, created_at, updated_at, 
+		active, email_was_validated, roles FROM users 
+			WHERE name ILIKE $1 ORDER BY name`
+	var pattrn strings.Builder
+	pattrn.WriteString("%")
+	pattrn.WriteString(name)
+	pattrn.WriteString("%")
+	rows, err := r.DB.Query(stmt, pattrn.String(), maxLstSize)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var u user.User
+		err = rows.Scan(&u.ID, &u.Name, &u.Email, &u.Phone, &u.CreatedAt,
+			&u.UpdatedAt, &u.Active, &u.EmailWasValidated, pq.Array(&u.Roles))
+		if err == sql.ErrNoRows {
+			return nil, patient.ErrNoRecord
+		} else if err != nil {
+			return nil, err
+		}
+		users = append(users, u)
+	}
+	// get any error encountered during iteration
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+	return &users, err
 }
