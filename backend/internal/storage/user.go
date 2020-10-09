@@ -228,7 +228,7 @@ func (r userRepository) FindByName(name string) (*[]user.User, error) {
 	var users []user.User
 	stmt := `SELECT id, name, email, phone, created_at, updated_at, 
 		active, email_was_validated, roles FROM users 
-			WHERE name ILIKE $1 ORDER BY name`
+			WHERE name ILIKE $1 ORDER BY name LIMIT $2`
 	var pattrn strings.Builder
 	pattrn.WriteString("%")
 	pattrn.WriteString(name)
