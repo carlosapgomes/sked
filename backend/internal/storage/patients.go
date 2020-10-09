@@ -99,12 +99,12 @@ func (r patientRepository) FindByName(name string) (*[]patient.Patient, error) {
 	var patients []patient.Patient
 	stmt := `SELECT id, name, address, city, state, phones, created_by, 
 			created_at, updated_by, updated_at FROM patients 
-			WHERE name ILIKE $1 ORDER BY name`
+			WHERE name ILIKE $1 ORDER BY name LIMIT $2`
 	var pattrn strings.Builder
 	pattrn.WriteString("%")
 	pattrn.WriteString(name)
 	pattrn.WriteString("%")
-	rows, err := r.DB.Query(stmt, pattrn, maxLstSize)
+	rows, err := r.DB.Query(stmt, pattrn.String(), maxLstSize)
 	if err != nil {
 		return nil, err
 	}
