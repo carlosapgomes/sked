@@ -112,6 +112,9 @@ func main() {
 	userRepository := storage.NewPgUserRepository(db)
 	sessionRepository := storage.NewPgSessionRepository(db)
 	tokenRepository := storage.NewPgTokenRepository(db)
+	patientRepository := storage.NewPgPatientRepository(db)
+	appointmentRepository := storage.NewPgAppointmentRepository(db)
+	surgeryRepository := storage.NewPgSurgeryRepository(db)
 
 	// Initialize core services injecting its dependencies
 	// when neccessary
@@ -119,6 +122,11 @@ func main() {
 	sessionService := services.NewSessionService(ssLifeTime, sessionRepository)
 	mailerService := services.NewMailerService(sgKey, fromName, fromAddress)
 	tokenService := services.NewTokenService(tokenRepository)
+	patientService := services.NewPatientService(patientRepository)
+	appointmentService := services.NewAppointmentService(appointmentRepository,
+		userService)
+	surgeryService := services.NewSurgeryService(surgeryRepository,
+		userService)
 	ckprops := &web.CkProps{
 		Name:     ckName,
 		HTTPOnly: ckHTTPOnly,
@@ -133,7 +141,10 @@ func main() {
 		sessionService,
 		userService,
 		mailerService,
-		tokenService)
+		tokenService,
+		patientService,
+		appointmentService,
+		surgeryService)
 
 	// Run web adapter
 	srv := &http.Server{
