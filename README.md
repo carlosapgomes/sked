@@ -41,7 +41,7 @@ should be created.
 - Address
 - City
 - State
-- Phones
+- Phones (can not be empty)
 - createdBy
 - createdAt
 - updatedBy
