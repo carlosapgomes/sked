@@ -26,18 +26,35 @@ func TestPatientCreate(t *testing.T) {
 		createdBy string
 		wantError []byte
 	}{
-		{"Valid patient", "Valid Street, 23", "Main City", "ST", []string{"12345"}, "7f064a4e-d3bd-48a6-a305-accf4743a94f", nil},
-		{"Bad uuid", "Valid Street, 22", "Main City", "ST", []string{"12345"}, "7f064a4e-d3bd-48a6-a305-accf4743a94f", []byte("repository ID not equal to new patient ID")},
+		{
+			"Valid patient",
+			"Valid Street, 23",
+			"Main City", "ST",
+			[]string{"12345"},
+			"7f064a4e-d3bd-48a6-a305-accf4743a94f",
+			nil,
+		},
+		{
+			"Bad uuid",
+			"Valid Street, 22",
+			"Main City",
+			"ST",
+			[]string{"12345"},
+			"7f064a4e-d3bd-48a6-a305-accf4743a94f",
+			[]byte("repository ID not equal to new patient ID"),
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			id, err := svc.Create(tt.name, tt.address, tt.city, tt.state, tt.phones, tt.createdBy)
+			id, err := svc.Create(tt.name, tt.address, tt.city,
+				tt.state, tt.phones, tt.createdBy)
 
 			if (tt.wantError != nil) && (err != nil) {
 				t.Log("wantError and error != nil")
 				e := err.Error()
 				if !bytes.Contains([]byte(e), tt.wantError) {
-					t.Errorf("want error msg %s to contain %q", e, tt.wantError)
+					t.Errorf("want error msg %s to contain %q", e,
+						tt.wantError)
 				}
 			}
 			if (tt.wantError == nil) && (err != nil) {
@@ -152,6 +169,50 @@ func TestUpdatePatientName(t *testing.T) {
 				}
 				if (patient != nil) && (patient.Name != tC.newPatientName) {
 					t.Errorf("want \n%v\n; got \n%v\n", tC.newPatientName, patient.Name)
+				}
+			}
+		})
+	}
+}
+func TestUpdatePatientPhones(t *testing.T) {
+	repo := mocks.NewPatientRepo()
+	svc := services.NewPatientService(repo)
+
+	testCases := []struct {
+		desc             string
+		id               string
+		newPatientPhones []string
+		wantError        error
+	}{
+		{
+			desc:             "Valid Update Request",
+			id:               "68b1d5e2-39dd-4713-8631-a08100383a0f",
+			newPatientPhones: []string{"2343453423"},
+			wantError:        nil,
+		},
+		{
+			desc:             "Empty new patient phones",
+			id:               "68b1d5e2-39dd-4713-8631-a08100383a0f",
+			newPatientPhones: []string{""},
+			wantError:        patient.ErrInvalidInputSyntax,
+		},
+	}
+	for _, tC := range testCases {
+		t.Run(tC.desc, func(t *testing.T) {
+			err := svc.UpdatePhone(tC.id, tC.newPatientPhones,
+				"f06244b9-97e5-4f1a-bae0-3b6da7a0b604")
+			if err != tC.wantError {
+				t.Errorf("want %v; got %v", tC.wantError, err)
+			}
+			if tC.wantError == nil {
+				patient, err := svc.FindByID(tC.id)
+				if err != nil {
+					t.Error("Could not find patient")
+				}
+				if (patient != nil) &&
+					len(patient.Phones) > 0 &&
+					(patient.Phones[0] != tC.newPatientPhones[0]) {
+					t.Errorf("want \n%v\n; got \n%v\n", tC.newPatientPhones, patient.Name)
 				}
 			}
 		})

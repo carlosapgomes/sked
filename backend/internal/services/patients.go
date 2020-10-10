@@ -3,6 +3,7 @@ package services
 import (
 	"encoding/base64"
 	"errors"
+	"strings"
 	"time"
 
 	"carlosapgomes.com/sked/internal/patient"
@@ -23,11 +24,16 @@ func NewPatientService(repo patient.Repository) patient.Service {
 }
 
 // Create creates a new patient and returns its uuid
-func (s *patientService) Create(name, address, city, state string, phones []string, createdBy string) (*string, error) {
+func (s *patientService) Create(name, address, city, state string,
+	phones []string, createdBy string) (*string, error) {
 	if len(name) == 0 {
 		return nil, patient.ErrInvalidInputSyntax
 	}
-	if len(phones) > 10 {
+	if len(phones) > 10 ||
+		len(phones) == 0 {
+		return nil, patient.ErrInvalidInputSyntax
+	}
+	if strings.TrimSpace(strings.Join(phones, "")) == "" {
 		return nil, patient.ErrInvalidInputSyntax
 	}
 	_, err := uuid.FromString(createdBy)
@@ -92,7 +98,8 @@ func (s *patientService) UpdateName(id string, name, updatedBy string) error {
 }
 
 // UpdatePhone updates patient email
-func (s *patientService) UpdatePhone(id string, phones []string, updatedBy string) error {
+func (s *patientService) UpdatePhone(id string, phones []string,
+	updatedBy string) error {
 	_, err := uuid.FromString(id)
 	if err != nil {
 		return patient.ErrInvalidInputSyntax
@@ -101,7 +108,11 @@ func (s *patientService) UpdatePhone(id string, phones []string, updatedBy strin
 	if err != nil {
 		return patient.ErrInvalidInputSyntax
 	}
-	if len(phones) > 10 {
+	if len(phones) > 10 ||
+		len(phones) == 0 {
+		return patient.ErrInvalidInputSyntax
+	}
+	if strings.TrimSpace(strings.Join(phones, "")) == "" {
 		return patient.ErrInvalidInputSyntax
 	}
 	return s.repo.UpdatePhone(id, phones, updatedBy)
