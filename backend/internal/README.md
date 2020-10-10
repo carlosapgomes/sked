@@ -29,4 +29,23 @@ This folder holds all internal packages for the system
 
 ### Web App and its Handlers
 
+- web/userHandlers
+- web/patientHandlers
+- web/appointmentHandlers
+- web/surgeryHandlers
+
+## Driven Adapters
+
+### Postgres
+
+- storage/user
+- storage/token
+- storage/session
+- storage/patients
+- storage/appointments
+- storage/surgeries
+
+### Mailer
+
+- mailer/service
 
