@@ -2,7 +2,6 @@ package storage_test
 
 import (
 	"errors"
-	"reflect"
 	"testing"
 	"time"
 
@@ -20,7 +19,7 @@ func TestCreatePatient(t *testing.T) {
 		wantError  error
 	}{
 		{
-			name: "Valid User",
+			name: "Valid Patient",
 			newPatient: &patient.Patient{
 				ID:        "5b28f739-e372-4622-8390-9992f3c7b0e9",
 				Name:      "Muhamed Ali",
@@ -176,15 +175,25 @@ func TestFindPatientByID(t *testing.T) {
 			db, teardown := newTestDB(t)
 			defer teardown()
 
-			repo := storage.NewPgUserRepository(db)
+			repo := storage.NewPgPatientRepository(db)
 
-			user, err := repo.FindByID(tt.patientID)
+			p, err := repo.FindByID(tt.patientID)
 
 			if err != tt.wantError {
 				t.Errorf("want %v; got %v", tt.wantError, err)
 			}
-			if !reflect.DeepEqual(user, tt.wantPatient) {
-				t.Errorf("want \n%v\n; got \n%v\n", tt.wantPatient, user)
+			if !(p == nil) &&
+				(p.ID == tt.wantPatient.ID) &&
+				(p.Name == tt.wantPatient.Name) &&
+				(p.Address == tt.wantPatient.Address) &&
+				(p.City == tt.wantPatient.City) &&
+				(p.State == tt.wantPatient.State) &&
+				(p.Phones[0] == tt.wantPatient.Phones[0]) &&
+				(p.CreatedBy == tt.wantPatient.CreatedBy) &&
+				(p.CreatedAt == tt.wantPatient.CreatedAt) &&
+				(p.UpdatedBy == tt.wantPatient.UpdatedBy) &&
+				(p.UpdatedAt == tt.wantPatient.UpdatedAt) {
+				t.Errorf("want \n%v\n; got \n%v\n", tt.wantPatient, p)
 			}
 		})
 	}
@@ -215,8 +224,9 @@ func TestUpdatePatientName(t *testing.T) {
 			db, teardown := newTestDB(t)
 			defer teardown()
 
-			repo := storage.NewPgUserRepository(db)
-			err := repo.UpdateName(tC.id, tC.newName)
+			repo := storage.NewPgPatientRepository(db)
+			err := repo.UpdateName(tC.id, tC.newName,
+				"dcce1beb-aee6-4a4d-b724-94d470817323")
 			if tC.wantError != nil && err == nil {
 				t.Errorf("Want %v; got %v\n", tC.wantError, err)
 			}
