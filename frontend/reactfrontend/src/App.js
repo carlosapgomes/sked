@@ -6,6 +6,7 @@ class App extends Component {
     super(propos);
     this.state = {
       currentUser: null,
+      loggedIn: false,
       currentPatient: null,
       currentDoctor: null,
     };
