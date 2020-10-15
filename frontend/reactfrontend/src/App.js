@@ -3,7 +3,7 @@ import "./App.css";
 import Auth from "./Auth/Auth";
 class App extends Component {
   constructor(props) {
-    super(propos);
+    super(props);
     this.state = {
       currentUser: null,
       loggedIn: false,
@@ -12,8 +12,7 @@ class App extends Component {
     };
   }
   render() {
-    return <div className="App"></div>;
+    return <div className="App">{!this.state.loggedIn ? <Auth /> : null}</div>;
   }
 }
-
 export default App;
