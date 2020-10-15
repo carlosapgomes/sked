@@ -548,7 +548,7 @@ func TestLogin(t *testing.T) {
 }
 
 // TestGetUserByEmail function tests retrieving user data by email
-func TestGetUserByEmailByAdmin(t *testing.T) {
+func TestGetUserByEmailnyAdmin(t *testing.T) {
 	handlers := newTestApplication(t)
 	ts := newTestServer(t, handlers.Routes())
 	defer ts.Close()
