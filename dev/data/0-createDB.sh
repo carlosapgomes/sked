@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+CREATE USER sked WITH ENCRYPTED PASSWORD 'sked';
+
+CREATE DATABASE sked WITH OWNER=sked;
+
+GRANT ALL PRIVILEGES ON DATABASE sked to sked;
+
+EOSQL
