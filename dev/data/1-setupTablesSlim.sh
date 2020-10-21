@@ -1,12 +1,12 @@
 #!/bin/bash
 set -e
-psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname sked <<-EOSQL
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "sked" <<'EOF'
 CREATE OR REPLACE FUNCTION sked_date_to_char(some_time timestamp with time zone) 
   RETURNS text
 AS
-$BODY$
+$$
     select to_char($1, 'yyyy-mm-dd');
-    $BODY$
+    $$
     LANGUAGE sql
     IMMUTABLE;
 
@@ -63,6 +63,7 @@ CREATE INDEX appointments_id_index ON appointments (id);
 CREATE INDEX appointments_patient_id_index ON appointments (patient_id);
 CREATE INDEX appointments_doctor_id_index ON appointments (doctor_id);
 CREATE INDEX appointments_date_index ON appointments (sked_date_to_char(date_time));
+
 DROP TABLE IF EXISTS surgeries;
 CREATE TABLE surgeries (
   id UUID NOT NULL PRIMARY KEY UNIQUE,
@@ -85,7 +86,6 @@ CREATE INDEX surgeries_patient_id_index ON surgeries (patient_id);
 CREATE INDEX surgeries_doctor_id_index ON surgeries (doctor_id);
 CREATE INDEX surgeries_date_time_index ON surgeries (sked_date_to_char(date_time));
 
-
 DROP TABLE IF EXISTS sessions;
 CREATE TABLE sessions (
   id UUID NOT NULL PRIMARY KEY UNIQUE,
@@ -107,4 +107,5 @@ CREATE TABLE tokens (
 CREATE INDEX tokens_id_index ON tokens (id);
 CREATE INDEX tokens_userid_index ON tokens (userid);
 
-EOSQL
+EOF
+

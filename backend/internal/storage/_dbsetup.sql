@@ -1,7 +1,6 @@
  -- This is the databse setup script 
  -- execute it with the following command:
  -- psql -U sked -d sked -a -f _dbsetup.sql
-
 CREATE OR REPLACE FUNCTION sked_date_to_char(some_time timestamp with time zone) 
   RETURNS text
 AS

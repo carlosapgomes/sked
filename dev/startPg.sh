@@ -1,4 +1,4 @@
-#echo "${PWD}/data"
+DATADIR=`mktemp -d /tmp/skedPgData.XXXXXX` || exit 1
 docker run -d \
         --name pgDevEnv \
         -e POSTGRES_PASSWORD=pgDevEnv \
@@ -7,4 +7,3 @@ docker run -d \
         -p 54320:5432 \
         postgres
 
-        #-v ${STORAGEDIR}/backend/internal/storage/testdata/setup.sql:/docker-entrypoint-initdb.d/1-setup.sql\
