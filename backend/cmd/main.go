@@ -29,17 +29,17 @@ func main() {
 	ckSecure := true
 	ckHTTPOnly := true
 	ssLifeTime := 20
-	fromName := "Go Backend Manager"
+	fromName := "Sked Manager"
 	// create this email and register it in sendgrid
 	// control panel as an authorized email sender
-	fromAddress := "sked.manager@gmail.com"
+	fromAddress := ""
 	sgKey := ""
 
 	// Lookup all corresponding Env vars
 	if ad, ok := os.LookupEnv("HTTP_ADDR"); ok {
 		addr = ad
 	}
-	if conn, ok := os.LookupEnv("PG_CONN"); ok {
+	if conn, ok := os.LookupEnv("PG_STR"); ok {
 		pgstr = conn
 	}
 	if cn, ok := os.LookupEnv("COOKIE_NAME"); ok {
@@ -86,17 +86,22 @@ func main() {
 	flag.StringVar(&fromAddress, "email", fromAddress, "'From' email to use")
 	flag.Parse()
 
-	// Finallly, check for external or secret vars that are
-	// required not to be empty
+	// Finallly, check for external or secret vars that must not be empty
 	if pgstr == "" {
 		flag.PrintDefaults()
-		errorLog.Fatal(errors.New("Please, supply DB connection string"))
+		errorLog.Fatal(errors.New("Missing DB connection string"))
 		os.Exit(1)
 	}
 
 	if sgKey == "" {
 		flag.PrintDefaults()
-		errorLog.Fatal(errors.New("Please, supply a Sendgrid API key"))
+		errorLog.Fatal(errors.New("Missing Sendgrid API key"))
+		os.Exit(1)
+	}
+	if fromAddress == "" {
+		flag.PrintDefaults()
+		errorLog.Fatal(
+			errors.New("Missing system mailer service fromAddress"))
 		os.Exit(1)
 	}
 
