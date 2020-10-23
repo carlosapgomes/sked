@@ -10,7 +10,7 @@ parameters:
 
 - pgstr (connection string to postgres)
 - sgKey (Sendgrid API key)
-- fromAddress
+- from
 
 And a local HTTPS reverse proxy that pass connection to `localhost:9000`
 because the default sked backend port is 9000.
@@ -23,7 +23,7 @@ because the default sked backend port is 9000.
 ./startPg.sh
 
 # start sked backend
-skedBackend --pgstr "postgres://user:password@localhost/sked?sslmode=disable" \\
-            --sgKey SG.xxxxxxx \\
-            --fromAddress "manager@domain.sked"
+skedBackend -pgstr "postgres://user:password@localhost/sked?sslmode=disable" \\
+            -sgKey SG.xxxxxxx \\
+            -from "manager@domain.sked"
 ```

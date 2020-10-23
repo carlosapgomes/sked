@@ -1,0 +1,8 @@
+https://myapp.local
+POST /api/users/login
+{
+  "email":"bob@example.com",
+  "password":"test1234"
+}
+
+
