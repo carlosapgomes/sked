@@ -104,7 +104,7 @@ func main() {
 	if fromAddress == "" {
 		flag.PrintDefaults()
 		errorLog.Fatal(
-			errors.New("Missing system mailer service fromAddress"))
+			errors.New("Missing system mailer service fromAddress (-email flag)"))
 		os.Exit(1)
 	}
 
