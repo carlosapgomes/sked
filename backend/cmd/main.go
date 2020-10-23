@@ -23,7 +23,10 @@ func main() {
 
 	// First, set all the defaults:
 	addr := ":9000"
-	pgstr := "" // "postgres://sked:skedp@localhost/sked?sslmode=disable"
+	// Postgres connection string
+	// postgres://[user[:password]@][netloc][:port][/dbname][?param1=value1&...]
+	// exemple: "postgres://user:password@localhost/sked?sslmode=disable"
+	pgstr := ""
 	ckName := "sid"
 	ckSameSite := "strict" // Strict||Lax
 	ckSecure := true
