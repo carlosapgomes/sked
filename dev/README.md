@@ -27,3 +27,8 @@ skedBackend -pgstr "postgres://user:password@localhost/sked?sslmode=disable" \\
             -sgKey SG.xxxxxxx \\
             -from "manager@domain.sked"
 ```
+
+For this dev setup, use 
+`postgres://sked:sked@localhost:54320/sked?sslmode=disable` as postgres 
+connection string.
+
