@@ -136,27 +136,39 @@ func (r patientRepository) GetAll(cursor string, next bool,
 	if pgSize <= 0 {
 		pgSize = 15
 	}
-	p, err := r.FindByID(cursor)
-	if err != nil {
-		return nil, false, err
-	}
-
 	var stmt string
-	if next {
-		// Get next result page
+	var rows *sql.Rows
+	var err error
+	if cursor == "" {
 		stmt = `SELECT id, name, address, city, state, phones, created_by, 
+			created_at, updated_by, updated_at FROM patients 
+			ORDER BY name LIMIT $1`
+		rows, err = r.DB.Query(stmt, (pgSize + 1))
+		if err != nil {
+			return nil, false, err
+		}
+	} else {
+		p, err := r.FindByID(cursor)
+		if err != nil {
+			return nil, false, err
+		}
+		if next {
+			// Get next result page
+			stmt = `SELECT id, name, address, city, state, phones, created_by, 
 			created_at, updated_by, updated_at FROM patients 
 			WHERE name > $1 ORDER BY name LIMIT $2`
-	} else {
-		// Get previous result page
-		stmt = `SELECT id, name, address, city, state, phones, created_by, 
+		} else {
+			// Get previous result page
+			stmt = `SELECT id, name, address, city, state, phones, created_by, 
 			created_at, updated_by, updated_at FROM patients 
 			WHERE  name < $1 ORDER BY name LIMIT $2`
+		}
+		rows, err = r.DB.Query(stmt, p.Name, (pgSize + 1))
+		if err != nil {
+			return nil, false, err
+		}
 	}
-	rows, err := r.DB.Query(stmt, p.Name, (pgSize + 1))
-	if err != nil {
-		return nil, false, err
-	}
+
 	var patients []patient.Patient
 	defer rows.Close()
 	for rows.Next() {
