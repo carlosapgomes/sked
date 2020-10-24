@@ -333,7 +333,7 @@ func (app App) getAllPatients(w http.ResponseWriter, r *http.Request) {
 	pgSize := r.URL.Query().Get("pgSize")
 	if pgSize == "" {
 		// set a mininum page size
-		pgSize == "5"
+		pgSize = "5"
 	}
 	size, err := strconv.Atoi(pgSize)
 	if err != nil {
@@ -354,5 +354,6 @@ func (app App) getAllPatients(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(output)
 }
