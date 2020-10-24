@@ -331,6 +331,10 @@ func (app App) getAllPatients(w http.ResponseWriter, r *http.Request) {
 	previous := r.URL.Query().Get("previous")
 	next := r.URL.Query().Get("next")
 	pgSize := r.URL.Query().Get("pgSize")
+	if pgSize == "" {
+		// set a mininum page size
+		pgSize == "5"
+	}
 	size, err := strconv.Atoi(pgSize)
 	if err != nil {
 		app.serverError(w, err)
