@@ -1,8 +1,30 @@
+# Rest file to be used with vim-rest-console
+# https://github.com/diepm/vim-rest-console
+
+# Global definitions
+// Default host
 https://myapp.local
+
+// Default cUrl options
+--connect-timeout 10
+--max-time 60
+--ipv4
+-c /tmp/cookie.jar
+-b /tmp/cookie.jar
+-L
+-i
+--
+
+
+--
 POST /api/users/login
 {
   "email":"bob@example.com",
   "password":"test1234"
 }
 
+
+https://myapp.local
+Cookie: sid=
+GET /api/patients
 
