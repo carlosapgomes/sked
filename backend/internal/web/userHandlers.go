@@ -96,7 +96,7 @@ func (app App) getUsers() http.Handler {
 // users is the root handler for restful users endpoints
 // A URL represents a parsed URL:
 // [scheme:][//[userinfo@]host][/]path[?query][#fragment]
-func (app App) sers() http.Handler {
+func (app App) users() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		path := r.URL.Path
 		switch {
