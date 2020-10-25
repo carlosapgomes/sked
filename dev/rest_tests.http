@@ -1,3 +1,6 @@
+# rest file to be used with VsCode Rest client
+# https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+#
 ### Login as Carlos
 
 POST https://localhost/api/login HTTP/1.1
