@@ -78,6 +78,7 @@ func (app App) findSurgeryByID(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(res)
 }
 
@@ -97,6 +98,7 @@ func (app App) findSurgeryByDoctorID(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(res)
 }
 
@@ -116,6 +118,7 @@ func (app App) findSurgeryByPatientID(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(res)
 }
 
@@ -140,6 +143,7 @@ func (app App) findSurgeryByDate(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(res)
 }
 
@@ -167,6 +171,7 @@ func (app App) getAllSurgeries(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(output)
 }
 
@@ -222,5 +227,6 @@ func (app App) createSurgery(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(output)
 }

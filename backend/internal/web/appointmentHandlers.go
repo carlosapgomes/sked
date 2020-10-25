@@ -78,6 +78,7 @@ func (app App) findAppointmentByID(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(res)
 }
 
@@ -97,6 +98,7 @@ func (app App) findAppointmentByDoctorID(w http.ResponseWriter, r *http.Request)
 		app.serverError(w, err)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(res)
 }
 
@@ -116,6 +118,7 @@ func (app App) findAppointmentByPatientID(w http.ResponseWriter, r *http.Request
 		app.serverError(w, err)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(res)
 }
 
@@ -140,6 +143,7 @@ func (app App) findAppointmentByDate(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(res)
 }
 
@@ -166,6 +170,7 @@ func (app App) getAllAppointments(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(output)
 }
 
@@ -223,5 +228,6 @@ func (app App) createAppointment(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(output)
 }

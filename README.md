@@ -119,3 +119,4 @@ Tables:
 - ~~write driven ports (repositories implementations)~~
 - full integration tests will be the same web test but with real repositories
 - consider adding created_by and updated_by to user entity
+- set header to application/json whenever returning a json

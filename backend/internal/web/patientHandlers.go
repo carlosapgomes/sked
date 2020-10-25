@@ -105,6 +105,7 @@ func (app App) getPatientName(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(res)
 
 }
@@ -176,6 +177,7 @@ func (app App) getPatientPhones(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(res)
 }
 
@@ -277,6 +279,7 @@ func (app App) createPatient(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(output)
 }
 
@@ -300,6 +303,7 @@ func (app App) findPatientByID(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(res)
 }
 
@@ -323,6 +327,7 @@ func (app App) findPatientByName(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(res)
 }
 

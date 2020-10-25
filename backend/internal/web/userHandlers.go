@@ -96,7 +96,7 @@ func (app App) getUsers() http.Handler {
 // users is the root handler for restful users endpoints
 // A URL represents a parsed URL:
 // [scheme:][//[userinfo@]host][/]path[?query][#fragment]
-func (app App) users() http.Handler {
+func (app App) sers() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		path := r.URL.Path
 		switch {
@@ -252,6 +252,7 @@ func (app App) getUserEmail(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(res)
 }
 
@@ -289,6 +290,7 @@ func (app App) getUserName(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(res)
 }
 
@@ -378,6 +380,7 @@ func (app App) addUser() http.Handler {
 			app.serverError(w, err)
 			return
 		}
+		w.Header().Set("Content-Type", "application/json")
 		w.Write(output)
 	})
 }
@@ -726,6 +729,7 @@ func (app App) getUserByEmail(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(output)
 }
 
