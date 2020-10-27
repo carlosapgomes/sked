@@ -80,7 +80,7 @@ func main() {
 	flag.StringVar(&addr, "addr", addr, "HTTP network address")
 	flag.StringVar(&pgstr, "pgstr", pgstr, "Postgres data source name")
 	flag.StringVar(&ckName, "ckname", ckName, "cookie session name (default: 'sid')")
-	flag.StringVar(&ckSameSite, "ckss", ckSameSite, "cookie same site (default: 'true')")
+	flag.StringVar(&ckSameSite, "ckss", ckSameSite, "cookie same site (default: 'strict')")
 	flag.BoolVar(&ckSecure, "cksec", ckSecure, "cookie secure (default: 'true')")
 	flag.BoolVar(&ckHTTPOnly, "ckonly", ckHTTPOnly, "cookie http only (default: 'true')")
 	flag.IntVar(&ssLifeTime, "slife", ssLifeTime, "session life time in minutes(default: '20')")
