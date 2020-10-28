@@ -3,15 +3,31 @@ import React, { useState } from "react";
 const Auth = (props) => {
   const [email, setEmail] = useState("");
   const [pword, setPword] = useState("");
+  const updateUser = (u) => {
+    props.updateUser(u);
+  };
+  const updateLogin = (s) => {
+    props.updateLogin(s);
+  };
+
   const loginHandler = () => {
     let ajax = new XMLHttpRequest();
     ajax.open("POST", "https://dev.local/api/users/login", true);
     ajax.setRequestHeader("Content-type", "application/json");
     ajax.send(JSON.stringify({ email: email, password: pword }));
     ajax.onreadystatechange = () => {
-      if (ajax.readyState === 4 && ajax.status == 200) {
-        var data = ajax.responseText;
-        console.log(data);
+      if (ajax.readyState === 4 && ajax.status === 200) {
+        var data = JSON.parse(ajax.responseText);
+        if (typeof data.name != "undefined") {
+          console.log("we got valid data");
+          console.log(data);
+          var user = {
+            name: data.name,
+            email: data.email,
+          };
+          updateUser(user);
+          updateLogin(true);
+        }
       }
     };
   };
