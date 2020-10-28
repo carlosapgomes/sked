@@ -12,14 +12,11 @@ class App extends Component {
     };
   }
   updateLogin(isLoggedIn) {
-    console.log("update loggedIn to: " + isLoggedIn);
     this.setState({
       loggedIn: isLoggedIn,
     });
   }
   updateUser(user) {
-    console.log("update currentUser to: ");
-    console.log(JSON.stringify(user, null, 2));
     this.setState({
       currentUser: { ...user },
     });
@@ -31,6 +28,7 @@ class App extends Component {
           <Auth
             updateLogin={(s) => this.updateLogin(s)}
             updateUser={(u) => this.updateUser(u)}
+            loggedIn={this.state.loggedIn}
           />
         ) : (
           <h1>Welcome to sked {this.state.currentUser.name}</h1>
