@@ -17,8 +17,20 @@ class App extends Component {
     });
   }
   updateUser(user) {
+    if (user) {
+      this.setState({
+        currentUser: { ...user },
+      });
+    } else {
+      this.setState({
+        currentUser: null,
+      });
+    }
+  }
+  logoutHandler() {
     this.setState({
-      currentUser: { ...user },
+      currentUser: null,
+      loggedIn: false,
     });
   }
   render() {
@@ -33,6 +45,15 @@ class App extends Component {
         ) : (
           <h1>Welcome to sked {this.state.currentUser.name}</h1>
         )}
+        <div id="logout" hidden={!this.state.loggedIn}>
+          <button
+            onClick={() => {
+              this.logoutHandler();
+            }}
+          >
+            Logout
+          </button>
+        </div>
       </div>
     );
   }
