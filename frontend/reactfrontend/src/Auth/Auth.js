@@ -22,8 +22,6 @@ const Auth = (props) => {
       }
     };
   };
-  const logoutHandler = () => {};
-  const cancelHandler = () => {};
 
   return (
     <div>
@@ -39,10 +37,6 @@ const Auth = (props) => {
           onChange={(e) => setPword(e.target.value)}
         />
         <button onClick={loginHandler}>Ok</button>
-        <button onClick={cancelHandler}>Cancelar</button>
-      </div>
-      <div id="logout" hidden={!props.loggedIn}>
-        <button onClick={logoutHandler}>Logout</button>
       </div>
     </div>
   );
