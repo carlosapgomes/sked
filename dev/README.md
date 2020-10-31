@@ -10,10 +10,11 @@ parameters:
 
 - pgstr (connection string to postgres)
 - sgKey (Sendgrid API key)
-- from
+- from email address
 
-And a local HTTPS reverse proxy that pass connection to `localhost:9000`
-because the default sked backend port is 9000.
+And set up a local dns entry and an HTTPS reverse proxy to pass connections
+to `localhost:9000` as described
+[here](https://carlosapgomes.me/post/localssl/).
 
 ## Example
 
