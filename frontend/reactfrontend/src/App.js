@@ -9,6 +9,7 @@ class App extends Component {
       loggedIn: false,
       currentPatient: null,
       currentDoctor: null,
+      result: null,
     };
   }
   updateLogin(isLoggedIn) {
@@ -33,6 +34,23 @@ class App extends Component {
       loggedIn: false,
     });
   }
+  getResult() {
+    let ajax = new XMLHttpRequest();
+    ajax.open("GET", "https://dev.local/api/patients", true);
+    ajax.withCredentials = true;
+    ajax.setRequestHeader("Content-type", "application/json");
+    ajax.send();
+    ajax.onreadystatechange = () => {
+      if (ajax.readyState === 4 && ajax.status === 200) {
+        var data = JSON.parse(ajax.responseText);
+        if (typeof data != "undefined") {
+          this.setState({
+            result: data,
+          });
+        }
+      }
+    };
+  }
   render() {
     return (
       <div className="App">
@@ -45,6 +63,16 @@ class App extends Component {
         ) : (
           <h1>Welcome to sked {this.state.currentUser.name}</h1>
         )}
+        <div>
+          <button
+            onClick={() => {
+              this.getResult();
+            }}
+          >
+            Query
+          </button>
+          <p>{this.state.result}</p>
+        </div>
         <div id="logout" hidden={!this.state.loggedIn}>
           <button
             onClick={() => {
