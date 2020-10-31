@@ -54,34 +54,40 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        {!this.state.loggedIn ? (
-          <Auth
-            updateLogin={(s) => this.updateLogin(s)}
-            updateUser={(u) => this.updateUser(u)}
-            loggedIn={this.state.loggedIn}
-          />
-        ) : (
-          <h1>Welcome to sked {this.state.currentUser.name}</h1>
-        )}
-        <div>
-          <button
-            onClick={() => {
-              this.getResult();
-            }}
-          >
-            Query
-          </button>
-          <p>{this.state.result}</p>
-        </div>
-        <div id="logout" hidden={!this.state.loggedIn}>
-          <button
-            onClick={() => {
-              this.logoutHandler();
-            }}
-          >
-            Logout
-          </button>
-        </div>
+        <header>Sked(uler)</header>
+        <nav>
+          <div id="logout" hidden={!this.state.loggedIn}>
+            <button
+              onClick={() => {
+                this.logoutHandler();
+              }}
+            >
+              Logout
+            </button>
+          </div>
+        </nav>
+        <main>
+          {!this.state.loggedIn ? (
+            <Auth
+              updateLogin={(s) => this.updateLogin(s)}
+              updateUser={(u) => this.updateUser(u)}
+              loggedIn={this.state.loggedIn}
+            />
+          ) : (
+            <div>
+              <h1>Welcome to sked {this.state.currentUser.name}</h1>
+              <button
+                onClick={() => {
+                  this.getResult();
+                }}
+              >
+                Query
+              </button>
+              <p>{this.state.result}</p>
+            </div>
+          )}
+        </main>
+        <footer>&#169; CG - 2020</footer>
       </div>
     );
   }
