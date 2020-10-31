@@ -89,13 +89,15 @@ Tables:
 - Users
 - Patients
 - Appointments
-- ActivitiesLog
+- Surgeries
+- Sessions
+- tokens
 
 ## FrontEnd
 
 ### Client side rendering
 
-#### Lit-element pages
+#### Pages
 
 - home/login page
 - add/edit appointment
