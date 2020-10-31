@@ -39,5 +39,13 @@ https://dev.local
 -i
 GET /api/users/68b1d5e2-39dd-4713-8631-a08100383a0f/name
 
-
-
+# Get a list of patients
+https://dev.local
+--connect-timeout 10
+--max-time 60
+--ipv4
+-c /tmp/cookie.jar
+-b /tmp/cookie.jar
+-L
+-i
+GET /api/patients
