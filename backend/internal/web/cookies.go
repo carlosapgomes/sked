@@ -12,6 +12,7 @@ func (app App) AddCookie(w http.ResponseWriter, sessionID string) {
 		Value:    sessionID,
 		HttpOnly: app.ckProps.HTTPOnly,
 		Secure:   app.ckProps.Secure,
+		Path:     "/",
 	}
 	ss := strings.ToLower(app.ckProps.SameSite)
 	switch ss {
