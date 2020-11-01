@@ -14,5 +14,6 @@ type Service interface {
 	UpdateStatus(id string, active bool) error
 	UpdateEmailValidated(id string, active bool) error
 	GetAll(before string, after string, pgSize int) (*Page, error)
+	GetAllDoctors() (*[]User, error)
 	FindByName(name string) (*[]User, error)
 }

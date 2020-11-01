@@ -166,6 +166,29 @@ func (r userRepository) FindByEmail(email string) (*user.User, error) {
 	return &u, err
 }
 
+// GetAllDoctors returns a list of doctors ordered by name
+func (r userRepository) GetAllDoctors() (*[]user.User, error) {
+	stmt := `SELECT id, name from users WHERE roles @> ARRAY['Doctor']
+			ORDER BY name`
+	rows, err := r.DB.Query(stmt)
+	if err != nil {
+		return nil, err
+	}
+	var users []user.User
+	defer rows.Close()
+	for rows.Next() {
+		var u user.User
+		err = rows.Scan(&u.ID, &u.Name)
+		if err == sql.ErrNoRows {
+			return nil, user.ErrNoRecord
+		} else if err != nil {
+			return nil, err
+		}
+		users = append(users, u)
+	}
+	return &users, nil
+}
+
 // GetAll returns a paginated list of all users ordered by email and a bool if there are more results in this direction
 func (r userRepository) GetAll(cursor string, next bool,
 	pgSize int) (*[]user.User, bool, error) {

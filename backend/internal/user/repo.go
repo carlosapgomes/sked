@@ -15,5 +15,6 @@ type Repository interface {
 	FindByID(id string) (*User, error)
 	FindByEmail(email string) (*User, error)
 	GetAll(cursor string, after bool, pgSize int) (*[]User, bool, error)
+	GetAllDoctors() (*[]User, error)
 	FindByName(name string) (*[]User, error)
 }

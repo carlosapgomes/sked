@@ -164,6 +164,15 @@ func (s *userService) UpdatePhone(id string, phone string) error {
 	return s.repo.UpdatePhone(id, phone)
 }
 
+// GetAllDoctors returns a list of doctors ordered by name
+func (s *userService) GetAllDoctors() (*[]user.User, error) {
+	docs, err := s.repo.GetAllDoctors()
+	if err != nil {
+		return nil, err
+	}
+	return docs, nil
+}
+
 // GetAll returns a paginated list of all users ordered by email
 func (s *userService) GetAll(previous string, next string, pgSize int) (*user.Page, error) {
 	var page user.Page
