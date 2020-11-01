@@ -5,7 +5,6 @@ export default class Appointments extends Component {
     super(props);
 
     this.state = {
-      doctors: [],
       selectedDoctor: null,
       searchField: null,
       patientSearchResult: [],
@@ -21,23 +20,17 @@ export default class Appointments extends Component {
   searchPatient(e) {
     e.preventDefault();
     if (!this.state.searchField || this.state.searchField.length < 3) {
-      console.log("leaving search patient");
       return;
     }
-    console.log("prearing ajax request");
-    console.log(this.state.searchField);
     let ajax = new XMLHttpRequest();
     let url = "https://dev.local/api/patients?name=" + this.state.searchField;
-    console.log(url);
     ajax.open("GET", url, true);
     ajax.withCredentials = true;
     ajax.setRequestHeader("Content-type", "application/json");
     ajax.send();
     ajax.onreadystatechange = () => {
-      console.log("onReadyStateChanged");
       if (ajax.readyState === 4 && ajax.status === 200) {
         var data = JSON.parse(ajax.responseText);
-        console.log(data);
         if (typeof data != "undefined") {
           this.setState({
             patientSearchResult: data,
@@ -60,11 +53,10 @@ export default class Appointments extends Component {
           }}
         >
           <label>Doctor: </label>
-          {this.state.doctors.length > 0 ? (
+          {this.props.doctors.length > 0 ? (
             <div>
               <select name="doctor" id="doctor">
-                {this.state.doctors.map((d) => {
-                  console.log(d);
+                {this.props.doctors.map((d) => {
                   return (
                     <option key={d.id} value={d.id}>
                       {d.name}
