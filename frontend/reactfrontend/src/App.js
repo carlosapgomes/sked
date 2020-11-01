@@ -14,7 +14,6 @@ class App extends Component {
       loggedIn: false,
       currentPatient: null,
       currentDoctor: null,
-      result: null,
     };
   }
   updateLogin(isLoggedIn) {
@@ -80,14 +79,16 @@ class App extends Component {
                   <li>
                     <Link to="/Users">Users</Link>
                   </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        this.logoutHandler();
+                      }}
+                    >
+                      Logout
+                    </button>
+                  </li>
                 </ul>
-                <button
-                  onClick={() => {
-                    this.logoutHandler();
-                  }}
-                >
-                  Logout
-                </button>
               </div>
             </nav>
           </header>
