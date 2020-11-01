@@ -110,10 +110,31 @@ func (app App) users() http.Handler {
 			app.userEmail(w, r)
 		case strings.HasSuffix(path, "/password"):
 			app.userPassword(w, r)
+		case strings.HasSuffix(path, "/doctors"):
+			app.getAllDoctors(w, r)
 		default:
 			app.clientError(w, http.StatusBadRequest)
 		}
 	})
+}
+
+// getDoctors return a list of all doctors
+func (app App) getAllDoctors(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		app.clientError(w, http.StatusMethodNotAllowed)
+	}
+	docs, err := app.userService.GetAllDoctors()
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	output, err := json.Marshal(docs)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(output)
 }
 
 // userPassword sets a user password (POST)
@@ -757,6 +778,7 @@ func (app App) getAllUsers(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(output)
 }
 

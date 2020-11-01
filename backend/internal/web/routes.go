@@ -21,6 +21,7 @@ func (app *App) Routes() http.Handler {
 	mux.Handle("/users/", app.requireAuthentication(app.users())) // ANY VERB
 	mux.Handle("/users", app.requireAuthentication(app.users()))  // ANY VERB
 
+	mux.Handle("/doctors", app.requireAuthentication(app.users())) //GET
 	// for an open app
 	// IMPORTANT: user signUp does not add a role
 	// mux.Handle("/users/signup", app.signUp()) //post
