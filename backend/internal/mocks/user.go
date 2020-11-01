@@ -239,6 +239,20 @@ func (r *UserMockRepo) FindByEmail(email string) (*user.User, error) {
 	return nil, user.ErrNoRecord
 }
 
+// GetAllDoctors returns a list of doctors ordered by name
+func (r UserMockRepo) GetAllDoctors() (*[]user.User, error) {
+	var users []user.User
+	for _, u := range r.uDb {
+		if u.Roles[0] == user.RoleDoctor {
+			users = append(users, u)
+		}
+	}
+	if len(users) == 0 {
+		return nil, user.ErrNoRecord
+	}
+	return &users, nil
+}
+
 // GetAll returns a list of users ordered by email
 func (r *UserMockRepo) GetAll(cursor string, after bool, pgSize int) (*[]user.User, bool, error) {
 	var res []user.User
@@ -488,9 +502,19 @@ func (s UserMockSvc) Authenticate(email, password string) (*string, error) {
 	return nil, user.ErrInvalidCredentials
 }
 
-// GetAll return a lista of users ordered by email
+// GetAll return a list of users ordered by email
 func (s UserMockSvc) GetAll(before string, after string, pgSize int) (*user.Page, error) {
 	return nil, nil
+}
+
+// GetAllDoctors return a list of doctors ordered by name
+func (s UserMockSvc) GetAllDoctors() (*[]user.User, error) {
+	repo := NewUserRepo()
+	docs, err := repo.GetAllDoctors()
+	if err != nil {
+		return nil, err
+	}
+	return docs, nil
 }
 
 // FindByName return a list of users whose names looks like 'name'
