@@ -14,6 +14,32 @@ class App extends Component {
       loggedIn: false,
       currentPatient: null,
       currentDoctor: null,
+      doctors: [],
+    };
+  }
+  componentDidUpdate(_pprops, pstate) {
+    if (this.state.loggedIn && !pstate.loggedIn) {
+      this.updateDoctorsList();
+    }
+  }
+  updateDoctorsList() {
+    console.log("updating doctors list");
+    let ajax = new XMLHttpRequest();
+    ajax.open("GET", "https://dev.local/api/doctors", true);
+    ajax.withCredentials = true;
+    ajax.setRequestHeader("Content-type", "application/json");
+    ajax.send();
+    ajax.onreadystatechange = () => {
+      if (ajax.readyState === 4 && ajax.status === 200) {
+        console.log("onReadyStateChanged");
+        let data = JSON.parse(ajax.responseText);
+        if (typeof data != "undefined") {
+          console.log(data);
+          this.setState({
+            doctors: [...data],
+          });
+        }
+      }
     };
   }
   updateLogin(isLoggedIn) {
@@ -37,23 +63,6 @@ class App extends Component {
       currentUser: null,
       loggedIn: false,
     });
-  }
-  getResult() {
-    let ajax = new XMLHttpRequest();
-    ajax.open("GET", "https://dev.local/api/patients", true);
-    ajax.withCredentials = true;
-    ajax.setRequestHeader("Content-type", "application/json");
-    ajax.send();
-    ajax.onreadystatechange = () => {
-      if (ajax.readyState === 4 && ajax.status === 200) {
-        var data = JSON.parse(ajax.responseText);
-        if (typeof data != "undefined") {
-          this.setState({
-            result: data,
-          });
-        }
-      }
-    };
   }
   render() {
     return (
@@ -105,7 +114,7 @@ class App extends Component {
                   <h1>Skeduler</h1>
                 </Route>
                 <Route path="/Appointments">
-                  <Appointments />
+                  <Appointments doctors={this.state.doctors} />
                 </Route>
                 <Route path="/Surgeries">
                   <Surgeries />
