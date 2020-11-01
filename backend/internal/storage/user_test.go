@@ -551,6 +551,36 @@ func TestUpdateUserRoles(t *testing.T) {
 		})
 	}
 }
+func TestGetAllDoctors(t *testing.T) {
+	tests := []struct {
+		name     string
+		wantSize int
+	}{
+		{
+			name:     "GetAllDoctors",
+			wantSize: 2,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			db, teardown := newTestDB(t)
+			defer teardown()
+
+			repo := storage.NewPgUserRepository(db)
+
+			docs, err := repo.GetAllDoctors()
+			if err != nil {
+				t.Errorf("Want no error, got: %v", err)
+			}
+			if (docs != nil) && (len(*docs) != test.wantSize) {
+				t.Errorf("Wanto size %v, got %v", test.wantSize, len(*docs))
+			}
+
+		})
+	}
+}
+
 func TestGetAllUsers(t *testing.T) {
 	testCases := []struct {
 		desc             string

@@ -562,6 +562,31 @@ func TestUpdatePhone(t *testing.T) {
 		})
 	}
 }
+func TestGetAllDoctors(t *testing.T) {
+	repo := mocks.NewUserRepo()
+	svc := services.NewUserService(repo)
+	tests := []struct {
+		name     string
+		wantSize int
+	}{
+		{
+			name:     "GetAllDoctors",
+			wantSize: 2,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			docs, err := svc.GetAllDoctors()
+			if err != nil {
+				t.Errorf("Want no errors, got %v ", err)
+			}
+			if docs != nil && len(*docs) != tt.wantSize {
+				t.Errorf("Want size %v, got %v ", tt.wantSize, len(*docs))
+			}
+		})
+	}
+}
 
 func TestGetAllUsers(t *testing.T) {
 	repo := mocks.NewUserRepo()

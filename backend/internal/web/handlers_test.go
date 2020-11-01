@@ -1230,6 +1230,61 @@ func TestPasswordResetRequest(t *testing.T) {
 	}
 }
 
+// TestGetAllDoctors
+func TestGetAllDoctors(t *testing.T) {
+	handlers := web.New(
+		log.New(ioutil.Discard, "", 0),
+		log.New(ioutil.Discard, "", 0),
+		&web.CkProps{
+			Name:     "sid",
+			HTTPOnly: false,
+			Secure:   false,
+		},
+		mocks.NewSessionSvc(),
+		services.NewUserService(mocks.NewUserRepo()),
+		nil,
+		mocks.NewTokenMockSvc(),
+		nil, nil, nil)
+
+	ts := newTestServer(t, handlers.Routes())
+	defer ts.Close()
+	tests := []struct {
+		name     string
+		wantSize int
+	}{
+		{
+			name:     "GetAllDoctors",
+			wantSize: 2,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			req, _ := http.NewRequest(http.MethodGet, ts.URL+"/doctors", nil)
+			q := req.URL.Query()
+			req.URL.RawQuery = q.Encode()
+			cookie := &http.Cookie{
+				Name:  "sid",
+				Value: "4e66a385-c7cd-47de-9e3b-cdfe26eecad4",
+			}
+			req.AddCookie(cookie)
+			rs, err := ts.Client().Do(req)
+			if err != nil {
+				t.Fatal(err)
+			}
+			var docs []user.User
+			defer rs.Body.Close()
+			err = json.NewDecoder(rs.Body).Decode(&docs)
+			if err != nil {
+				t.Error("bad response body")
+			}
+			if len(docs) != tt.wantSize {
+				t.Errorf("Want size %v, got %v ", tt.wantSize, len(docs))
+			}
+		})
+	}
+}
+
 // TestGetATestGetAllUsersByAdmin
 func TestGetAllUsersByAdmin(t *testing.T) {
 	handlers := web.New(
