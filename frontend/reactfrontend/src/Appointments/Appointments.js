@@ -11,7 +11,18 @@ export default class Appointments extends Component {
       selectedPatient: null,
     };
   }
-
+  setSelectedPatient(e) {
+    let idx = e.target.selectedIndex;
+    this.setState({
+      selectedPatient: { ...this.state.patientSearchResult[idx] },
+    });
+  }
+  setSelectedDoctor(e) {
+    let idx = e.target.selectedIndex;
+    this.setState({
+      selectedDoctor: { ...this.props.doctors[idx] },
+    });
+  }
   updateSearchField(s) {
     this.setState({
       searchField: s,
@@ -55,7 +66,13 @@ export default class Appointments extends Component {
           <label>Doctor: </label>
           {this.props.doctors.length > 0 ? (
             <div>
-              <select name="doctor" id="doctor">
+              <select
+                name="doctor"
+                id="doctor"
+                onChange={(e) => {
+                  this.setSelectedDoctor(e);
+                }}
+              >
                 {this.props.doctors.map((d) => {
                   return (
                     <option key={d.id} value={d.id}>
@@ -85,7 +102,14 @@ export default class Appointments extends Component {
             Search
           </button>
           <div hidden={this.state.patientSearchResult.length <= 0}>
-            <select name="searchresult" id="searchresult" size="4">
+            <select
+              name="searchresult"
+              id="searchresult"
+              size="4"
+              onChange={(e) => {
+                this.setSelectedPatient(e);
+              }}
+            >
               {this.state.patientSearchResult.map((p) => {
                 return (
                   <option key={p.id} value={p.id}>
