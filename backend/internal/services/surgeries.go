@@ -88,6 +88,8 @@ func (s *surgeryService) Create(dateTime time.Time, patientName, patientID, doct
 		Done:            false,
 		CreatedBy:       createdByID.String(),
 		CreatedAt:       time.Now().UTC(),
+		UpdatedBy:       createdByID.String(),
+		UpdatedAt:       time.Now().UTC(),
 	}
 
 	id, err := s.repo.Create(newSurgery)
