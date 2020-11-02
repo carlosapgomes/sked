@@ -15,6 +15,8 @@ const Auth = (props) => {
           var user = {
             name: data.name,
             email: data.email,
+            uid: data.uid,
+            phone: data.phone,
           };
           props.updateUser(user);
           props.updateLogin(data.loggedin);
