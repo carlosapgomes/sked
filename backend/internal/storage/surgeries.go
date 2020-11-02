@@ -3,6 +3,7 @@ package storage
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 	"time"
 
 	"carlosapgomes.com/sked/internal/surgery"
@@ -24,14 +25,27 @@ func NewPgSurgeryRepository(db *sql.DB) surgery.Repository {
 // Create - creates a new surgery
 func (r surgeryRepository) Create(surg surgery.Surgery) (*string, error) {
 	stmt := `INSERT INTO surgeries (id, date_time, patient_name,
-		patient_id, doctor_name, doctor_id, notes, proposed_surgery, canceled, done,
-		created_by, created_at, updated_by, updated_at) VALUES (
-		$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) Returning id;`
+		patient_id, doctor_name, doctor_id, notes, proposed_surgery, 
+		canceled, done, created_by, created_at, updated_by, updated_at)
+		VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, 
+		$14) Returning id;`
 	var id string
-	err := r.DB.QueryRow(stmt, surg.ID, surg.DateTime, surg.PatientName, surg.PatientID,
-		surg.DoctorName, surg.DoctorID, surg.Notes, surg.ProposedSurgery,
-		surg.Canceled, surg.Done, surg.CreatedBy, surg.CreatedAt, surg.UpdatedBy,
-		surg.UpdatedAt).Scan(&id)
+	err := r.DB.QueryRow(
+		stmt,
+		surg.ID,
+		strings.TrimRight(surg.DateTime.String(), " UTC"),
+		surg.PatientName,
+		surg.PatientID,
+		surg.DoctorName,
+		surg.DoctorID,
+		surg.Notes,
+		surg.ProposedSurgery,
+		surg.Canceled,
+		surg.Done,
+		surg.CreatedBy,
+		strings.TrimRight(surg.CreatedAt.String(), " UTC"),
+		surg.UpdatedBy,
+		strings.TrimRight(surg.UpdatedAt.String(), " UTC")).Scan(&id)
 	if pqErr, ok := err.(*pq.Error); ok {
 		switch pqErr.Code {
 		case "23505":
