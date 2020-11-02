@@ -50,8 +50,7 @@ export default class Appointments extends Component {
       searchField: s,
     });
   }
-  searchPatient(e) {
-    e.preventDefault();
+  searchPatient() {
     if (!this.state.searchField || this.state.searchField.length < 3) {
       return;
     }
@@ -137,8 +136,8 @@ export default class Appointments extends Component {
             name="pctsearch"
           />
           <button
-            onClick={(e) => {
-              this.searchPatient(e);
+            onClick={() => {
+              this.searchPatient();
             }}
           >
             Search
