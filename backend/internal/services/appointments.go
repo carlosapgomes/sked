@@ -3,7 +3,6 @@ package services
 import (
 	"encoding/base64"
 	"errors"
-	"fmt"
 	"time"
 
 	"carlosapgomes.com/sked/internal/appointment"
@@ -26,7 +25,14 @@ func NewAppointmentService(repo appointment.Repository, userSvc user.Service) ap
 }
 
 // Create - creates a new appointment and returns its uuid
-func (s *appointmentService) Create(dateTime time.Time, patientName, patientID, doctorName, doctorID, notes, createdBy string) (*string, error) {
+func (s *appointmentService) Create(
+	dateTime time.Time,
+	patientName,
+	patientID,
+	doctorName,
+	doctorID,
+	notes,
+	createdBy string) (*string, error) {
 	// validate ID format (uuidV4)
 	ptID, err := uuid.FromString(patientID)
 	if err != nil {
@@ -87,8 +93,9 @@ func (s *appointmentService) Create(dateTime time.Time, patientName, patientID, 
 		Completed:   false,
 		CreatedBy:   createdByID.String(),
 		CreatedAt:   time.Now().UTC(),
+		UpdatedBy:   createdByID.String(),
+		UpdatedAt:   time.Now().UTC(),
 	}
-
 	id, err := s.repo.Create(newAppointmt)
 	if err != nil {
 		return nil, err
@@ -104,7 +111,6 @@ func (s *appointmentService) Update(appointmt appointment.Appointment) (*string,
 	// get original appointment
 	original, err := s.repo.FindByID(appointmt.ID)
 	if err != nil {
-		fmt.Print("could not find appointment\n")
 		return nil, appointment.ErrNoRecord
 	}
 	_, err = uuid.FromString(appointmt.UpdatedBy)
