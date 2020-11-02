@@ -3,6 +3,7 @@ package storage
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 	"time"
 
 	"carlosapgomes.com/sked/internal/appointment"
@@ -28,10 +29,22 @@ func (r appointmentRepository) Create(a appointment.Appointment) (*string, error
 		created_by, created_at, updated_by, updated_at) VALUES (
 		$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) Returning id;`
 	var id string
-	err := r.DB.QueryRow(stmt, a.ID, a.DateTime, a.PatientName, a.PatientID,
-		a.DoctorName, a.DoctorID, a.Notes, a.Canceled, a.Completed,
-		a.CreatedBy, a.CreatedAt, a.UpdatedBy, a.UpdatedAt).Scan(&id)
+	err := r.DB.QueryRow(stmt,
+		a.ID,
+		strings.TrimRight(a.DateTime.String(), " UTC"),
+		a.PatientName,
+		a.PatientID,
+		a.DoctorName,
+		a.DoctorID,
+		a.Notes,
+		a.Canceled,
+		a.Completed,
+		a.CreatedBy,
+		strings.TrimRight(a.CreatedAt.String(), " UTC"),
+		a.UpdatedBy,
+		strings.TrimRight(a.UpdatedAt.String(), " UTC")).Scan(&id)
 	if pqErr, ok := err.(*pq.Error); ok {
+		fmt.Printf("db error: %v\n", pqErr)
 		switch pqErr.Code {
 		case "23505":
 			return nil, fmt.Errorf("%w\n %s %s", appointment.ErrDuplicateField,
