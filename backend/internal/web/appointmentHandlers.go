@@ -216,7 +216,14 @@ func (app App) createAppointment(w http.ResponseWriter, r *http.Request) {
 		app.clientError(w, http.StatusForbidden)
 		return
 	}
-	id, err := app.appointmentService.Create(dateTime, newAppointmt.PatientName, newAppointmt.PatientID, newAppointmt.DoctorName, newAppointmt.DoctorID, newAppointmt.Notes, u.ID)
+	id, err := app.appointmentService.Create(
+		dateTime,
+		newAppointmt.PatientName,
+		newAppointmt.PatientID,
+		newAppointmt.DoctorName,
+		newAppointmt.DoctorID,
+		newAppointmt.Notes,
+		u.ID)
 	if err != nil {
 		fmt.Printf("appointmentService error: %v\n", err)
 		app.serverError(w, err)
