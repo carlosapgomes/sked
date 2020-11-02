@@ -309,7 +309,15 @@ func TestCreateAppointment(t *testing.T) {
 		wantBody    []byte
 		wantCode    int
 	}{
-		{"Valid Appointment", "2020-04-02T08:02:17-05:00", "John Doe", "c753a381-7642-4709-876f-57b16a5c6a6c", "Dr House", "f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes", "896d45e7-b544-41da-aa3f-f59a321fcdb9", []byte("John Doe"), http.StatusOK},
+		{"Valid Appointment",
+			"2020-04-02T08:02:17-05:00",
+			"John Doe",
+			"c753a381-7642-4709-876f-57b16a5c6a6c",
+			"Dr House",
+			"f06244b9-97e5-4f1a-bae0-3b6da7a0b604",
+			"some notes",
+			"896d45e7-b544-41da-aa3f-f59a321fcdb9",
+			[]byte("John Doe"), http.StatusOK},
 	}
 	type appointmentsData struct {
 		DateTime    string `json:"dateTime"` // iso8601 format
