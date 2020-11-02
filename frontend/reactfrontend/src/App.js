@@ -23,7 +23,6 @@ class App extends Component {
     }
   }
   updateDoctorsList() {
-    console.log("updating doctors list");
     let ajax = new XMLHttpRequest();
     ajax.open("GET", "https://dev.local/api/doctors", true);
     ajax.withCredentials = true;
@@ -31,14 +30,20 @@ class App extends Component {
     ajax.send();
     ajax.onreadystatechange = () => {
       if (ajax.readyState === 4 && ajax.status === 200) {
-        console.log("onReadyStateChanged");
+        if (!ajax.responseText) {
+          console.log("Received an empty doctors list");
+          window.alert("Could not get doctors list");
+        }
         let data = JSON.parse(ajax.responseText);
-        if (typeof data != "undefined") {
-          console.log(data);
+        if (data) {
           this.setState({
             doctors: [...data],
           });
         }
+      }
+      if (ajax.readyState === 4 && ajax.status !== 200) {
+        console.log(ajax.responseText);
+        window.alert("Could not get doctors list");
       }
     };
   }
