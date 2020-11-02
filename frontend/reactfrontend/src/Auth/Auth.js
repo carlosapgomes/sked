@@ -22,6 +22,10 @@ const Auth = (props) => {
           props.updateLogin(data.loggedin);
         }
       }
+      if (ajax.readyState === 4 && ajax.status !== 200) {
+        console.log(ajax.responseText);
+        window.alert("Could not login");
+      }
     };
   };
 
