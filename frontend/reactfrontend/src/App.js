@@ -114,7 +114,10 @@ class App extends Component {
                   <h1>Skeduler</h1>
                 </Route>
                 <Route path="/Appointments">
-                  <Appointments doctors={this.state.doctors} />
+                  <Appointments
+                    currentUser={this.state.currentUser}
+                    doctors={this.state.doctors}
+                  />
                 </Route>
                 <Route path="/Surgeries">
                   <Surgeries />
