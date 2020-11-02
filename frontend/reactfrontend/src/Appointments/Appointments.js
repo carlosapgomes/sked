@@ -54,7 +54,6 @@ export default class Appointments extends Component {
       notes: this.state.notes,
       createdBy: this.props.currentUser.uid,
     };
-    console.log(appointmt, null, 2);
     let ajax = new XMLHttpRequest();
     let url = "https://dev.local/api/appointments";
     ajax.open("POST", url, true);
@@ -65,6 +64,10 @@ export default class Appointments extends Component {
       if (ajax.readyState === 4 && ajax.status === 200) {
         window.alert("Appointment saved");
         this.clearForm();
+      }
+      if (ajax.readyState === 4 && ajax.status !== 200) {
+        window.alert("Could not complete operation");
+        console.log(ajax.responseText);
       }
     };
   }
@@ -116,12 +119,20 @@ export default class Appointments extends Component {
     ajax.send();
     ajax.onreadystatechange = () => {
       if (ajax.readyState === 4 && ajax.status === 200) {
-        var data = JSON.parse(ajax.responseText);
-        if (typeof data != "undefined") {
-          this.setState({
-            patientSearchResult: data,
-          });
+        if (!ajax.responseText) {
+          window.alert("Could not find any patient");
+        } else {
+          let data = JSON.parse(ajax.responseText);
+          if (data) {
+            this.setState({
+              patientSearchResult: [...data],
+            });
+          }
         }
+      }
+      if (ajax.readyState === 4 && ajax.status !== 200) {
+        window.alert("Could not complete the operation");
+        console.log(ajax.responseText);
       }
     };
   }
