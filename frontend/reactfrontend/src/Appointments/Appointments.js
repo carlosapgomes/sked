@@ -3,25 +3,47 @@ import React, { Component } from "react";
 export default class Appointments extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
+      initialSelectedValue: "selectAnOption",
       selectedDoctor: null,
-      searchField: null,
+      searchField: "",
       patientSearchResult: [],
       selectedPatient: null,
+      selectedDate: "",
     };
   }
+  resetInitialState() {
+    this.setState({
+      initialSelectedValue: "selectAnOption",
+      selectedDoctor: null,
+      searchField: "",
+      patientSearchResult: [],
+      selectedPatient: null,
+      selectedDate: "",
+    });
+  }
+  clearForm() {
+    this.resetInitialState();
+  }
+  saveAppointment() {}
   setSelectedPatient(e) {
     let idx = e.target.selectedIndex;
     this.setState({
       selectedPatient: { ...this.state.patientSearchResult[idx] },
     });
   }
-  setSelectedDoctor(e) {
-    let idx = e.target.selectedIndex;
+  setDate(e) {
     this.setState({
-      selectedDoctor: { ...this.props.doctors[idx] },
+      selectedDate: e.target.value,
     });
+  }
+  setSelectedDoctor(e) {
+    let idx = e.target.selectedIndex - 1;
+    if (idx >= 0) {
+      this.setState({
+        selectedDoctor: { ...this.props.doctors[idx] },
+      });
+    }
   }
   updateSearchField(s) {
     this.setState({
@@ -72,7 +94,18 @@ export default class Appointments extends Component {
                 onChange={(e) => {
                   this.setSelectedDoctor(e);
                 }}
+                value={this.state.initialSelectedValue}
               >
+                <option
+                  hidden
+                  disabled
+                  defaultValue
+                  value="selectAnOption"
+                  style={{ display: "none" }}
+                >
+                  {" "}
+                  -- select an option --{" "}
+                </option>
                 {this.props.doctors.map((d) => {
                   return (
                     <option key={d.id} value={d.id}>
@@ -84,10 +117,19 @@ export default class Appointments extends Component {
             </div>
           ) : null}
           <label htmlFor="apptmtdate">Data: </label>
-          <input type="date" id="apptmtdate" name="apptmtdate" />
+          <input
+            type="date"
+            id="apptmtdate"
+            name="apptmtdate"
+            value={this.state.selectedDate}
+            onChange={(e) => {
+              this.setDate(e);
+            }}
+          />
           <label htmlFor="pctsearch">Patient: </label>
           <input
             type="text"
+            value={this.state.searchField}
             onChange={(e) => {
               this.updateSearchField(e.target.value);
             }}
@@ -118,6 +160,22 @@ export default class Appointments extends Component {
                 );
               })}
             </select>
+          </div>
+          <div>
+            <button
+              onClick={() => {
+                this.saveAppointment();
+              }}
+            >
+              Save
+            </button>
+            <button
+              onClick={() => {
+                this.clearForm();
+              }}
+            >
+              Clear
+            </button>
           </div>
         </form>
       </div>
