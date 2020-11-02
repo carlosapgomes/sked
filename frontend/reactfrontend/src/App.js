@@ -125,7 +125,10 @@ class App extends Component {
                   />
                 </Route>
                 <Route path="/Surgeries">
-                  <Surgeries />
+                  <Surgeries
+                    currentUser={this.state.currentUser}
+                    doctors={this.state.doctors}
+                  />
                 </Route>
                 <Route path="/Patients">
                   <Patients />
