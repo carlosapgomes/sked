@@ -55,6 +55,7 @@ export default class Surgeries extends Component {
       doctorName: this.state.selectedDoctor.name,
       doctorID: this.state.selectedDoctor.id,
       notes: this.state.notes,
+      proposedSurgery: this.state.proposedSurgery,
       createdBy: this.props.currentUser.uid,
     };
     let ajax = new XMLHttpRequest();
@@ -103,6 +104,11 @@ export default class Surgeries extends Component {
   setNotes(s) {
     this.setState({
       notes: s,
+    });
+  }
+  setProposedSurgery(s) {
+    this.setState({
+      proposedSurgery: s,
     });
   }
   updateSearchField(s) {
