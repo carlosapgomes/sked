@@ -26,7 +26,9 @@ func NewSurgeryService(repo surgery.Repository, userSvc user.Service) surgery.Se
 }
 
 // Create - creates a new surgery and returns its uuid
-func (s *surgeryService) Create(dateTime time.Time, patientName, patientID, doctorName, doctorID, notes, proposedSurgery, createdBy string) (*string, error) {
+func (s *surgeryService) Create(dateTime time.Time,
+	patientName, patientID, doctorName, doctorID, notes,
+	proposedSurgery, createdBy string) (*string, error) {
 	// validate ID format (uuidV4)
 	ptID, err := uuid.FromString(patientID)
 	if err != nil {
@@ -54,7 +56,7 @@ func (s *surgeryService) Create(dateTime time.Time, patientName, patientID, doct
 	if !isDoc {
 		return nil, appointment.ErrInvalidInputSyntax
 	}
-	// if appointment is not created by the same doctor,
+	// if the surgery is not created by the same doctor,
 	// it can only be created by a clerk or admin
 	if doctorID != createdBy {
 		createdByUser, err := s.userSvc.FindByID(createdBy)
