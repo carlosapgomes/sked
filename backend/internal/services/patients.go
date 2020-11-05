@@ -51,6 +51,7 @@ func (s *patientService) Create(name, address, city, state string,
 		Phones:    phones,
 		CreatedBy: createdBy,
 		CreatedAt: dt,
+		UpdatedBy: createdBy,
 		UpdatedAt: dt,
 	}
 	var id *string
