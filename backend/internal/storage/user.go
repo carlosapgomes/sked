@@ -30,8 +30,16 @@ func (r userRepository) Create(u user.User) (*string, error) {
 			 $5, $6, $7, $8) Returning id;`
 
 	var id string
-	err := r.DB.QueryRow(stmt, u.ID, u.Name, u.Email, u.Phone, u.HashedPw,
-		u.CreatedAt, u.UpdatedAt, pq.Array(u.Roles)).Scan(&id)
+	err := r.DB.QueryRow(
+		stmt,
+		u.ID,
+		u.Name,
+		u.Email,
+		u.Phone,
+		u.HashedPw,
+		strings.TrimRight(u.CreatedAt.String(), " UTC"),
+		strings.TrimRight(u.UpdatedAt.String(), " UTC"),
+		pq.Array(u.Roles)).Scan(&id)
 	if pqErr, ok := err.(*pq.Error); ok {
 		switch pqErr.Code {
 		case "23505":
