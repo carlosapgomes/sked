@@ -27,9 +27,18 @@ func (r patientRepository) Create(p patient.Patient) (*string, error) {
              created_by, created_at, updated_by, updated_at) VALUES($1,
 			 $2, $3, $4, $5, $6, $7, $8, $9, $10) Returning id;`
 	var id string
-	err := r.DB.QueryRow(stmt, p.ID, p.Name, p.Address, p.City, p.State,
-		pq.Array(p.Phones), p.CreatedBy, p.CreatedAt, p.UpdatedBy,
-		p.UpdatedAt).Scan(&id)
+	err := r.DB.QueryRow(
+		stmt,
+		p.ID,
+		p.Name,
+		p.Address,
+		p.City,
+		p.State,
+		pq.Array(p.Phones),
+		p.CreatedBy,
+		strings.TrimRight(p.CreatedAt.String(), " UTC"),
+		p.UpdatedBy,
+		strings.TrimRight(p.UpdatedAt.String(), " UTC")).Scan(&id)
 	if pqErr, ok := err.(*pq.Error); ok {
 		switch pqErr.Code {
 		case "23505":
