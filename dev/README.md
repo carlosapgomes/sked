@@ -5,8 +5,8 @@ This folder contains config files used in development mode:
 - postgres docker image startup script
 - db configuration scripts
 
-To run the server, make sure to provide at least the following command line
-parameters:
+To run the compiled server binary, make sure to provide at least the
+following command line parameters:
 
 - pgstr (connection string to postgres)
 - sgKey (Sendgrid API key)
@@ -29,7 +29,16 @@ skedBackend -pgstr "postgres://user:password@localhost/sked?sslmode=disable" \\
             -from "manager@domain.sked"
 ```
 
-For this dev setup, use 
-`postgres://sked:sked@localhost:54320/sked?sslmode=disable` as postgres 
+For this dev setup, use
+`postgres://sked:sked@localhost:54320/sked?sslmode=disable` as postgres
 connection string.
 
+Another option is to provide the following environment variables and just
+run the binary:
+
+- PG_STR
+- SENDGRID_API_KEY
+- FROM_EMAIL
+
+The binary looks for a folder in the current directory called `templates` which
+contain all the templates for the HTML pages and emails.
