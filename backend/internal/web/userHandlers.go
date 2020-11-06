@@ -371,7 +371,7 @@ func (app App) addUser() http.Handler {
 			return
 		}
 		// compose email
-		link := fmt.Sprintf("https://%s%s%s", r.Host, "/users/validateEmail?token=", *token)
+		link := fmt.Sprintf("https://%s%s%s", r.Host, "/api/users/validateEmail?token=", *token)
 		tplData := &templateData{
 			Title: "Email Validation",
 			User: &user.User{
