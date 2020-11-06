@@ -864,7 +864,7 @@ func (app App) resetPassword() http.Handler {
 				return
 			}
 			// send msg/token to confirm user's email account  // compose email
-			link := fmt.Sprintf("https://%s%s%s", r.Host, "/users/verifyResetPw?token=", *token)
+			link := fmt.Sprintf("https://%s%s%s", r.Host, "/api/users/verifyResetPw?token=", *token)
 			tplData := &templateData{
 				Title: "Email Validation",
 				User: &user.User{
