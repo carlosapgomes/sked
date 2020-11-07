@@ -8,7 +8,6 @@ export default class Users extends Component {
       name: "",
       email: "",
       phone: "",
-      password: "",
     };
   }
   setUsername(s) {
@@ -26,17 +25,12 @@ export default class Users extends Component {
       phone: s,
     });
   }
-  setPassword(s) {
-    this.setState({
-      password: s,
-    });
-  }
+
   saveUser() {
     if (
       this.state.name === "" ||
       this.state.email === "" ||
-      this.state.phone === "" ||
-      this.state.password === ""
+      this.state.phone === ""
     ) {
       window.alert("Please, fill the requested data");
       return;
@@ -45,7 +39,6 @@ export default class Users extends Component {
       Name: this.state.name,
       Email: this.state.email,
       Phone: this.state.phone,
-      Password: this.state.password,
     };
     console.log(newUser);
     let ajax = new XMLHttpRequest();
@@ -70,7 +63,6 @@ export default class Users extends Component {
       name: "",
       email: "",
       phone: "",
-      password: "",
     });
   }
   localSubmitHandler(e) {
@@ -119,18 +111,6 @@ export default class Users extends Component {
               id="phone"
               onChange={(e) => {
                 this.setPhone(e.target.value);
-              }}
-            />
-          </div>
-          <div>
-            <label htmlFor="password">Password: </label>
-            <input
-              type="password"
-              value={this.state.password}
-              name="password"
-              id="password"
-              onChange={(e) => {
-                this.setPassword(e.target.value);
               }}
             />
           </div>
