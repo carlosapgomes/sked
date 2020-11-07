@@ -164,22 +164,26 @@ func (app App) userPassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// get pw from body
-	b, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
+	r.ParseForm()
+
+	//b, err := ioutil.ReadAll(r.Body)
+	//defer r.Body.Close()
+	//if err != nil {
+	//app.clientError(w, http.StatusBadRequest)
+	//return
+	//}
 	type pw struct {
 		Password string `json:"password"`
 		Confirm  string `json:"confirm_password"`
 	}
 	var p pw
-	err = json.Unmarshal(b, &p)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
+	p.Password = r.FormValue("password")
+	p.Confirm = r.FormValue("confirm_password")
+	//err = json.Unmarshal(b, &p)
+	//if err != nil {
+	//app.serverError(w, err)
+	//return
+	//}
 	if (p.Password != p.Confirm) ||
 		(p.Password == "") ||
 		(utf8.RuneCountInString(p.Password) < 8) {
@@ -195,7 +199,7 @@ func (app App) userPassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	app.ClearCookie(w)
-	err = app.sessionService.Delete(sid)
+	err := app.sessionService.Delete(sid)
 	if err != nil {
 		app.serverError(w, err)
 		return
