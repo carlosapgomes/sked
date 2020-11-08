@@ -6,31 +6,28 @@
 # - copy the binary to a `/tmp/` folder with the 
 #   templates files
 # - starts the backend
-# - runs the frontend server
 # - cleans up everything when it receives a `CTRL-C`
 
 # It needs a pre configured basic reverse proxy to map
-# a TLS enabled local development dns entry with the
+# a TLS enabled local development DNS entry with the
 # following paths:
 # - `/api` -> mapping to the backend server port
 # - `/` -> mapping to the frontend server port
 
-# set the following environment variables:
+# set the following environment variables before running
+# this script:
 # PG_STR
 # SENDGRID_API_KEY
 # FROM_EMAIL
-echo "Setting environment variables"
-source ./setEnv.sh
 
 sigint(){
     echo "signal INT received, script ending";
     docker stop pgDevEnv && docker rm pgDevEnv;
     rm -rf $DATADIR
     rm -rf $SKEDDIR
-    pkill -f yarn
     exit 0;
 }
-trap sigint SIGINT
+trap 'sigint' INT TERM
 CURRENTDIR=$PWD
 echo "Starting Postgres with a temporary data folder"
 DATADIR=`mktemp -d /tmp/skedPgData.XXXXXX` || exit 1
@@ -53,15 +50,12 @@ echo "Sked temporary folder: $SKEDDIR"
 mkdir "$SKEDDIR/templates" || exit 1;
 cp ../backend/internal/web/templates/* "$SKEDDIR/templates" || exit 1;
 echo "starting the frontend"
-cd $CURRENTDIR
-cd ../frontend/reactfrontend
-yarn start  &
 echo "Waiting postgres to launch..."
 cd $SKEDDIR
 n=0
 until [ "$n" -ge 8 ]
 do
-   ./skedbackend && break  # substitute your command here
+   ./skedbackend && break  
    n=$((n+1)) 
    sleep 5 
 done
