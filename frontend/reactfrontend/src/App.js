@@ -119,10 +119,25 @@ class App extends Component {
     }
   }
   logoutHandler() {
-    this.setState({
-      currentUser: null,
-      loggedIn: false,
-    });
+    let ajax = new XMLHttpRequest();
+    let url = "https://dev.local/api/users/logout";
+    ajax.open("POST", url, true);
+    ajax.withCredentials = true;
+    ajax.setRequestHeader("Content-type", "application/json");
+    ajax.send();
+    ajax.onreadystatechange = () => {
+      if (ajax.readyState === 4 && ajax.status === 200) {
+        // update state & localStorage
+        this.setState({
+          currentUser: null,
+          loggedIn: false,
+        });
+        window.localStorage.removeItem("uid");
+        window.localStorage.removeItem("name");
+        window.localStorage.removeItem("email");
+        window.localStorage.removeItem("phone");
+      }
+    };
   }
   render() {
     return (
