@@ -51,10 +51,6 @@ class App extends Component {
             window.localStorage.setItem("phone", data.phone);
           }
         }
-        //if (ajax.readyState === 4 && ajax.status !== 200) {
-        //console.log(ajax.responseText);
-        //window.alert("Could not get doctors list");
-        //}
       };
     }
   }
