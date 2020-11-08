@@ -35,6 +35,7 @@ func (app App) ClearCookie(w http.ResponseWriter) {
 		HttpOnly: app.ckProps.HTTPOnly,
 		Secure:   app.ckProps.Secure,
 		MaxAge:   0,
+		Path:     "/",
 	}
 	http.SetCookie(w, cookie)
 	return
