@@ -147,4 +147,4 @@ dist
 # Local History for Visual Studio Code
 .history/
 
-
+setEnv.sh
