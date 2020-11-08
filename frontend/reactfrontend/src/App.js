@@ -17,6 +17,47 @@ class App extends Component {
       doctors: [],
     };
   }
+  componentDidMount() {
+    // try to recover user data in case of a page reload
+    if (window.localStorage.getItem("email") !== "") {
+      let ajax = new XMLHttpRequest();
+      let url =
+        "https://dev.local/api/users?email=" +
+        window.localStorage.getItem("email");
+      ajax.open("GET", url, true);
+      ajax.withCredentials = true;
+      ajax.setRequestHeader("Content-type", "application/json");
+      ajax.send();
+      ajax.onreadystatechange = () => {
+        if (ajax.readyState === 4 && ajax.status === 200) {
+          if (!ajax.responseText) {
+            console.log("Received an empty user");
+          }
+          // update state & localStorage
+          let data = JSON.parse(ajax.responseText);
+          if (data) {
+            this.setState({
+              currentUser: {
+                uid: data.uid,
+                name: data.name,
+                email: data.email,
+                phone: data.phone,
+              },
+              loggedIn: true,
+            });
+            window.localStorage.setItem("uid", data.uid);
+            window.localStorage.setItem("name", data.name);
+            window.localStorage.setItem("email", data.email);
+            window.localStorage.setItem("phone", data.phone);
+          }
+        }
+        //if (ajax.readyState === 4 && ajax.status !== 200) {
+        //console.log(ajax.responseText);
+        //window.alert("Could not get doctors list");
+        //}
+      };
+    }
+  }
   componentDidUpdate(_pprops, pstate) {
     if (this.state.loggedIn && !pstate.loggedIn) {
       this.updateDoctorsList();
@@ -61,6 +102,20 @@ class App extends Component {
       this.setState({
         currentUser: null,
       });
+    }
+    this.setLocalStorage(user);
+  }
+  setLocalStorage(user) {
+    if (!user) {
+      window.localStorage.removeItem("uid");
+      window.localStorage.removeItem("name");
+      window.localStorage.removeItem("email");
+      window.localStorage.removeItem("phone");
+    } else {
+      window.localStorage.setItem("uid", user.uid);
+      window.localStorage.setItem("name", user.name);
+      window.localStorage.setItem("email", user.email);
+      window.localStorage.setItem("phone", user.phone);
     }
   }
   logoutHandler() {
