@@ -507,6 +507,20 @@ func TestLogin(t *testing.T) {
 			method:   http.MethodPost,
 			wantCode: http.StatusUnauthorized,
 		},
+		{
+			name:      "Unvalidated email",
+			wantName:  []byte("Isaac Newton"),
+			wantUID:   []byte("d745a61e-2840-4a96-920e-1080b5adf784"),
+			email:     "i.newton@kensington.lo.uk",
+			wantPhone: []byte("6544332135"),
+			pw:        "test1234",
+			body: &postBody{
+				Email:    "i.newton@kensington.lo.uk",
+				Password: "test1234",
+			},
+			method:   http.MethodPost,
+			wantCode: http.StatusUnauthorized,
+		},
 	}
 
 	for _, tt := range tests {
