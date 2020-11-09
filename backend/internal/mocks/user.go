@@ -453,6 +453,20 @@ func (s UserMockSvc) FindByEmail(email string) (*user.User, error) {
 			Roles:             []string{user.RoleClerk},
 		}, nil
 	}
+	if email == "i.newton@kensington.lo.uk" {
+		return &user.User{
+			ID:                "d745a61e-2840-4a96-920e-1080b5adf784",
+			Name:              "Isaac Newton",
+			Email:             "i.newton@kensington.lo.uk",
+			Phone:             "6544332135",
+			HashedPw:          []byte("$2a$12$I9BW22CbzLHzY9ORTRhkEuEtq8ufJVMf1dX9CKFlo4W9cIaAjD0Je"),
+			CreatedAt:         time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
+			UpdatedAt:         time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
+			Active:            true,
+			EmailWasValidated: false,
+			Roles:             []string{user.RoleClerk},
+		}, nil
+	}
 	return nil, user.ErrNoRecord
 }
 
