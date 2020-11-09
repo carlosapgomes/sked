@@ -528,6 +528,37 @@ func (app App) login() http.Handler {
 			}
 			return
 		}
+
+		user, err := app.userService.FindByID(*uid)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+		if !user.Active {
+			err := map[string]interface{}{"validationError": "User is not active"}
+			w.Header().Set("Content-type", "application/json")
+			app.clientError(w, http.StatusUnauthorized)
+			js, e := json.Marshal(err)
+			if e != nil {
+				app.serverError(w, e)
+				return
+			}
+			w.Write(js)
+			return
+		}
+		if !user.EmailWasValidated {
+			err := map[string]interface{}{"validationError": "Email was not validated"}
+			w.Header().Set("Content-type", "application/json")
+			app.clientError(w, http.StatusUnauthorized)
+			js, e := json.Marshal(err)
+			if e != nil {
+				app.serverError(w, e)
+				return
+			}
+			w.Write(js)
+			return
+		}
+
 		sid, err := app.sessionService.Create(*uid)
 		if err != nil {
 			app.serverError(w, err)
@@ -535,22 +566,15 @@ func (app App) login() http.Handler {
 		}
 		app.AddCookie(w, *sid)
 
-		user, err := app.userService.FindByID(*uid)
+		// do not return the password
+		user.HashedPw = []byte("")
+		js, err := json.Marshal(user)
 		if err != nil {
 			app.serverError(w, err)
 			return
 		}
-
-		// return only relevant info to user
-		// do not return password, created_at, updated_at, roles, active, etc
-		msg := make(map[string]string)
-		msg["loggedin"] = "true"
-		msg["uid"] = user.ID
-		msg["name"] = user.Name
-		msg["email"] = user.Email
-		msg["phone"] = user.Phone
-		app.sendMsg(w, &msg)
-		return
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(js)
 	})
 }
 
