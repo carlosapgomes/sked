@@ -42,6 +42,7 @@ class App extends Component {
                 name: data.name,
                 email: data.email,
                 phone: data.phone,
+                roles: [...data.roles],
               },
               loggedIn: true,
             });
@@ -49,6 +50,7 @@ class App extends Component {
             window.localStorage.setItem("name", data.name);
             window.localStorage.setItem("email", data.email);
             window.localStorage.setItem("phone", data.phone);
+            window.localStorage.setItem("roles", [...data.roles]);
           }
         }
       };
@@ -107,11 +109,13 @@ class App extends Component {
       window.localStorage.removeItem("name");
       window.localStorage.removeItem("email");
       window.localStorage.removeItem("phone");
+      window.localStorage.removeItem("roles");
     } else {
       window.localStorage.setItem("uid", user.uid);
       window.localStorage.setItem("name", user.name);
       window.localStorage.setItem("email", user.email);
       window.localStorage.setItem("phone", user.phone);
+      window.localStorage.setItem("roles", [...user.roles]);
     }
   }
   logoutHandler() {
@@ -132,6 +136,7 @@ class App extends Component {
         window.localStorage.removeItem("name");
         window.localStorage.removeItem("email");
         window.localStorage.removeItem("phone");
+        window.localStorage.removeItem("roles");
       }
     };
   }
