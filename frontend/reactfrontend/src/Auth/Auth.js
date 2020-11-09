@@ -15,11 +15,12 @@ const Auth = (props) => {
           var user = {
             name: data.name,
             email: data.email,
-            uid: data.uid,
+            uid: data.id,
             phone: data.phone,
+            roles: data.roles,
           };
           props.updateUser(user);
-          props.updateLogin(data.loggedin);
+          props.updateLogin(data.active && data.emailWasValidated);
         }
       }
       if (ajax.readyState === 4 && ajax.status !== 200) {
