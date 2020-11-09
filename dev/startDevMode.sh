@@ -28,7 +28,6 @@ sigint(){
     exit 0;
 }
 trap 'sigint' INT TERM
-CURRENTDIR=$PWD
 echo "Starting Postgres with a temporary data folder"
 DATADIR=`mktemp -d /tmp/skedPgData.XXXXXX` || exit 1
 docker run -d \
