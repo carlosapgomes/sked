@@ -1,4 +1,4 @@
-# Sked(duler)
+# Sked(duler) [![time tracker](https://wakatime.com/badge/github/carlosapgomes/sked.svg)](https://wakatime.com/badge/github/carlosapgomes/sked)
 
 This program will keep track of patients appointments/surgeries for a specific
 specialty/clinic.
