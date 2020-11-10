@@ -118,6 +118,11 @@ class App extends Component {
       window.localStorage.setItem("roles", [...user.roles]);
     }
   }
+  updateCurrentPatient(p) {
+    this.setState({
+      currentPatient: { ...p },
+    });
+  }
   logoutHandler() {
     let ajax = new XMLHttpRequest();
     let url = "https://dev.local/api/users/logout";
@@ -214,7 +219,12 @@ class App extends Component {
                   />
                 </Route>
                 <Route path="/Patients">
-                  <Patients />
+                  <Patients
+                    currentPatient={this.state.currentPatient}
+                    updateCurrentPatient={(p) => {
+                      this.updateCurrentPatient(p);
+                    }}
+                  />
                 </Route>
                 <Route path="/Users">
                   {() => {
