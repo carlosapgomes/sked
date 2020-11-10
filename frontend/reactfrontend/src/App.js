@@ -140,6 +140,16 @@ class App extends Component {
       }
     };
   }
+  isAdminOrClerk() {
+    if (!this.state.currentUser) {
+      return false;
+    } else {
+      return (
+        this.state.currentUser.roles.includes("Clerk") ||
+        this.state.currentUser.roles.includes("Admin")
+      );
+    }
+  }
   render() {
     return (
       <Router>
@@ -161,9 +171,11 @@ class App extends Component {
                   <li>
                     <Link to="/Patients">Patients</Link>
                   </li>
-                  <li>
-                    <Link to="/Users">Users</Link>
-                  </li>
+                  {this.isAdminOrClerk() && (
+                    <li>
+                      <Link to="/Users">Users</Link>
+                    </li>
+                  )}
                   <li>
                     <button
                       onClick={() => {
@@ -205,7 +217,13 @@ class App extends Component {
                   <Patients />
                 </Route>
                 <Route path="/Users">
-                  <Users />
+                  {() => {
+                    if (this.isAdminOrClerk()) {
+                      return <Users />;
+                    } else {
+                      return null;
+                    }
+                  }}
                 </Route>
               </Switch>
             )}
