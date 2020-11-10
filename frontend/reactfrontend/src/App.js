@@ -119,9 +119,15 @@ class App extends Component {
     }
   }
   updateCurrentPatient(p) {
-    this.setState({
-      currentPatient: { ...p },
-    });
+    if (!p) {
+      this.setState({
+        currentPatient: null,
+      });
+    } else {
+      this.setState({
+        currentPatient: { ...p },
+      });
+    }
   }
   logoutHandler() {
     let ajax = new XMLHttpRequest();
