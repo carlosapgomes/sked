@@ -54,6 +54,8 @@ func (app App) patients() http.Handler {
 			app.patientName(w, r)
 		case strings.HasSuffix(path, "/phones"):
 			app.patientPhones(w, r)
+		case strings.HasPrefix(path, "/patients/"):
+			app.updatePatient(w, r)
 		default:
 			app.clientError(w, http.StatusBadRequest)
 		}
@@ -77,6 +79,57 @@ func (app App) patientsNoPath(w http.ResponseWriter, r *http.Request) {
 	default:
 		app.clientError(w, http.StatusBadRequest)
 	}
+}
+func (app App) updatePatient(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPut {
+		app.clientError(w, http.StatusBadRequest)
+	}
+	// Read body
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	var p patientData
+	err = json.Unmarshal(b, &p)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	if validationErrors := p.validate(); len(validationErrors) > 0 {
+		err := map[string]interface{}{"validationError": validationErrors}
+		w.Header().Set("Content-type", "application/json")
+		app.clientError(w, http.StatusBadRequest)
+		js, e := json.Marshal(err)
+		if e != nil {
+			app.serverError(w, e)
+			return
+		}
+		w.Write(js)
+		return
+	}
+	// get logged in user from ctx
+	u, ok := r.Context().Value(ContextKeyUser).(*user.User)
+	if !ok {
+		// no ContextKeyUser -> user is not authenticated
+		app.clientError(w, http.StatusForbidden)
+		return
+	}
+	err = app.patientService.UpdatePatient(
+		p.ID,
+		p.Name,
+		p.Address,
+		p.City,
+		p.State,
+		p.Phones,
+		u.ID)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write()
 }
 func (app App) patientName(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
