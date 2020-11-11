@@ -20,9 +20,9 @@ type Patient struct {
 	Address   string    `json:"address"`
 	City      string    `json:"city"`
 	State     string    `json:"state"`
-	Phones    []string  `json:"phones,omitempty"`
-	CreatedBy string    `json:"createdBy"`
+	Phones    []string  `json:"phones"`
+	CreatedBy string    `json:"createdBy,omitempty"`
 	CreatedAt time.Time `json:"createdAt,omitempty"`
-	UpdatedBy string    `json:"updatedBy"`
+	UpdatedBy string    `json:"updatedBy,omitempty"`
 	UpdatedAt time.Time `json:"updatedAt,omitempty"`
 }
