@@ -86,6 +86,22 @@ func (r *PatientMockRepo) Create(patient patient.Patient) (*string, error) {
 	}
 }
 
+// UpdatePatient mocks updating a patient record
+func (r *PatientMockRepo) UpdatePatient(p *patient.Patient) error {
+	for i, u := range r.pDb {
+		if u.ID == p.ID {
+			r.pDb[i].Name = p.Name
+			r.pDb[i].Address = p.Address
+			r.pDb[i].City = p.City
+			r.pDb[i].State = p.State
+			r.pDb[i].UpdatedBy = p.UpdatedBy
+			r.pDb[i].UpdatedAt = p.UpdatedAt
+			return nil
+		}
+	}
+	return patient.ErrNoRecord
+}
+
 // UpdateName mocks updating patient's Name
 func (r *PatientMockRepo) UpdateName(id string, name string, updatedBy string) error {
 	for i, u := range r.pDb {
@@ -208,6 +224,12 @@ func (s PatientMockSvc) Create(name, address, city, state string, phone []string
 		uid := "85f45ff9-d31c-4ff7-94ac-5afb5a1f0fcd"
 		return &uid, nil
 	}
+}
+
+// UpdatePatient - mocks updating a patient record
+func (s PatientMockSvc) UpdatePatient(id, name, address, city, state string,
+	phone []string, updatedBy string) error {
+	return nil
 }
 
 // FindByID mocks finding a patient by its ID
