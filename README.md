@@ -19,7 +19,7 @@ specialty/clinic.
 - A user can mark an appointment/surgery as complete only at its scheduled date
 - A user can unmark an appointment/surgery as complete only at its scheduled date
 - Nobody can change an appointment/surgery's date. A new appointment/surgery
-should be created.
+  should be created.
 
 ## Entities
 
@@ -123,3 +123,4 @@ Tables:
 - full integration tests will be the same web test but with real repositories
 - consider adding created_by and updated_by to user entity
 - ~~set header to application/json whenever returning a json~~
+- add tests for UpdatePatient service and storage
