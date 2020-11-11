@@ -1,15 +1,18 @@
 import React, { Component } from "react";
+import PatientSearch from "../PatientSearch/PatientSearch";
 
 export default class Patients extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      id: "",
       name: "",
       address: "",
       city: "",
       state: "",
       phones: [],
+      showUpdateButton: false,
     };
   }
   savePatient() {
@@ -48,11 +51,13 @@ export default class Patients extends Component {
   }
   clearForm() {
     this.setState({
+      id: "",
       name: "",
       address: "",
       city: "",
       state: "",
       phones: [],
+      showUpdateButton: false,
     });
   }
   setName(s) {
@@ -82,13 +87,33 @@ export default class Patients extends Component {
       phones: [...phones],
     });
   }
+  setSelectedPatient(p) {
+    if (!p) {
+      this.clearForm();
+    } else {
+      this.setState({
+        id: p.id,
+        name: p.name,
+        address: p.address,
+        city: p.city,
+        state: p.state,
+        phones: [...p.phones],
+        showUpdateButton: true,
+      });
+    }
+  }
   localSubmitHandler(e) {
     e.preventDefault();
   }
   render() {
     return (
       <div>
-        <h1>New Patient</h1>
+        <h1>Patients</h1>
+        <PatientSearch
+          setSelectedPatient={(p) => {
+            this.setSelectedPatient(p);
+          }}
+        />
         <form
           acceptCharset="utf-8"
           onSubmit={(e) => {
@@ -157,11 +182,20 @@ export default class Patients extends Component {
           </div>
           <div>
             <button
+              hidden={this.state.showUpdateButton}
               onClick={() => {
                 this.savePatient();
               }}
             >
               Save
+            </button>
+            <button
+              hidden={!this.state.showUpdateButton}
+              onClick={() => {
+                this.updatePatient();
+              }}
+            >
+              Update
             </button>
             <button
               onClick={() => {
