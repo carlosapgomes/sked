@@ -54,6 +54,30 @@ func (r patientRepository) Create(p patient.Patient) (*string, error) {
 	return &id, err
 }
 
+// UpdatePatient - updates a patient's record
+func (r patientRepository) UpdatePatient(p *patient.Patient) error {
+	stmt := `UPDATE patients SET name = $1, 
+			address = $2, city = $3, state = $4, phones = $5,
+			updated_by = $6, updated_at = $7
+			WHERE id = $8`
+	_, err := r.DB.Exec(
+		stmt,
+		p.Name,
+		p.Address,
+		p.City,
+		p.State,
+		pq.Array(p.Phones),
+		p.UpdatedBy,
+		p.UpdatedAt,
+		p.ID,
+	)
+	if err != nil {
+		pqErr := err.(*pq.Error)
+		return pqErr
+	}
+	return nil
+}
+
 // UpdateName - updates a patient's name
 func (r patientRepository) UpdateName(id, name, updatedBy string) error {
 	stmt := `UPDATE patients SET name = $1, updated_by = $2, updated_at = $3

@@ -9,5 +9,6 @@ type Repository interface {
 	UpdatePhone(id string, phones []string, updatedBy string) error
 	FindByID(id string) (*Patient, error)
 	FindByName(name string) (*[]Patient, error)
+	UpdatePatient(*Patient) error
 	GetAll(cursor string, after bool, pgSize int) (*[]Patient, bool, error)
 }
