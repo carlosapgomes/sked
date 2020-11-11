@@ -65,6 +65,42 @@ func (s *patientService) Create(name, address, city, state string,
 	return id, err
 }
 
+// UpdatePatient updates a patient record
+func (s *patientService) UpdatePatient(id, name, address, city,
+	state string, phones []string, updatedBy string) error {
+	if len(name) == 0 {
+		return patient.ErrInvalidInputSyntax
+	}
+	if len(phones) > 10 ||
+		len(phones) == 0 {
+		return patient.ErrInvalidInputSyntax
+	}
+	if strings.TrimSpace(strings.Join(phones, "")) == "" {
+		return patient.ErrInvalidInputSyntax
+	}
+	_, err := uuid.FromString(updatedBy)
+	if err != nil {
+		return patient.ErrInvalidInputSyntax
+	}
+	p, err := s.repo.FindByID(id)
+	if err != nil {
+		return err
+	}
+	p.Name = name
+	p.Address = address
+	p.City = city
+	p.State = state
+	p.Phones = phones
+	p.UpdatedBy = updatedBy
+	p.UpdatedAt = time.Now().UTC()
+
+	err = s.repo.UpdatePatient(p)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // FindByID searches a patient by its ID
 func (s *patientService) FindByID(id string) (*patient.Patient, error) {
 	if id == "" {

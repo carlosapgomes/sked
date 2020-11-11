@@ -8,5 +8,7 @@ type Service interface {
 	UpdateName(id, name, updatedBy string) error
 	UpdatePhone(id string, phones []string, updatedBy string) error
 	GetAll(before string, after string, pgSize int) (*Page, error)
+	UpdatePatient(id, name, address, city, state string,
+		phone []string, updatedBy string) error
 	FindByName(name string) (*[]Patient, error)
 }
