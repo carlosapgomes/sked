@@ -94,6 +94,7 @@ func (r *PatientMockRepo) UpdatePatient(p *patient.Patient) error {
 			r.pDb[i].Address = p.Address
 			r.pDb[i].City = p.City
 			r.pDb[i].State = p.State
+			r.pDb[i].Phones = p.Phones
 			r.pDb[i].UpdatedBy = p.UpdatedBy
 			r.pDb[i].UpdatedAt = p.UpdatedAt
 			return nil
