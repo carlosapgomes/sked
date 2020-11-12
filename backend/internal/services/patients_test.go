@@ -130,6 +130,16 @@ func TestPatientUpdate(t *testing.T) {
 					tt.wantError,
 					err)
 			}
+			if tt.wantError == nil {
+				p, err := repo.FindByID(tt.id)
+				if err != nil {
+					t.Error("Could not find patient by ID")
+				}
+				if p.Phones[0] != tt.phones[0] {
+					t.Errorf("Want new phone to be %v, but got %v\n",
+						tt.phones[0], p.Phones[0])
+				}
+			}
 		})
 	}
 }
