@@ -139,6 +139,10 @@ func TestPatientUpdate(t *testing.T) {
 					t.Errorf("Want new phone to be %v, but got %v\n",
 						tt.phones[0], p.Phones[0])
 				}
+				if p.Name != tt.name {
+					t.Errorf("Want new name to be %v, but got %v\n",
+						tt.name, p.Name)
+				}
 			}
 		})
 	}
