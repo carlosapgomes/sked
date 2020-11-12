@@ -123,5 +123,5 @@ Tables:
 - full integration tests will be the same web test but with real repositories
 - consider adding created_by and updated_by to user entity
 - ~~set header to application/json whenever returning a json~~
-- add tests for UpdatePatient service and storage
+- ~~add tests for UpdatePatient service and storage~~
 - user searchPatient on components Appointments and Surgeries
