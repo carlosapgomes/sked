@@ -83,6 +83,61 @@ func TestCreatePatient(t *testing.T) {
 			}
 		})
 	}
+
+}
+func TestUpdatePatient(t *testing.T) {
+	if testing.Short() {
+		t.Skip("postgres: skipping integration test")
+	}
+	tests := []struct {
+		name           string
+		updatedPatient *patient.Patient
+		wantError      error
+	}{
+		{
+			name: "Valid Patient",
+			updatedPatient: &patient.Patient{
+				ID:        "dcce1beb-aee6-4a4d-b724-94d470817323",
+				Name:      "Alice Mary Jones",
+				Address:   "MainStreet, 44",
+				City:      "MainCity",
+				State:     "MN",
+				Phones:    []string{"46456422"},
+				CreatedBy: "dcce1beb-aee6-4a4d-b724-94d470817323",
+				CreatedAt: time.Now().UTC(),
+				UpdatedBy: "dcce1beb-aee6-4a4d-b724-94d470817323",
+				UpdatedAt: time.Now().UTC(),
+			},
+			wantError: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			db, teardown := newTestDB(t)
+			defer teardown()
+
+			repo := storage.NewPgPatientRepository(db)
+
+			err := repo.UpdatePatient(tt.updatedPatient)
+			if err != tt.wantError {
+				t.Errorf("Wanted error %v, but got %v\n",
+					tt.wantError, err)
+			}
+			if tt.wantError == nil {
+				p, err := repo.FindByID(tt.updatedPatient.ID)
+				if err != nil {
+					t.Error("Could not retrieve updated patient")
+				}
+				if (p.Name != tt.updatedPatient.Name) ||
+					(p.Address != tt.updatedPatient.Address) ||
+					(p.Phones[0] != tt.updatedPatient.Phones[0]) {
+					t.Error("Could not update patient")
+				}
+			}
+
+		})
+	}
+
 }
 func TestFindPatientByName(t *testing.T) {
 	tests := []struct {
