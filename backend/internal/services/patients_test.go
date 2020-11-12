@@ -76,6 +76,63 @@ func TestPatientCreate(t *testing.T) {
 	}
 
 }
+func TestPatientUpdate(t *testing.T) {
+	repo := mocks.NewPatientRepo()
+	svc := services.NewPatientService(repo)
+
+	tests := []struct {
+		testName  string
+		id        string
+		name      string
+		address   string
+		city      string
+		state     string
+		phones    []string
+		createdBy string
+		wantError error
+	}{
+		{
+			"Valid Patient",
+			"85f45ff9-d31c-4ff7-94ac-5afb5a1f0fcd",
+			"Valid Patient New Name",
+			"Valid Street, 23",
+			"Main City",
+			"ST",
+			[]string{"12345432"},
+			"7f064a4e-d3bd-48a6-a305-accf4743a94f",
+			nil,
+		},
+		{
+			"Unknown record",
+			"931d1721-065e-4be1-92c6-e33020c07ded",
+			"Valid Patient New Name",
+			"Valid Street, 23",
+			"Main City",
+			"ST",
+			[]string{"12345432"},
+			"7f064a4e-d3bd-48a6-a305-accf4743a94f",
+			patient.ErrNoRecord,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := svc.UpdatePatient(
+				tt.id,
+				tt.name,
+				tt.address,
+				tt.city,
+				tt.state,
+				tt.phones,
+				tt.createdBy)
+
+			if err != tt.wantError {
+				t.Errorf("want error %v to contain %v\n",
+					tt.wantError,
+					err)
+			}
+		})
+	}
+}
 
 func TestFindPatientByID(t *testing.T) {
 	repo := mocks.NewPatientRepo()
