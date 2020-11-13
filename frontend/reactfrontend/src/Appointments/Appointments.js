@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PatientSearch from "../PatientSearch/PatientSearch";
 import dayjs from "dayjs";
 
 export default class Appointments extends Component {
@@ -7,9 +8,6 @@ export default class Appointments extends Component {
     this.state = {
       selectedDoctorValue: "selectAnOption",
       selectedDoctor: null,
-      searchField: "",
-      patientSearchResult: [],
-      selectedPatientValue: "selectAnOption",
       selectedPatient: null,
       selectedDate: "",
       selectedTime: "08:00",
@@ -20,9 +18,6 @@ export default class Appointments extends Component {
     this.setState({
       selectedDoctorValue: "selectAnOption",
       selectedDoctor: null,
-      searchField: "",
-      patientSearchResult: [],
-      selectedPatientValue: "selectAnOption",
       selectedPatient: null,
       selectedDate: "",
       selectedTime: "08:00",
@@ -80,12 +75,16 @@ export default class Appointments extends Component {
       });
     }
   }
-  setSelectedPatient(e) {
-    let idx = e.target.selectedIndex - 1;
-    this.setState({
-      selectedPatientValue: this.state.patientSearchResult[idx].id,
-      selectedPatient: { ...this.state.patientSearchResult[idx] },
-    });
+  setSelectedPatient(p) {
+    if (!p) {
+      this.setState({
+        selectedPatient: null,
+      });
+    } else {
+      this.setState({
+        selectedPatient: { ...p },
+      });
+    }
   }
   setTime(e) {
     this.setState({
@@ -106,35 +105,6 @@ export default class Appointments extends Component {
     this.setState({
       searchField: s,
     });
-  }
-  searchPatient() {
-    if (!this.state.searchField || this.state.searchField.length < 3) {
-      return;
-    }
-    let ajax = new XMLHttpRequest();
-    let url = "https://dev.local/api/patients?name=" + this.state.searchField;
-    ajax.open("GET", url, true);
-    ajax.withCredentials = true;
-    ajax.setRequestHeader("Content-type", "application/json");
-    ajax.send();
-    ajax.onreadystatechange = () => {
-      if (ajax.readyState === 4 && ajax.status === 200) {
-        if (!ajax.responseText) {
-          window.alert("Could not find any patient");
-        } else {
-          let data = JSON.parse(ajax.responseText);
-          if (data) {
-            this.setState({
-              patientSearchResult: [...data],
-            });
-          }
-        }
-      }
-      if (ajax.readyState === 4 && ajax.status !== 200) {
-        window.alert("Could not complete the operation");
-        console.log(ajax.responseText);
-      }
-    };
   }
 
   localSubmitHandler(e) {
@@ -201,51 +171,11 @@ export default class Appointments extends Component {
               }}
             />
           </div>
-          <label htmlFor="pctsearch">Patient: </label>
-          <input
-            type="text"
-            value={this.state.searchField}
-            onChange={(e) => {
-              this.updateSearchField(e.target.value);
+          <PatientSearch
+            setSelectedPatient={(p) => {
+              this.setSelectedPatient(p);
             }}
-            id="pctsearch"
-            name="pctsearch"
           />
-          <button
-            onClick={() => {
-              this.searchPatient();
-            }}
-          >
-            Search
-          </button>
-          <div hidden={this.state.patientSearchResult.length <= 0}>
-            <select
-              name="searchresult"
-              id="searchresult"
-              onChange={(e) => {
-                this.setSelectedPatient(e);
-              }}
-              value={this.state.selectedPatientValue}
-            >
-              <option
-                hidden
-                disabled
-                defaultValue
-                value="selectAnOption"
-                style={{ display: "none" }}
-              >
-                {" "}
-                -- select an option --{" "}
-              </option>
-              {this.state.patientSearchResult.map((p) => {
-                return (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
           <div>
             <label htmlFor="notes">Notes: </label>
             <textarea
