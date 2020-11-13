@@ -24,6 +24,7 @@ export default class PatientSearch extends Component {
     this.setState({
       selectedPatientValue: this.state.patientSearchResult[idx].id,
       selectedPatient: { ...this.state.patientSearchResult[idx] },
+      searchField: "",
     });
     // update selectedPatient on parent component
     this.props.setSelectedPatient({ ...this.state.patientSearchResult[idx] });
@@ -37,8 +38,12 @@ export default class PatientSearch extends Component {
     if (!this.state.searchField || this.state.searchField.length < 3) {
       return;
     }
+    let str = this.state.searchField.trim().split(/\s+/).join(" ");
+    if (str.length < 3) {
+      return;
+    }
     let ajax = new XMLHttpRequest();
-    let url = "https://dev.local/api/patients?name=" + this.state.searchField;
+    let url = "https://dev.local/api/patients?name=" + str;
     ajax.open("GET", url, true);
     ajax.withCredentials = true;
     ajax.setRequestHeader("Content-type", "application/json");
