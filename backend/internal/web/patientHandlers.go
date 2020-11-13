@@ -129,7 +129,6 @@ func (app App) updatePatient(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusOK)
-	w.Write()
 }
 func (app App) patientName(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
