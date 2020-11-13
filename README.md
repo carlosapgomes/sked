@@ -125,3 +125,5 @@ Tables:
 - ~~set header to application/json whenever returning a json~~
 - ~~add tests for UpdatePatient service and storage~~
 - user searchPatient on components Appointments and Surgeries
+- fix patient test handlers: testUpdatePatientName and testUpdatePatientPhones
+because they are expecting a full patient.Patient object in response
