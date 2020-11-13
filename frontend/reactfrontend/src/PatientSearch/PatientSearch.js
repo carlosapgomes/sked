@@ -52,6 +52,7 @@ export default class PatientSearch extends Component {
           if (data) {
             this.setState({
               patientSearchResult: [...data],
+              selectedPatientValue: "selectAnOption",
             });
           }
         }
