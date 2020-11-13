@@ -8,9 +8,6 @@ export default class Surgeries extends Component {
     this.state = {
       selectedDoctorValue: "selectAnOption",
       selectedDoctor: null,
-      searchField: "",
-      patientSearchResult: [],
-      selectedPatientValue: "selectAnOption",
       selectedPatient: null,
       selectedDate: "",
       selectedTime: "08:00",
@@ -22,9 +19,6 @@ export default class Surgeries extends Component {
     this.setState({
       selectedDoctorValue: "selectAnOption",
       selectedDoctor: null,
-      searchField: "",
-      patientSearchResult: [],
-      selectedPatientValue: "selectAnOption",
       selectedPatient: null,
       selectedDate: "",
       selectedTime: "08:00",
@@ -115,40 +109,6 @@ export default class Surgeries extends Component {
     this.setState({
       proposedSurgery: s,
     });
-  }
-  updateSearchField(s) {
-    this.setState({
-      searchField: s,
-    });
-  }
-  searchPatient() {
-    if (!this.state.searchField || this.state.searchField.length < 3) {
-      return;
-    }
-    let ajax = new XMLHttpRequest();
-    let url = "https://dev.local/api/patients?name=" + this.state.searchField;
-    ajax.open("GET", url, true);
-    ajax.withCredentials = true;
-    ajax.setRequestHeader("Content-type", "application/json");
-    ajax.send();
-    ajax.onreadystatechange = () => {
-      if (ajax.readyState === 4 && ajax.status === 200) {
-        if (!ajax.responseText) {
-          window.alert("Could not find any patient");
-        } else {
-          let data = JSON.parse(ajax.responseText);
-          if (data) {
-            this.setState({
-              patientSearchResult: [...data],
-            });
-          }
-        }
-      }
-      if (ajax.readyState === 4 && ajax.status !== 200) {
-        window.alert("Could not complete the operation");
-        console.log(ajax.responseText);
-      }
-    };
   }
 
   localSubmitHandler(e) {
