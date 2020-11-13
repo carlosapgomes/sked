@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PatientSearch from "../PatientSearch/PatientSearch";
 import dayjs from "dayjs";
 
 export default class Surgeries extends Component {
@@ -84,12 +85,16 @@ export default class Surgeries extends Component {
       });
     }
   }
-  setSelectedPatient(e) {
-    let idx = e.target.selectedIndex - 1;
-    this.setState({
-      selectedPatientValue: this.state.patientSearchResult[idx].id,
-      selectedPatient: { ...this.state.patientSearchResult[idx] },
-    });
+  setSelectedPatient(p) {
+    if (!p) {
+      this.setState({
+        selectedPatient: null,
+      });
+    } else {
+      this.setState({
+        selectedPatient: { ...p },
+      });
+    }
   }
   setTime(e) {
     this.setState({
@@ -210,51 +215,11 @@ export default class Surgeries extends Component {
               }}
             />
           </div>
-          <label htmlFor="pctsearch">Patient: </label>
-          <input
-            type="text"
-            value={this.state.searchField}
-            onChange={(e) => {
-              this.updateSearchField(e.target.value);
+          <PatientSearch
+            setSelectedPatient={(p) => {
+              this.setSelectedPatient(p);
             }}
-            id="pctsearch"
-            name="pctsearch"
           />
-          <button
-            onClick={() => {
-              this.searchPatient();
-            }}
-          >
-            Search
-          </button>
-          <div hidden={this.state.patientSearchResult.length <= 0}>
-            <select
-              name="searchresult"
-              id="searchresult"
-              onChange={(e) => {
-                this.setSelectedPatient(e);
-              }}
-              value={this.state.selectedPatientValue}
-            >
-              <option
-                hidden
-                disabled
-                defaultValue
-                value="selectAnOption"
-                style={{ display: "none" }}
-              >
-                {" "}
-                -- select an option --{" "}
-              </option>
-              {this.state.patientSearchResult.map((p) => {
-                return (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
           <div>
             <label htmlFor="proposedSurgery">Proposed surgery: </label>
             <input
