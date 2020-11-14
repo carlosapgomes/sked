@@ -6,6 +6,7 @@ import Appointments from "./Appointments/Appointments";
 import Surgeries from "./Surgeries/Surgeries";
 import Patients from "./Patients/Patients";
 import Users from "./Users/Users";
+import ScheduleList from "./ScheduleList/ScheduleList";
 class App extends Component {
   constructor(props) {
     super(props);
@@ -211,6 +212,7 @@ class App extends Component {
               <Switch>
                 <Route path="/" exact>
                   <h1>Skeduler</h1>
+                  <ScheduleList></ScheduleList>
                 </Route>
                 <Route path="/Appointments">
                   <Appointments
