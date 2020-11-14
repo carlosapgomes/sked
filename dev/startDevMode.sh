@@ -52,7 +52,7 @@ echo "starting the frontend"
 echo "Waiting postgres to launch..."
 cd $SKEDDIR
 n=0
-until [ "$n" -ge 8 ]
+until [ "$n" -ge 10 ]
 do
    ./skedbackend && break  
    n=$((n+1)) 
