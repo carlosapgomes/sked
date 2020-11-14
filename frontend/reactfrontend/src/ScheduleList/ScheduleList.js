@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import dayjs from "dayjs";
-
+import cl from "./ScheduleList.css";
 export default class ScheduleList extends Component {
   constructor(props) {
     super(props);
@@ -50,7 +50,7 @@ export default class ScheduleList extends Component {
           }}
         />
         <div>
-          <ul>{this.state.days}</ul>
+          <ul className={cl.ul}>{this.state.days}</ul>
         </div>
       </div>
     );
