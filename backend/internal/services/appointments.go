@@ -182,6 +182,22 @@ func (s *appointmentService) FindByDate(dateTime time.Time) ([]appointment.Appoi
 	return appointmts, nil
 }
 
+// FindByMonthYear - return all appointments in a specific month
+func (s *appointmentService) FindByMonthYear(m,
+	y int) ([]appointment.Appointment, error) {
+	if (m < 1) || (m > 12) || (y < 0) {
+		return nil, appointment.ErrInvalidInputSyntax
+	}
+	loc := time.Now().Location()
+	firstOfMonth := time.Date(y, m, 1, 0, 0, 0, 0, loc)
+	lastOfMonth := firstOfMonth.AddDate(0, 1, -1)
+	appointmts, err := s.repo.FindByInterval(firstOfMonth, lastOfMonth)
+	if err != nil {
+		return nil, err
+	}
+	return appointmts, nil
+}
+
 // GetAll - return all appointments
 func (s *appointmentService) GetAll(before string, after string, pgSize int) (*appointment.Page, error) {
 	var appointmtsResp appointment.Page
