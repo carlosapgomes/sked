@@ -156,6 +156,36 @@ func (r appointmentRepository) FindByDoctorID(doctorID string) ([]appointment.Ap
 	return apptmts, err
 }
 
+// FindByMonthYear - return all appointments in a specific month
+func (r appointmentRepository) FindByInterval(s,
+	e time.Time) ([]appointment.Appointment, error) {
+	start := s.Format("2006-01-02")
+	end := e.Format("2006-01-02")
+	var apptmts []appointment.Appointment
+	stmt := `SELECT id, date_time, patient_name, patient_id, doctor_name,
+			doctor_id, notes, canceled, completed, created_by, created_at, 
+			updated_by, updated_at FROM appointments
+			WHERE sked_date_to_char(start)  >= $1 AND 
+			sked_date_to_char(end)  <= $2`
+	rows, err := r.DB.Query(stmt, start, end)
+	defer rows.Close()
+	for rows.Next() {
+		var a appointment.Appointment
+		err = rows.Scan(&a.ID, &a.DateTime, &a.PatientName, &a.PatientID,
+			&a.DoctorName, &a.DoctorID, &a.Notes, &a.Canceled, &a.Completed,
+			&a.CreatedBy, &a.CreatedAt, &a.UpdatedBy, &a.UpdatedAt)
+		if err == sql.ErrNoRows {
+			return nil, appointment.ErrNoRecord
+		} else if err != nil {
+			return nil, err
+		}
+		a.CreatedAt = a.CreatedAt.In(loc)
+		a.UpdatedAt = a.UpdatedAt.In(loc)
+		apptmts = append(apptmts, a)
+	}
+	return apptmts, err
+}
+
 // FindByDate - finds appointments in a date
 func (r appointmentRepository) FindByDate(date time.Time) ([]appointment.Appointment, error) {
 	var apptmts []appointment.Appointment
