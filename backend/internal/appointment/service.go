@@ -16,5 +16,6 @@ type Service interface {
 	FindByPatientID(patientID string) ([]Appointment, error)
 	FindByDoctorID(doctorID string) ([]Appointment, error)
 	FindByDate(date time.Time) ([]Appointment, error)
+	FindByMonthYear(m, y int) ([]Appointment, error)
 	GetAll(before string, after string, pgSize int) (*Page, error)
 }
