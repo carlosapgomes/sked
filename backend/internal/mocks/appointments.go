@@ -126,8 +126,15 @@ func (r AppointmentMockRepo) FindByDate(dateTime time.Time) ([]appointment.Appoi
 	}
 }
 
+// FindByMonth
+func (r AppointmentMockRepo) FindByInterval(s,
+	e time.time) ([]appointment.Appointment, error) {
+	return []appointment.Appointment{}, nil
+}
+
 // GetAll
-func (r AppointmentMockRepo) GetAll(cursor string, after bool, pgSize int) ([]appointment.Appointment, bool, error) {
+func (r AppointmentMockRepo) GetAll(cursor string, after bool,
+	pgSize int) ([]appointment.Appointment, bool, error) {
 	var db []appointment.Appointment
 	db = append(db, appointment.Appointment{
 		ID:          "e521798b-9f33-4a10-8b2a-9677ed1cd1ae",
