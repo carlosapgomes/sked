@@ -189,7 +189,7 @@ func (s *appointmentService) FindByMonthYear(m,
 		return nil, appointment.ErrInvalidInputSyntax
 	}
 	loc := time.Now().Location()
-	firstOfMonth := time.Date(y, m, 1, 0, 0, 0, 0, loc)
+	firstOfMonth := time.Date(y, time.Month(m), 1, 0, 0, 0, 0, loc)
 	lastOfMonth := firstOfMonth.AddDate(0, 1, -1)
 	appointmts, err := s.repo.FindByInterval(firstOfMonth, lastOfMonth)
 	if err != nil {
