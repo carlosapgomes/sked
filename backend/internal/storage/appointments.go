@@ -168,6 +168,7 @@ func (r appointmentRepository) FindByInterval(s,
 			WHERE sked_date_to_char(start)  >= $1 AND 
 			sked_date_to_char(end)  <= $2`
 	rows, err := r.DB.Query(stmt, start, end)
+	loc, _ := time.LoadLocation("UTC")
 	defer rows.Close()
 	for rows.Next() {
 		var a appointment.Appointment
