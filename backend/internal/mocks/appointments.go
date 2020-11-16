@@ -128,7 +128,7 @@ func (r AppointmentMockRepo) FindByDate(dateTime time.Time) ([]appointment.Appoi
 
 // FindByMonth
 func (r AppointmentMockRepo) FindByInterval(s,
-	e time.time) ([]appointment.Appointment, error) {
+	e time.Time) ([]appointment.Appointment, error) {
 	var db []appointment.Appointment
 	db = append(db, appointment.Appointment{
 		ID:          "e521798b-9f33-4a10-8b2a-9677ed1cd1ae",
@@ -192,15 +192,15 @@ func (r AppointmentMockRepo) FindByInterval(s,
 		CreatedAt:   time.Date(2020, 9, 6, 12, 0, 0, 0, time.UTC),
 	},
 	)
-	start := s.Sub(1 * time.Minute)
-	end := e.Add(1 * time.Minute)
+	start := s.Add(time.Minute * -1)
+	end := e.Add(time.Minute * 1)
 	var res []appointment.Appointment
 	for _, el := range db {
 		if el.DateTime.After(start) && el.DateTime.Before(end) {
-			res := append(res, el)
+			res = append(res, el)
 		}
 	}
-	return []appointment.Appointment{}, nil
+	return res, nil
 }
 
 // GetAll
