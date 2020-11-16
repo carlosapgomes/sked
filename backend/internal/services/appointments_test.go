@@ -288,7 +288,35 @@ func TestAppointmentFindByDoctorID(t *testing.T) {
 		})
 	}
 }
+func TestAppointmentsFindByMonthYear(t *testing.T) {
+	userRepo := mocks.NewUserRepo()
+	userSvc := services.NewUserService(userRepo)
+	repo := mocks.NewAppointmentRepo()
+	svc := services.NewAppointmentService(repo, userSvc)
 
+	tests := []struct {
+		name      string
+		month     int
+		year      int
+		wantSize  int
+		wantError error
+	}{
+		{"Valid Month/Year", 9, 2020, 6, nil},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			appointmts, err := svc.FindByMonthYear(tt.month, tt.year)
+			if tt.wantError != err {
+				t.Errorf("Want error %v, but got %v\n", tt.wantError, err)
+			}
+			if tt.wantSize != len(appointmts) {
+				t.Errorf("Want respose size %v, but got %v\n", tt.wantSize,
+					len(appointmts))
+			}
+		})
+	}
+}
 func TestAppointmentFindByDate(t *testing.T) {
 	userRepo := mocks.NewUserRepo()
 	userSvc := services.NewUserService(userRepo)
