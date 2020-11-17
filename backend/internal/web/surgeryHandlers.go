@@ -43,6 +43,8 @@ func (app App) surgeriesNoPath(w http.ResponseWriter, r *http.Request) {
 		doctorID := r.URL.Query().Get("doctorID")
 		patientID := r.URL.Query().Get("patientID")
 		dt := r.URL.Query().Get("date")
+		month := r.URL.Query().Get("month")
+		year := r.URL.Query().Get("year")
 		switch {
 		case id != "":
 			app.findSurgeryByID(w, r)
@@ -52,6 +54,8 @@ func (app App) surgeriesNoPath(w http.ResponseWriter, r *http.Request) {
 			app.findSurgeryByPatientID(w, r)
 		case dt != "":
 			app.findSurgeryByDate(w, r)
+		case ((month != "") && (year != "")):
+			app.findAppointmentsByMonth(w, r)
 		default:
 			app.getAllSurgeries(w, r)
 		}
@@ -147,6 +151,37 @@ func (app App) findSurgeryByDate(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
+func (app App) findSurgeriesByMonth(w http.ResponseWriter, r *http.Request) {
+	month := r.URL.Query().Get("month")
+	year := r.URL.Query().Get("year")
+	if (month == "") || (year == "") {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	m, err := strconv.Atoi(month)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	y, err := strconv.Atoi(year)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	surgs, err := app.
+		surgeryService.FindByMonthYear(m, y)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	res, err := json.Marshal(surgs)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(res)
+}
 func (app App) getAllSurgeries(w http.ResponseWriter, r *http.Request) {
 	previous := r.URL.Query().Get("previous")
 	next := r.URL.Query().Get("next")
