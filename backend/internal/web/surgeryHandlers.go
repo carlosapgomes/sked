@@ -55,7 +55,7 @@ func (app App) surgeriesNoPath(w http.ResponseWriter, r *http.Request) {
 		case dt != "":
 			app.findSurgeryByDate(w, r)
 		case ((month != "") && (year != "")):
-			app.findAppointmentsByMonth(w, r)
+			app.findSurgeriesByMonth(w, r)
 		default:
 			app.getAllSurgeries(w, r)
 		}
