@@ -12,5 +12,6 @@ type Repository interface {
 	FindByPatientID(patientID string) ([]Surgery, error)
 	FindByDoctorID(doctorID string) ([]Surgery, error)
 	FindByDate(date time.Time) ([]Surgery, error)
+	FindByInterval(start, end time.Time) ([]Surgery, error)
 	GetAll(cursor string, after bool, pgSize int) ([]Surgery, bool, error)
 }
