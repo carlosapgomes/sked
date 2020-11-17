@@ -280,6 +280,42 @@ func TestFindAppointmentsByDoctorID(t *testing.T) {
 	}
 }
 
+func TestFindAppointmentsByInterval(t *testing.T) {
+	db, teardown := newTestDB(t)
+	defer teardown()
+	repo := storage.NewPgAppointmentRepository(db)
+	var tests = []struct {
+		name      string
+		start     time.Time
+		end       time.Time
+		wantSize  int
+		wantError error
+	}{
+		{
+			"Valid Search",
+			time.Date(2020, 9, 1, 12, 0, 0, 0, time.UTC),
+			time.Date(2020, 9, 30, 12, 0, 0, 0, time.UTC),
+			5,
+			nil,
+		},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			appointmts, err := repo.FindByInterval(tt.start, tt.end)
+
+			if !errors.Is(err, tt.wantError) {
+				t.Errorf("want %v; got %v", tt.wantError, err)
+			}
+			if len(appointmts) != tt.wantSize {
+				t.Errorf("want answer size of %d; got %d\n",
+					tt.wantSize, len(appointmts))
+
+			}
+		})
+	}
+}
+
 func TestFindAppointmentsByDate(t *testing.T) {
 	var tests = []struct {
 		name      string
