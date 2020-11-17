@@ -160,6 +160,42 @@ func (r surgeryRepository) FindByDoctorID(doctorID string) ([]surgery.Surgery, e
 	return surgs, err
 }
 
+// FindByMonthYear - return all appointments in a specific month
+func (r surgeryRepository) FindByInterval(s,
+	e time.Time) ([]surgery.Surgery, error) {
+	start := s.Format("2006-01-02")
+	end := e.Format("2006-01-02")
+	var surgs []surgery.Surgery
+	stmt := `SELECT id, date_time, patient_name, patient_id, doctor_name,
+			doctor_id, notes, proposed_surgery, canceled, done, created_by,
+			created_at, updated_by, updated_at
+			FROM surgeries
+			WHERE sked_date_to_char(date_time)  >= $1 AND 
+			sked_date_to_char(date_time)  <= $2`
+	rows, err := r.DB.Query(stmt, start, end)
+	if err != nil {
+		return nil, err
+	}
+	loc, _ := time.LoadLocation("UTC")
+	defer rows.Close()
+	for rows.Next() {
+		var a surgery.Surgery
+		err = rows.Scan(&a.ID, &a.DateTime, &a.PatientName, &a.PatientID,
+			&a.DoctorName, &a.DoctorID, &a.Notes, &a.ProposedSurgery,
+			&a.Canceled, &a.Done, &a.CreatedBy, &a.CreatedAt, &a.UpdatedBy,
+			&a.UpdatedAt)
+		if err == sql.ErrNoRows {
+			return nil, surgery.ErrNoRecord
+		} else if err != nil {
+			return nil, err
+		}
+		a.CreatedAt = a.CreatedAt.In(loc)
+		a.UpdatedAt = a.UpdatedAt.In(loc)
+		surgs = append(surgs, a)
+	}
+	return surgs, err
+}
+
 // FindByDate - finds surgeries in a date
 func (r surgeryRepository) FindByDate(date time.Time) ([]surgery.Surgery, error) {
 	var surgs []surgery.Surgery
