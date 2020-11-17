@@ -184,6 +184,22 @@ func (s *surgeryService) FindByDate(dateTime time.Time) ([]surgery.Surgery,
 	return surgeries, nil
 }
 
+// FindByMonthYear - return all appointments in a specific month
+func (s *surgeryService) FindByMonthYear(m,
+	y int) ([]appointment.Appointment, error) {
+	if (m < 1) || (m > 12) || (y < 0) {
+		return nil, appointment.ErrInvalidInputSyntax
+	}
+	loc := time.Now().Location()
+	firstOfMonth := time.Date(y, time.Month(m), 1, 0, 0, 0, 0, loc)
+	lastOfMonth := firstOfMonth.AddDate(0, 1, -1)
+	surgs, err := s.repo.FindByInterval(firstOfMonth, lastOfMonth)
+	if err != nil {
+		return nil, err
+	}
+	return surgs, nil
+}
+
 // GetAll - return all surgeries
 func (s *surgeryService) GetAll(previous string, next string,
 	pgSize int) (*surgery.Page, error) {
