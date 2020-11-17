@@ -186,7 +186,7 @@ func (s *surgeryService) FindByDate(dateTime time.Time) ([]surgery.Surgery,
 
 // FindByMonthYear - return all appointments in a specific month
 func (s *surgeryService) FindByMonthYear(m,
-	y int) ([]appointment.Appointment, error) {
+	y int) ([]surgery.Surgery, error) {
 	if (m < 1) || (m > 12) || (y < 0) {
 		return nil, appointment.ErrInvalidInputSyntax
 	}
