@@ -14,20 +14,13 @@ export default class ScheduleList extends Component {
     };
   }
   componentDidMount() {
-    const m = String(dayjs().month());
-    const y = String(dayjs().year());
+    const m = dayjs().month();
+    const y = dayjs().year();
     this.setState({
-      currentMonth: m,
-      currentYear: y,
+      currentMonth: String(m),
+      currentYear: String(y),
     });
-    //const nDays = new Date(m.substr(0, 4), m.substr(5, 2), 0).getDate();
-    //let days = [];
-    //for (let i = 1; i <= nDays; i++) {
-    //days.push(<li key={i.toString()}>{i}</li>);
-    //}
-    //this.setState({
-    //days: [...days],
-    //});
+    this.updateAppointmtsAndSurgsData(m, y);
   }
   getAllAppointmentsInAMonth(m, y) {
     let ajax = new XMLHttpRequest();
@@ -43,11 +36,10 @@ export default class ScheduleList extends Component {
         } else {
           let data = JSON.parse(ajax.responseText);
           if (data) {
-            console.log(data);
             this.setState({
               appointments: [...data],
             });
-            this.updateSchedulesList(m.y);
+            this.updateSchedulesList(m, y);
           }
         }
       }
@@ -71,7 +63,6 @@ export default class ScheduleList extends Component {
         } else {
           let data = JSON.parse(ajax.responseText);
           if (data) {
-            console.log(data);
             this.setState({
               surgeries: [...data],
             });
@@ -92,23 +83,31 @@ export default class ScheduleList extends Component {
     ) {
       return;
     }
-    //const nDays = new Date(y, m, 0).getDate();
+    const nDays = new Date(y, m, 0).getDate();
     let daysOfMonth = [];
-    //for (let i = 1; i <= nDays; i++) {
-    //daysOfMonth.push(
-    //<li key={i.toString()}>
-    //{this.state.appointments.map((e) => {
-    //if (dayjs(e.date_time).date() === i) {
-    //return (
-    //<div>
-    //{e.doctor_name}: {e.patient_name}
-    //</div>
-    //);
-    //}
-    //})}
-    //</li>
-    //);
-    //}
+    for (let i = 1; i <= nDays; i++) {
+      daysOfMonth.push(
+        <li key={i.toString()}>
+          {
+            <span>
+              {i}/{m}/{y}:{" "}
+            </span>
+          }
+          {this.state.appointments.map((e) => {
+            let d = dayjs(e.dateTime).date();
+            if (d === i) {
+              return (
+                <div>
+                  {e.doctorName} : {e.patientName}
+                </div>
+              );
+            } else {
+              return <div>{"  "}</div>;
+            }
+          })}
+        </li>
+      );
+    }
     this.setState({
       days: [...daysOfMonth],
     });
@@ -119,13 +118,14 @@ export default class ScheduleList extends Component {
       appointments: undefined,
       surgeries: undefined,
     });
-    console.log(this.state.currentMonth);
-    console.log(this.state.currentYear);
-
-    //let year = m.substr(0, 4);
-    //let month = m.substr(5, 2);
-    //this.getAllSurgeriesInAMonth(month, year);
-    //this.getAllAppointmentsInAMonth(month, year);
+    this.updateAppointmtsAndSurgsData(
+      Number(m),
+      Number(this.state.currentYear)
+    );
+  }
+  updateAppointmtsAndSurgsData(m, y) {
+    this.getAllSurgeriesInAMonth(m, y);
+    this.getAllAppointmentsInAMonth(m, y);
   }
   setCurrentYear(y) {
     this.setState({
@@ -133,14 +133,16 @@ export default class ScheduleList extends Component {
       appointments: undefined,
       surgeries: undefined,
     });
-    console.log(this.state.currentMonth);
-    console.log(this.state.currentYear);
+    this.updateAppointmtsAndSurgsData(
+      Number(this.state.currentMonth),
+      Number(y)
+    );
   }
   render() {
     return (
       <div>
         <span>
-          <label for="month">Month: </label>
+          <label htmlFor="month">Month: </label>
           <select
             id="month"
             name="month"
@@ -166,7 +168,7 @@ export default class ScheduleList extends Component {
         {"    "}
         {"    "}
         <span>
-          <label for="year">Year: </label>
+          <label htmlFor="year">Year: </label>
           <select
             id="year"
             name="year"
