@@ -100,12 +100,12 @@ export default class ScheduleList extends Component {
                 let d = dayjs(e.dateTime).date();
                 if (d === i) {
                   return (
-                    <div key={e.dateTime}>
+                    <div key={e.id}>
                       {e.doctorName} : {e.patientName}
                     </div>
                   );
                 } else {
-                  return <div key={e.dateTime}>{"  "}</div>;
+                  return <div key={e.id}>{"  "}</div>;
                 }
               })}
             </div>
@@ -115,12 +115,12 @@ export default class ScheduleList extends Component {
                 let d = dayjs(e.dateTime).date();
                 if (d === i) {
                   return (
-                    <div key={e.dateTime}>
+                    <div key={e.id}>
                       {e.doctorName} : {e.patientName}
                     </div>
                   );
                 } else {
-                  return <div key={e.dateTime}>{"  "}</div>;
+                  return <div key={e.id}>{"  "}</div>;
                 }
               })}
             </div>
