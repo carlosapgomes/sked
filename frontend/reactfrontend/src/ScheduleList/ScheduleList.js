@@ -88,23 +88,43 @@ export default class ScheduleList extends Component {
     for (let i = 1; i <= nDays; i++) {
       daysOfMonth.push(
         <li key={i.toString()}>
-          {
-            <span>
-              {i}/{m}/{y}:{" "}
-            </span>
-          }
-          {this.state.appointments.map((e) => {
-            let d = dayjs(e.dateTime).date();
-            if (d === i) {
-              return (
-                <div>
-                  {e.doctorName} : {e.patientName}
-                </div>
-              );
-            } else {
-              return <div>{"  "}</div>;
+          <div>
+            {
+              <span>
+                {i}/{m}/{y}:{" "}
+              </span>
             }
-          })}
+            <div>
+              Appointments:
+              {this.state.appointments.map((e) => {
+                let d = dayjs(e.dateTime).date();
+                if (d === i) {
+                  return (
+                    <div key={e.dateTime}>
+                      {e.doctorName} : {e.patientName}
+                    </div>
+                  );
+                } else {
+                  return <div key={e.dateTime}>{"  "}</div>;
+                }
+              })}
+            </div>
+            <div>
+              Surgeries:
+              {this.state.surgeries.map((e) => {
+                let d = dayjs(e.dateTime).date();
+                if (d === i) {
+                  return (
+                    <div key={e.dateTime}>
+                      {e.doctorName} : {e.patientName}
+                    </div>
+                  );
+                } else {
+                  return <div key={e.dateTime}>{"  "}</div>;
+                }
+              })}
+            </div>
+          </div>
         </li>
       );
     }
