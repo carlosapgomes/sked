@@ -8,13 +8,11 @@ export default class ScheduleList extends Component {
     this.state = {
       currentMonth: "",
       currentYear: "",
-      days: [],
       appointments: [],
       appSchedules: [],
       appSelected: false,
       surgeries: [],
       surgSchedules: [],
-      surgSelected: false,
     };
   }
   componentDidMount() {
@@ -44,8 +42,8 @@ export default class ScheduleList extends Component {
             this.setState({
               appointments: [...data],
             });
-            this.updateAppSchedulesList(m, y, data);
           }
+          this.updateAppSchedulesList(m, y, data);
         }
       }
       if (ajax.readyState === 4 && ajax.status !== 200) {
@@ -71,8 +69,8 @@ export default class ScheduleList extends Component {
             this.setState({
               surgeries: [...data],
             });
-            this.updateSurgSchedulesList(m, y, data);
           }
+          this.updateSurgSchedulesList(m, y, data);
         }
       }
       if (ajax.readyState === 4 && ajax.status !== 200) {
@@ -95,18 +93,20 @@ export default class ScheduleList extends Component {
             }
             <div>
               Appointments:
-              {data.map((e) => {
-                let d = dayjs(e.dateTime).date();
-                if (d === i) {
-                  return (
-                    <div key={e.id}>
-                      {e.doctorName} : {e.patientName}
-                    </div>
-                  );
-                } else {
-                  return <div key={e.id}>{"  "}</div>;
-                }
-              })}
+              {!data
+                ? null
+                : data.map((e) => {
+                    let d = dayjs(e.dateTime).date();
+                    if (d === i) {
+                      return (
+                        <div key={e.id}>
+                          {e.doctorName} : {e.patientName}
+                        </div>
+                      );
+                    } else {
+                      return <div key={e.id}>{"  "}</div>;
+                    }
+                  })}
             </div>
           </div>
         </li>
@@ -130,18 +130,20 @@ export default class ScheduleList extends Component {
             }
             <div>
               Surgeries:
-              {this.state.surgeries.map((e) => {
-                let d = dayjs(e.dateTime).date();
-                if (d === i) {
-                  return (
-                    <div key={e.id}>
-                      {e.doctorName} : {e.patientName}
-                    </div>
-                  );
-                } else {
-                  return <div key={e.id}>{"  "}</div>;
-                }
-              })}
+              {!data
+                ? null
+                : data.map((e) => {
+                    let d = dayjs(e.dateTime).date();
+                    if (d === i) {
+                      return (
+                        <div key={e.id}>
+                          {e.doctorName} : {e.patientName}
+                        </div>
+                      );
+                    } else {
+                      return <div key={e.id}>{"  "}</div>;
+                    }
+                  })}
             </div>
           </div>
         </li>
@@ -151,63 +153,11 @@ export default class ScheduleList extends Component {
       surgSchedules: [...daysOfMonth],
     });
   }
-
-  //updateSchedulesList(m, y) {
-  //const nDays = new Date(y, m, 0).getDate();
-  //let daysOfMonth = [];
-  //for (let i = 1; i <= nDays; i++) {
-  //daysOfMonth.push(
-  //<li key={i.toString()}>
-  //<div>
-  //{
-  //<span>
-  //{i}/{m}/{y}:{" "}
-  //</span>
-  //}
-  //<div>
-  //Appointments:
-  //{this.state.appointments.map((e) => {
-  //let d = dayjs(e.dateTime).date();
-  //if (d === i) {
-  //return (
-  //<div key={e.id}>
-  //{e.doctorName} : {e.patientName}
-  //</div>
-  //);
-  //} else {
-  //return <div key={e.id}>{"  "}</div>;
-  //}
-  //})}
-  //</div>
-  //<div>
-  //Surgeries:
-  //{this.state.surgeries.map((e) => {
-  //let d = dayjs(e.dateTime).date();
-  //if (d === i) {
-  //return (
-  //<div key={e.id}>
-  //{e.doctorName} : {e.patientName}
-  //</div>
-  //);
-  //} else {
-  //return <div key={e.id}>{"  "}</div>;
-  //}
-  //})}
-  //</div>
-  //</div>
-  //</li>
-  //);
-  //}
-  //this.setState({
-  //days: [...daysOfMonth],
-  //});
-  //}
   setCurrentMonth(m) {
     this.setState({
       currentMonth: m,
       appointments: [],
       surgeries: [],
-      days: [],
     });
     this.updateAppointmtsAndSurgsData(
       Number(m),
@@ -223,7 +173,6 @@ export default class ScheduleList extends Component {
       currentYear: y,
       appointments: [],
       surgeries: [],
-      days: [],
     });
     this.updateAppointmtsAndSurgsData(
       Number(this.state.currentMonth),
@@ -231,28 +180,20 @@ export default class ScheduleList extends Component {
     );
   }
   radioChanged(e) {
-    let res = e.target.value;
-    console.log(res);
-    if (res === "appointments") {
+    if (e.target.value === "appointments") {
       this.setState({
         appSelected: true,
-        surgSelected: false,
       });
     } else {
       this.setState({
         appSelected: false,
-        surgSelected: true,
       });
     }
   }
   render() {
     return (
       <div>
-        <div
-          onChange={(e) => {
-            this.radioChanged(e);
-          }}
-        >
+        <div>
           <input
             type="radio"
             value="appointments"
@@ -269,7 +210,7 @@ export default class ScheduleList extends Component {
             value="surgeries"
             name="schedule"
             id="surgeries"
-            checked={this.state.surgSelected}
+            checked={!this.state.appSelected}
             onChange={(e) => {
               this.radioChanged(e);
             }}
