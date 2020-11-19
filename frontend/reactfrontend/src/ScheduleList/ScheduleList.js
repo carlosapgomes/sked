@@ -79,6 +79,15 @@ export default class ScheduleList extends Component {
       }
     };
   }
+  clickedOnDay(d) {
+    console.log(d);
+  }
+  clickedOnAppt(a) {
+    console.log(a);
+  }
+  clickedOnSurg(s) {
+    console.log(s);
+  }
   updateAppSchedulesList(m, y, data) {
     const nDays = new Date(y, m, 0).getDate();
     let daysOfMonth = [];
@@ -87,7 +96,12 @@ export default class ScheduleList extends Component {
         <li key={i.toString()}>
           <div>
             {
-              <span>
+              <span
+                data-day={i}
+                onClick={(e) => {
+                  this.clickedOnDay(e.target.dataset.day);
+                }}
+              >
                 {i}/{m}/{y}:{" "}
               </span>
             }
@@ -99,7 +113,13 @@ export default class ScheduleList extends Component {
                     let d = dayjs(e.dateTime).date();
                     if (d === i) {
                       return (
-                        <div key={e.id}>
+                        <div
+                          key={e.id}
+                          data-id={e.id}
+                          onClick={(e) => {
+                            this.clickedOnAppt(e.target.dataset.id);
+                          }}
+                        >
                           {e.doctorName} : {e.patientName}
                         </div>
                       );
@@ -124,7 +144,12 @@ export default class ScheduleList extends Component {
         <li key={i.toString()}>
           <div>
             {
-              <span>
+              <span
+                data-day={i}
+                onClick={(e) => {
+                  this.clickedOnDay(e.target.dataset.day);
+                }}
+              >
                 {i}/{m}/{y}:{" "}
               </span>
             }
@@ -136,7 +161,13 @@ export default class ScheduleList extends Component {
                     let d = dayjs(e.dateTime).date();
                     if (d === i) {
                       return (
-                        <div key={e.id}>
+                        <div
+                          key={e.id}
+                          data-id={e.id}
+                          onClick={(e) => {
+                            this.clickedOnSurg(e.target.dataset.id);
+                          }}
+                        >
                           {e.doctorName} : {e.patientName}
                         </div>
                       );
