@@ -8,9 +8,13 @@ export default class ScheduleList extends Component {
     this.state = {
       currentMonth: "",
       currentYear: "",
-      days: undefined,
-      appointments: undefined,
-      surgeries: undefined,
+      days: [],
+      appointments: [],
+      appSchedules: [],
+      appSelected: false,
+      surgeries: [],
+      surgSchedules: [],
+      surgSelected: false,
     };
   }
   componentDidMount() {
@@ -19,6 +23,7 @@ export default class ScheduleList extends Component {
     this.setState({
       currentMonth: String(m),
       currentYear: String(y),
+      appSelected: true,
     });
     this.updateAppointmtsAndSurgsData(m, y);
   }
@@ -39,7 +44,7 @@ export default class ScheduleList extends Component {
             this.setState({
               appointments: [...data],
             });
-            this.updateSchedulesList(m, y);
+            this.updateAppSchedulesList(m, y, data);
           }
         }
       }
@@ -66,7 +71,7 @@ export default class ScheduleList extends Component {
             this.setState({
               surgeries: [...data],
             });
-            this.updateSchedulesList(m, y);
+            this.updateSurgSchedulesList(m, y, data);
           }
         }
       }
@@ -76,13 +81,7 @@ export default class ScheduleList extends Component {
       }
     };
   }
-  updateSchedulesList(m, y) {
-    if (
-      typeof this.state.appointments === "undefined" ||
-      typeof this.state.surgeries === "undefined"
-    ) {
-      return;
-    }
+  updateAppSchedulesList(m, y, data) {
     const nDays = new Date(y, m, 0).getDate();
     let daysOfMonth = [];
     for (let i = 1; i <= nDays; i++) {
@@ -96,7 +95,7 @@ export default class ScheduleList extends Component {
             }
             <div>
               Appointments:
-              {this.state.appointments.map((e) => {
+              {data.map((e) => {
                 let d = dayjs(e.dateTime).date();
                 if (d === i) {
                   return (
@@ -109,6 +108,26 @@ export default class ScheduleList extends Component {
                 }
               })}
             </div>
+          </div>
+        </li>
+      );
+    }
+    this.setState({
+      appSchedules: [...daysOfMonth],
+    });
+  }
+  updateSurgSchedulesList(m, y, data) {
+    const nDays = new Date(y, m, 0).getDate();
+    let daysOfMonth = [];
+    for (let i = 1; i <= nDays; i++) {
+      daysOfMonth.push(
+        <li key={i.toString()}>
+          <div>
+            {
+              <span>
+                {i}/{m}/{y}:{" "}
+              </span>
+            }
             <div>
               Surgeries:
               {this.state.surgeries.map((e) => {
@@ -129,14 +148,66 @@ export default class ScheduleList extends Component {
       );
     }
     this.setState({
-      days: [...daysOfMonth],
+      surgSchedules: [...daysOfMonth],
     });
   }
+
+  //updateSchedulesList(m, y) {
+  //const nDays = new Date(y, m, 0).getDate();
+  //let daysOfMonth = [];
+  //for (let i = 1; i <= nDays; i++) {
+  //daysOfMonth.push(
+  //<li key={i.toString()}>
+  //<div>
+  //{
+  //<span>
+  //{i}/{m}/{y}:{" "}
+  //</span>
+  //}
+  //<div>
+  //Appointments:
+  //{this.state.appointments.map((e) => {
+  //let d = dayjs(e.dateTime).date();
+  //if (d === i) {
+  //return (
+  //<div key={e.id}>
+  //{e.doctorName} : {e.patientName}
+  //</div>
+  //);
+  //} else {
+  //return <div key={e.id}>{"  "}</div>;
+  //}
+  //})}
+  //</div>
+  //<div>
+  //Surgeries:
+  //{this.state.surgeries.map((e) => {
+  //let d = dayjs(e.dateTime).date();
+  //if (d === i) {
+  //return (
+  //<div key={e.id}>
+  //{e.doctorName} : {e.patientName}
+  //</div>
+  //);
+  //} else {
+  //return <div key={e.id}>{"  "}</div>;
+  //}
+  //})}
+  //</div>
+  //</div>
+  //</li>
+  //);
+  //}
+  //this.setState({
+  //days: [...daysOfMonth],
+  //});
+  //}
   setCurrentMonth(m) {
     this.setState({
       currentMonth: m,
-      appointments: undefined,
-      surgeries: undefined,
+      appointments: [],
+      surgeries: [],
+      days: [],
     });
     this.updateAppointmtsAndSurgsData(
       Number(m),
@@ -150,17 +221,61 @@ export default class ScheduleList extends Component {
   setCurrentYear(y) {
     this.setState({
       currentYear: y,
-      appointments: undefined,
-      surgeries: undefined,
+      appointments: [],
+      surgeries: [],
+      days: [],
     });
     this.updateAppointmtsAndSurgsData(
       Number(this.state.currentMonth),
       Number(y)
     );
   }
+  radioChanged(e) {
+    let res = e.target.value;
+    console.log(res);
+    if (res === "appointments") {
+      this.setState({
+        appSelected: true,
+        surgSelected: false,
+      });
+    } else {
+      this.setState({
+        appSelected: false,
+        surgSelected: true,
+      });
+    }
+  }
   render() {
     return (
       <div>
+        <div
+          onChange={(e) => {
+            this.radioChanged(e);
+          }}
+        >
+          <input
+            type="radio"
+            value="appointments"
+            name="schedule"
+            id="appointments"
+            checked={this.state.appSelected}
+            onChange={(e) => {
+              this.radioChanged(e);
+            }}
+          />
+          <label htmlFor="appointments">Appointments</label>
+          <input
+            type="radio"
+            value="surgeries"
+            name="schedule"
+            id="surgeries"
+            checked={this.state.surgSelected}
+            onChange={(e) => {
+              this.radioChanged(e);
+            }}
+          />
+          <label htmlFor="surgeries">Surgeries</label>
+        </div>
         <span>
           <label htmlFor="month">Month: </label>
           <select
@@ -202,7 +317,11 @@ export default class ScheduleList extends Component {
           </select>
         </span>
         <div>
-          <ul className={cl.ul}>{this.state.days}</ul>
+          <ul className={cl.ul}>
+            {this.state.appSelected
+              ? this.state.appSchedules
+              : this.state.surgSchedules}
+          </ul>
         </div>
       </div>
     );
