@@ -8,7 +8,7 @@ export default class Appointments extends Component {
     this.state = {
       selectedDoctorValue: "selectAnOption",
       selectedDoctor: null,
-      selectedPatient: null,
+      selectedPatient: props.currentPatient,
       selectedDate: "",
       selectedTime: "08:00",
       notes: "",
@@ -80,10 +80,12 @@ export default class Appointments extends Component {
       this.setState({
         selectedPatient: null,
       });
+      this.props.updateCurrentPatient(null);
     } else {
       this.setState({
         selectedPatient: { ...p },
       });
+      this.props.updateCurrentPatient({ ...p });
     }
   }
   setTime(e) {
