@@ -325,8 +325,13 @@ func (app App) createPatient(w http.ResponseWriter, r *http.Request) {
 		return
 
 	}
-	newPatient.ID = *id
-	output, err := json.Marshal(newPatient)
+	// return a full copy of the newly created record
+	p, err := app.patientService.FindByID(*id)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	output, err := json.Marshal(*p)
 	if err != nil {
 		app.serverError(w, err)
 		return
