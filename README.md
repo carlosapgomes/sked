@@ -127,5 +127,9 @@ Tables:
 - ~~user searchPatient on components Appointments and Surgeries~~
 - fix patient test handlers: testUpdatePatientName and testUpdatePatientPhones
 because they are expecting a full patient.Patient object in response
-- create a new endpoint for Appointments and Surgeries to return the schedules
-for a whole month
+- ~~create a new endpoint for Appointments and Surgeries to return the schedules
+for a whole month~~
+- add update patient on Patient component
+- add create patient inside Appointments and Surgeries components
+- create utility component to abstract ajax communications and backend
+configuration
