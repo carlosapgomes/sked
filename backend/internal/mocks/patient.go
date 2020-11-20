@@ -73,6 +73,7 @@ func NewPatientRepo() *PatientMockRepo {
 
 // Create mocks patient creation
 func (r *PatientMockRepo) Create(patient patient.Patient) (*string, error) {
+	r.pDb = append(r.pDb, patient)
 	badID := "12342342"
 	switch patient.Name {
 	case "Valid patient":
