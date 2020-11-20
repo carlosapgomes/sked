@@ -31,7 +31,6 @@ export default class Patients extends Component {
       state: this.state.state,
       phones: [...this.state.phones],
     };
-    console.log(patient);
     let ajax = new XMLHttpRequest();
     let url = "https://dev.local/api/patients";
     ajax.open("POST", url, true);
@@ -40,6 +39,11 @@ export default class Patients extends Component {
     ajax.send(JSON.stringify(patient));
     ajax.onreadystatechange = () => {
       if (ajax.readyState === 4 && ajax.status === 200) {
+        let data = JSON.parse(ajax.response);
+        if (data) {
+          this.props.updateCurrentPatient({ ...data });
+          console.log(data);
+        }
         window.alert("Patient saved");
         this.clearForm();
       }
