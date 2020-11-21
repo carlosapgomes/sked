@@ -189,13 +189,13 @@ class App extends Component {
                     </li>
                   )}
                   <li>
-                    <button
+                    <a
                       onClick={() => {
                         this.logoutHandler();
                       }}
                     >
-                      Logout
-                    </button>
+                      <em>Logout</em>
+                    </a>
                   </li>
                 </ul>
               </div>
