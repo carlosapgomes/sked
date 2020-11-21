@@ -224,77 +224,80 @@ export default class ScheduleList extends Component {
   render() {
     return (
       <div>
-        <div>
-          <input
-            type="radio"
-            value="appointments"
-            name="schedule"
-            id="appointments"
-            checked={this.state.appSelected}
-            onChange={(e) => {
-              this.radioChanged(e);
-            }}
-          />
-          <label htmlFor="appointments">Appointments</label>
-          <input
-            type="radio"
-            value="surgeries"
-            name="schedule"
-            id="surgeries"
-            checked={!this.state.appSelected}
-            onChange={(e) => {
-              this.radioChanged(e);
-            }}
-          />
-          <label htmlFor="surgeries">Surgeries</label>
-        </div>
-        <span>
-          <label htmlFor="month">Month: </label>
-          <select
-            id="month"
-            name="month"
-            value={this.state.currentMonth}
-            onChange={(e) => {
-              this.setCurrentMonth(e.target.value);
-            }}
-          >
-            <option value="01">01</option>
-            <option value="02">02</option>
-            <option value="03">03</option>
-            <option value="04">04</option>
-            <option value="05">05</option>
-            <option value="06">06</option>
-            <option value="07">07</option>
-            <option value="08">08</option>
-            <option value="09">09</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-          </select>
-        </span>
-        {"    "}
-        {"    "}
-        <span>
-          <label htmlFor="year">Year: </label>
-          <select
-            id="year"
-            name="year"
-            value={this.state.currentYear}
-            onChange={(e) => {
-              this.setCurrentYear(e.target.value);
-            }}
-          >
-            <option value="2020">2020</option>
-            <option value="2021">2021</option>
-          </select>
-        </span>
-        <div>
-          <ul className={cl.ul}>
-            {this.state.appSelected
-              ? this.state.appSchedules
-              : this.state.surgSchedules}
-          </ul>
-        </div>
+        <h1>Schedules</h1>
+        <section>
+          <form>
+            <input
+              type="radio"
+              value="appointments"
+              name="schedule"
+              id="appointments"
+              checked={this.state.appSelected}
+              onChange={(e) => {
+                this.radioChanged(e);
+              }}
+            />
+            <label htmlFor="appointments">Appointments</label>
+            <input
+              type="radio"
+              value="surgeries"
+              name="schedule"
+              id="surgeries"
+              checked={!this.state.appSelected}
+              onChange={(e) => {
+                this.radioChanged(e);
+              }}
+            />
+            <label htmlFor="surgeries">Surgeries</label>
+            <span>
+              <label htmlFor="month">Month: </label>
+              <select
+                id="month"
+                name="month"
+                value={this.state.currentMonth}
+                onChange={(e) => {
+                  this.setCurrentMonth(e.target.value);
+                }}
+              >
+                <option value="01">01</option>
+                <option value="02">02</option>
+                <option value="03">03</option>
+                <option value="04">04</option>
+                <option value="05">05</option>
+                <option value="06">06</option>
+                <option value="07">07</option>
+                <option value="08">08</option>
+                <option value="09">09</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+              </select>
+            </span>
+            {"    "}
+            {"    "}
+            <span>
+              <label htmlFor="year">Year: </label>
+              <select
+                id="year"
+                name="year"
+                value={this.state.currentYear}
+                onChange={(e) => {
+                  this.setCurrentYear(e.target.value);
+                }}
+              >
+                <option value="2020">2020</option>
+                <option value="2021">2021</option>
+              </select>
+            </span>
+            <div>
+              <ul className={cl.ul}>
+                {this.state.appSelected
+                  ? this.state.appSchedules
+                  : this.state.surgSchedules}
+              </ul>
+            </div>
+          </form>
+        </section>
       </div>
     );
   }
