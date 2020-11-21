@@ -190,6 +190,7 @@ class App extends Component {
                   )}
                   <li>
                     <a
+                      href="#!"
                       onClick={() => {
                         this.logoutHandler();
                       }}
