@@ -1,9 +1,9 @@
 /* MVP.css v1.6.2 - https://github.com/andybrewer/mvp */
-/** {*/
-/*margin: 0;*/
-/*padding: 0;*/
-/*box-sizing: border-box;*/
-/*}*/
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 :root {
   --border-radius: 5px;
   --box-shadow: 2px 2px 10px;
@@ -73,7 +73,8 @@ hr {
   background-color: var(--color-bg-secondary);
   border: none;
   height: 1px;
-  margin: 4rem 0;
+  /*margin: 4rem 0;*/
+  margin: 2rem 0;
 }
 
 section {
@@ -137,7 +138,8 @@ nav {
   display: flex;
   font-weight: bold;
   justify-content: space-between;
-  margin-bottom: 7rem;
+  /*margin-bottom: 7rem;*/
+  margin-bottom: 0;
 }
 
 nav ul {
