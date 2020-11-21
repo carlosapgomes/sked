@@ -34,25 +34,27 @@ const Auth = (props) => {
   return (
     <div>
       <div id="login" hidden={props.loggedIn}>
-        <form>
-          <input
-            type="text"
-            placeholder="Email"
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Senha"
-            onChange={(e) => setPword(e.target.value)}
-          />
-          <button
-            onClick={(e) => {
-              loginHandler(e);
-            }}
-          >
-            Ok
-          </button>
-        </form>
+        <section>
+          <form>
+            <input
+              type="text"
+              placeholder="Email"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Senha"
+              onChange={(e) => setPword(e.target.value)}
+            />
+            <button
+              onClick={(e) => {
+                loginHandler(e);
+              }}
+            >
+              Ok
+            </button>
+          </form>
+        </section>
       </div>
     </div>
   );
