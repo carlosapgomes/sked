@@ -3,7 +3,8 @@ import React, { useState } from "react";
 const Auth = (props) => {
   const [email, setEmail] = useState("");
   const [pword, setPword] = useState("");
-  const loginHandler = () => {
+  const loginHandler = (e) => {
+    e.preventDefault();
     let ajax = new XMLHttpRequest();
     ajax.open("POST", "https://dev.local/api/users/login", true);
     ajax.setRequestHeader("Content-type", "application/json");
@@ -33,17 +34,25 @@ const Auth = (props) => {
   return (
     <div>
       <div id="login" hidden={props.loggedIn}>
-        <input
-          type="text"
-          placeholder="Email"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Senha"
-          onChange={(e) => setPword(e.target.value)}
-        />
-        <button onClick={loginHandler}>Ok</button>
+        <form>
+          <input
+            type="text"
+            placeholder="Email"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Senha"
+            onChange={(e) => setPword(e.target.value)}
+          />
+          <button
+            onClick={(e) => {
+              loginHandler(e);
+            }}
+          >
+            Ok
+          </button>
+        </form>
       </div>
     </div>
   );
