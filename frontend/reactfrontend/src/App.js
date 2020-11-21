@@ -167,34 +167,36 @@ class App extends Component {
       <Router>
         <div className="App">
           <header>
-            <nav
-              id="logout"
-              hidden={!this.state.loggedIn}
-              className="Navigation"
-            >
-              <a href="#!">
-                <img alt="Sked(duler)" src="./img/skedlogo.png" />
-              </a>
+            <nav id="logout" className="Navigation">
+              <Link to="/">
+                <img alt="Logo" src="img/sked-new.png" width="70" height="70" />
+              </Link>
               <ul>
                 <li>
-                  <Link to="/">Home</Link>
+                  <Link hidden={!this.state.loggedIn} to="/Appointments">
+                    Appointments
+                  </Link>
                 </li>
                 <li>
-                  <Link to="/Appointments">Appointments</Link>
+                  <Link hidden={!this.state.loggedIn} to="/Surgeries">
+                    Surgeries
+                  </Link>
                 </li>
                 <li>
-                  <Link to="/Surgeries">Surgeries</Link>
-                </li>
-                <li>
-                  <Link to="/Patients">Patients</Link>
+                  <Link hidden={!this.state.loggedIn} to="/Patients">
+                    Patients
+                  </Link>
                 </li>
                 {this.isAdminOrClerk() && (
                   <li>
-                    <Link to="/Users">Users</Link>
+                    <Link hidden={!this.state.loggedIn} to="/Users">
+                      Users
+                    </Link>
                   </li>
                 )}
                 <li>
                   <a
+                    hidden={!this.state.loggedIn}
                     href="#!"
                     onClick={() => {
                       this.logoutHandler();
@@ -204,11 +206,12 @@ class App extends Component {
                   </a>
                 </li>
               </ul>
+              <a hidden={this.state.loggedIn} href="#!">
+                <em>Login</em>
+              </a>
             </nav>
-            <h1>Sked(uler)</h1>
           </header>
           <main>
-            <hr />
             {!this.state.loggedIn ? (
               <Auth
                 updateLogin={(s) => this.updateLogin(s)}
