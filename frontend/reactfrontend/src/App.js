@@ -172,6 +172,9 @@ class App extends Component {
               hidden={!this.state.loggedIn}
               className="Navigation"
             >
+              <a href="#!">
+                <img alt="Sked(duler)" src="./img/skedlogo.png" />
+              </a>
               <ul>
                 <li>
                   <Link to="/">Home</Link>
@@ -205,6 +208,7 @@ class App extends Component {
             <h1>Sked(uler)</h1>
           </header>
           <main>
+            <hr />
             {!this.state.loggedIn ? (
               <Auth
                 updateLogin={(s) => this.updateLogin(s)}
@@ -252,7 +256,10 @@ class App extends Component {
               </Switch>
             )}
           </main>
-          <footer>&#169; CG - 2020</footer>
+          <footer>
+            <hr />
+            <small>&#169; CG - 2020</small>
+          </footer>
         </div>
       </Router>
     );
