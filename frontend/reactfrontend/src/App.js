@@ -167,40 +167,42 @@ class App extends Component {
       <Router>
         <div className="App">
           <header>
-            Sked(uler)
-            <nav className="Navigation">
-              <div id="logout" hidden={!this.state.loggedIn}>
-                <ul>
+            <nav
+              id="logout"
+              hidden={!this.state.loggedIn}
+              className="Navigation"
+            >
+              <ul>
+                <li>
+                  <Link to="/">Home</Link>
+                </li>
+                <li>
+                  <Link to="/Appointments">Appointments</Link>
+                </li>
+                <li>
+                  <Link to="/Surgeries">Surgeries</Link>
+                </li>
+                <li>
+                  <Link to="/Patients">Patients</Link>
+                </li>
+                {this.isAdminOrClerk() && (
                   <li>
-                    <Link to="/">Home</Link>
+                    <Link to="/Users">Users</Link>
                   </li>
-                  <li>
-                    <Link to="/Appointments">Appointments</Link>
-                  </li>
-                  <li>
-                    <Link to="/Surgeries">Surgeries</Link>
-                  </li>
-                  <li>
-                    <Link to="/Patients">Patients</Link>
-                  </li>
-                  {this.isAdminOrClerk() && (
-                    <li>
-                      <Link to="/Users">Users</Link>
-                    </li>
-                  )}
-                  <li>
-                    <a
-                      href="#!"
-                      onClick={() => {
-                        this.logoutHandler();
-                      }}
-                    >
-                      <em>Logout</em>
-                    </a>
-                  </li>
-                </ul>
-              </div>
+                )}
+                <li>
+                  <a
+                    href="#!"
+                    onClick={() => {
+                      this.logoutHandler();
+                    }}
+                  >
+                    <em>Logout</em>
+                  </a>
+                </li>
+              </ul>
             </nav>
+            <h1>Sked(uler)</h1>
           </header>
           <main>
             {!this.state.loggedIn ? (
@@ -212,7 +214,6 @@ class App extends Component {
             ) : (
               <Switch>
                 <Route path="/" exact>
-                  <h1>Skeduler</h1>
                   <ScheduleList></ScheduleList>
                 </Route>
                 <Route path="/Appointments">
