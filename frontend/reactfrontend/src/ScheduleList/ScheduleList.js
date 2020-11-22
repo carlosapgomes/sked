@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import dayjs from "dayjs";
+import weekday from "dayjs/plugin/weekday";
 import "./ScheduleList.css";
+dayjs.extend(weekday);
 export default class ScheduleList extends Component {
   constructor(props) {
     super(props);
@@ -26,8 +28,13 @@ export default class ScheduleList extends Component {
     this.updateAppointmtsAndSurgsData(m, y);
   }
   getAllAppointmentsInAMonth(m, y) {
+    let month = Number(m) + 1;
     let ajax = new XMLHttpRequest();
-    let url = "https://dev.local/api/appointments?month=" + m + "&year=" + y;
+    let url =
+      "https://dev.local/api/appointments?month=" +
+      String(month) +
+      "&year=" +
+      y;
     ajax.open("GET", url, true);
     ajax.withCredentials = true;
     ajax.setRequestHeader("Content-type", "application/json");
@@ -53,8 +60,10 @@ export default class ScheduleList extends Component {
     };
   }
   getAllSurgeriesInAMonth(m, y) {
+    let month = Number(m) + 1;
     let ajax = new XMLHttpRequest();
-    let url = "https://dev.local/api/surgeries?month=" + m + "&year=" + y;
+    let url =
+      "https://dev.local/api/surgeries?month=" + String(month) + "&year=" + y;
     ajax.open("GET", url, true);
     ajax.withCredentials = true;
     ajax.setRequestHeader("Content-type", "application/json");
@@ -89,15 +98,37 @@ export default class ScheduleList extends Component {
     console.log(s);
   }
   updateAppSchedulesList(m, y, data) {
-    const nDays = new Date(y, m, 0).getDate();
+    const nDays = new Date(y, Number(m) + 1, 0).getDate();
     let daysOfMonth = [];
-    for (let i = 1; i <= nDays; i++) {
-      daysOfMonth.push(
-        <li key={i.toString()}>
+    for (let i = 0; i < nDays; i++) {
+      let nOfSchedules = 0;
+      let schedules = [];
+      let thisDay = dayjs(new Date(y, m, i + 1));
+      if (data) {
+        data.forEach((e) => {
+          let day = dayjs(e.dateTime).date();
+          if (day === i + 1) {
+            nOfSchedules++;
+            schedules.push(e);
+          }
+        });
+      }
+      daysOfMonth.push({
+        dateStr: thisDay.format("DD/MM/YYYY"),
+        nOfSchedules: nOfSchedules,
+        schedules: [...schedules],
+        weekday: thisDay.format("dd"),
+      });
+    }
+    let apptsSchedules = [];
+    for (let i = 0; i < nDays; i++) {
+      apptsSchedules.push(
+        <li key={(i + 1).toString()}>
           <details>
             {
               <summary>
-                {i}/{m}/{y}:{" "}
+                {daysOfMonth[i].dateStr}: {daysOfMonth[i].weekday} - #&nbsp;
+                {daysOfMonth[i].nOfSchedules}
               </summary>
             }
             <div>
@@ -112,25 +143,22 @@ export default class ScheduleList extends Component {
               >
                 &#10133;
               </span>
-              {!data
+              {!daysOfMonth[i].schedules
                 ? null
-                : data.map((e) => {
-                    let d = dayjs(e.dateTime).date();
-                    if (d === i) {
-                      return (
-                        <div
-                          key={e.id}
-                          data-id={e.id}
-                          onClick={(e) => {
-                            this.clickedOnAppt(e.target.dataset.id);
-                          }}
-                        >
+                : daysOfMonth[i].schedules.map((e) => {
+                    return (
+                      <div
+                        key={e.id}
+                        data-id={e.id}
+                        onClick={(e) => {
+                          this.clickedOnAppt(e.target.dataset.id);
+                        }}
+                      >
+                        <p>
                           {e.doctorName} : {e.patientName}
-                        </div>
-                      );
-                    } else {
-                      return <div key={e.id}>{"  "}</div>;
-                    }
+                        </p>
+                      </div>
+                    );
                   })}
             </div>
           </details>
@@ -138,55 +166,79 @@ export default class ScheduleList extends Component {
       );
     }
     this.setState({
-      appSchedules: [...daysOfMonth],
+      appSchedules: [...apptsSchedules],
     });
   }
   updateSurgSchedulesList(m, y, data) {
-    const nDays = new Date(y, m, 0).getDate();
+    const nDays = new Date(y, Number(m) + 1, 0).getDate();
     let daysOfMonth = [];
-    for (let i = 1; i <= nDays; i++) {
-      daysOfMonth.push(
-        <li key={i.toString()}>
-          <div>
+    for (let i = 0; i < nDays; i++) {
+      let nOfSchedules = 0;
+      let schedules = [];
+      let thisDay = dayjs(new Date(y, m, i + 1));
+      if (data) {
+        data.forEach((e) => {
+          let day = dayjs(e.dateTime).date();
+          if (day === i + 1) {
+            nOfSchedules++;
+            schedules.push(e);
+          }
+        });
+      }
+      daysOfMonth.push({
+        dateStr: thisDay.format("DD/MM/YYYY"),
+        nOfSchedules: nOfSchedules,
+        schedules: [...schedules],
+        weekday: thisDay.format("dd"),
+      });
+    }
+    let surgsSchedules = [];
+    for (let i = 0; i < nDays; i++) {
+      surgsSchedules.push(
+        <li key={(i + 1).toString()}>
+          <details>
             {
+              <summary>
+                {daysOfMonth[i].dateStr}: {daysOfMonth[i].weekday} - #&nbsp;
+                {daysOfMonth[i].nOfSchedules}
+              </summary>
+            }
+            <div>
               <span
+                className="AddSchedule"
+                role="img"
+                aria-label="Add appointment"
                 data-day={i}
                 onClick={(e) => {
                   this.clickedOnDay(e.target.dataset.day);
                 }}
               >
-                {i}/{m}/{y}:{" "}
+                &#10133;
               </span>
-            }
-            <div>
-              Surgeries:
-              {!data
+              {!daysOfMonth[i].schedules
                 ? null
-                : data.map((e) => {
-                    let d = dayjs(e.dateTime).date();
-                    if (d === i) {
-                      return (
-                        <div
-                          key={e.id}
-                          data-id={e.id}
-                          onClick={(e) => {
-                            this.clickedOnSurg(e.target.dataset.id);
-                          }}
-                        >
-                          {e.doctorName} : {e.patientName}
-                        </div>
-                      );
-                    } else {
-                      return <div key={e.id}>{"  "}</div>;
-                    }
+                : daysOfMonth[i].schedules.map((e) => {
+                    return (
+                      <div
+                        key={e.id}
+                        data-id={e.id}
+                        onClick={(e) => {
+                          this.clickedOnAppt(e.target.dataset.id);
+                        }}
+                      >
+                        {e.doctorName} : {e.patientName}
+                        <br />
+                        {e.proposedSurgery}
+                      </div>
+                    );
                   })}
             </div>
-          </div>
+          </details>
         </li>
       );
     }
     this.setState({
-      surgSchedules: [...daysOfMonth],
+      surgSchedules: [...surgsSchedules],
     });
   }
   setCurrentMonth(m) {
@@ -267,18 +319,18 @@ export default class ScheduleList extends Component {
                   this.setCurrentMonth(e.target.value);
                 }}
               >
-                <option value="01">01</option>
-                <option value="02">02</option>
-                <option value="03">03</option>
-                <option value="04">04</option>
-                <option value="05">05</option>
-                <option value="06">06</option>
-                <option value="07">07</option>
-                <option value="08">08</option>
-                <option value="09">09</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
+                <option value="0">01</option>
+                <option value="01">02</option>
+                <option value="02">03</option>
+                <option value="03">04</option>
+                <option value="04">05</option>
+                <option value="05">06</option>
+                <option value="06">07</option>
+                <option value="07">08</option>
+                <option value="08">09</option>
+                <option value="09">10</option>
+                <option value="10">11</option>
+                <option value="11">12</option>
               </select>
               {"    "}
               {"    "}
