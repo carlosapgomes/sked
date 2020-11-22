@@ -1,0 +1,9 @@
+.PatientsSection {
+  flex-direction: column;
+}
+.ColumnItem {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: var(--justify-important);
+  flex-direction: row;
+}

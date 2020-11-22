@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PatientSearch from "../PatientSearch/PatientSearch";
-
+import cl from "./Patients.css";
 export default class Patients extends Component {
   constructor(props) {
     super(props);
@@ -113,103 +113,110 @@ export default class Patients extends Component {
     return (
       <div>
         <h1>Patients</h1>
-        <PatientSearch
-          setSelectedPatient={(p) => {
-            this.setSelectedPatient(p);
-          }}
-        />
-        <form
-          acceptCharset="utf-8"
-          onSubmit={(e) => {
-            this.localSubmitHandler(e);
-          }}
-        >
-          <div>
-            <label htmlFor="name">Name: </label>
-            <input
-              type="text"
-              name="name"
-              id="name"
-              value={this.state.name}
-              onChange={(e) => {
-                this.setName(e.target.value);
-              }}
-            />{" "}
-          </div>
-          <div>
-            <label htmlFor="address">Address: </label>
-            <input
-              type="text"
-              name="address"
-              id="address"
-              value={this.state.address}
-              onChange={(e) => {
-                this.setAddress(e.target.value);
+        <section className="PatientsSection">
+          <div className="ColumnItem">
+            <PatientSearch
+              setSelectedPatient={(p) => {
+                this.setSelectedPatient(p);
               }}
             />
           </div>
-          <div>
-            <label htmlFor="city">City: </label>
-            <input
-              type="text"
-              name="city"
-              id="city"
-              value={this.state.city}
-              onChange={(e) => {
-                this.setCity(e.target.value);
-              }}
-            />
-          </div>
-          <div>
-            <label htmlFor="state">State: </label>
-            <input
-              type="text"
-              name="state"
-              id="state"
-              value={this.state.state}
-              onChange={(e) => {
-                this.setSt(e.target.value);
-              }}
-            />
-          </div>
-          <div>
-            <label htmlFor="phones">Phones: </label>
-            <input
-              type="tel"
-              name="phones"
-              id="phones"
-              value={this.state.phones.toString()}
-              onChange={(e) => {
-                this.setPhones(e.target.value);
-              }}
-            />
-          </div>
-          <div>
-            <button
-              hidden={this.state.showUpdateButton}
-              onClick={() => {
-                this.savePatient();
+          <br />
+          <div className="ColumnItem">
+            <form
+              acceptCharset="utf-8"
+              onSubmit={(e) => {
+                this.localSubmitHandler(e);
               }}
             >
-              Save
-            </button>
-            <button
-              hidden={!this.state.showUpdateButton}
-              onClick={() => {
-                this.updatePatient();
-              }}
-            >
-              Update
-            </button>
-            <button
-              onClick={() => {
-                this.clearForm();
-              }}
-            >
-              Clear
-            </button>
+              <div>
+                <label htmlFor="name">Name: </label>
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  value={this.state.name}
+                  onChange={(e) => {
+                    this.setName(e.target.value);
+                  }}
+                />{" "}
+              </div>
+              <div>
+                <label htmlFor="address">Address: </label>
+                <input
+                  type="text"
+                  name="address"
+                  id="address"
+                  value={this.state.address}
+                  onChange={(e) => {
+                    this.setAddress(e.target.value);
+                  }}
+                />
+              </div>
+              <div>
+                <label htmlFor="city">City: </label>
+                <input
+                  type="text"
+                  name="city"
+                  id="city"
+                  value={this.state.city}
+                  onChange={(e) => {
+                    this.setCity(e.target.value);
+                  }}
+                />
+              </div>
+              <div>
+                <label htmlFor="state">State: </label>
+                <input
+                  type="text"
+                  name="state"
+                  id="state"
+                  value={this.state.state}
+                  onChange={(e) => {
+                    this.setSt(e.target.value);
+                  }}
+                />
+              </div>
+              <div>
+                <label htmlFor="phones">Phones: </label>
+                <input
+                  type="tel"
+                  name="phones"
+                  id="phones"
+                  value={this.state.phones.toString()}
+                  onChange={(e) => {
+                    this.setPhones(e.target.value);
+                  }}
+                />
+              </div>
+              <div>
+                <button
+                  hidden={this.state.showUpdateButton}
+                  onClick={() => {
+                    this.savePatient();
+                  }}
+                >
+                  Save
+                </button>
+                <button
+                  hidden={!this.state.showUpdateButton}
+                  onClick={() => {
+                    this.updatePatient();
+                  }}
+                >
+                  Update
+                </button>
+                <button
+                  onClick={() => {
+                    this.clearForm();
+                  }}
+                >
+                  Clear
+                </button>
+              </div>
+            </form>
           </div>
-        </form>
+        </section>
       </div>
     );
   }
