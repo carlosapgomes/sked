@@ -71,66 +71,68 @@ export default class Users extends Component {
   render() {
     return (
       <div>
-        <h1>Add User</h1>
-        <form
-          acceptCharset="utf-8"
-          onSubmit={(e) => {
-            this.localSubmitHandler(e);
-          }}
-        >
-          <div>
-            <label htmlFor="name">Name: </label>
-            <input
-              type="text"
-              value={this.state.name}
-              name="name"
-              id="name"
-              onChange={(e) => {
-                this.setUsername(e.target.value);
-              }}
-            />
-          </div>
-          <div>
-            <label htmlFor="email">Email: </label>
-            <input
-              type="email"
-              value={this.state.email}
-              name="email"
-              id="email"
-              onChange={(e) => {
-                this.setEmail(e.target.value);
-              }}
-            />
-          </div>
-          <div>
-            <label htmlFor="phone">Phone: </label>
-            <input
-              type="tel"
-              value={this.state.phone}
-              name="phone"
-              id="phone"
-              onChange={(e) => {
-                this.setPhone(e.target.value);
-              }}
-            />
-          </div>
-          <div>
-            <button
-              onClick={() => {
-                this.saveUser();
-              }}
-            >
-              Save
-            </button>
-            <button
-              onClick={() => {
-                this.clearForm();
-              }}
-            >
-              Clear
-            </button>
-          </div>
-        </form>
+        <h1>New User</h1>
+        <section>
+          <form
+            acceptCharset="utf-8"
+            onSubmit={(e) => {
+              this.localSubmitHandler(e);
+            }}
+          >
+            <div>
+              <label htmlFor="name">Name: </label>
+              <input
+                type="text"
+                value={this.state.name}
+                name="name"
+                id="name"
+                onChange={(e) => {
+                  this.setUsername(e.target.value);
+                }}
+              />
+            </div>
+            <div>
+              <label htmlFor="email">Email: </label>
+              <input
+                type="email"
+                value={this.state.email}
+                name="email"
+                id="email"
+                onChange={(e) => {
+                  this.setEmail(e.target.value);
+                }}
+              />
+            </div>
+            <div>
+              <label htmlFor="phone">Phone: </label>
+              <input
+                type="tel"
+                value={this.state.phone}
+                name="phone"
+                id="phone"
+                onChange={(e) => {
+                  this.setPhone(e.target.value);
+                }}
+              />
+            </div>
+            <div>
+              <button
+                onClick={() => {
+                  this.saveUser();
+                }}
+              >
+                Save
+              </button>
+              <button
+                onClick={() => {
+                  this.clearForm();
+                }}
+              >
+                Clear
+              </button>
+            </div>
+          </form>
+        </section>
       </div>
     );
   }
