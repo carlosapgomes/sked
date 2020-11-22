@@ -238,6 +238,7 @@ export default class ScheduleList extends Component {
               }}
             />
             <label htmlFor="appointments">Appointments</label>
+            <br />
             <input
               type="radio"
               value="surgeries"
@@ -249,6 +250,8 @@ export default class ScheduleList extends Component {
               }}
             />
             <label htmlFor="surgeries">Surgeries</label>
+            <hr />
+            <p>Choose Month/Year:</p>
             <span>
               <label htmlFor="month">Month: </label>
               <select
@@ -272,10 +275,8 @@ export default class ScheduleList extends Component {
                 <option value="11">11</option>
                 <option value="12">12</option>
               </select>
-            </span>
-            {"    "}
-            {"    "}
-            <span>
+              {"    "}
+              {"    "}
               <label htmlFor="year">Year: </label>
               <select
                 id="year"
@@ -289,6 +290,8 @@ export default class ScheduleList extends Component {
                 <option value="2021">2021</option>
               </select>
             </span>
+            <hr />
+            <p>Days:</p>
             <div>
               <ul className={cl.ul}>
                 {this.state.appSelected
