@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import dayjs from "dayjs";
-//import cl from "./ScheduleList.css";
 import "./ScheduleList.css";
 export default class ScheduleList extends Component {
   constructor(props) {
@@ -95,19 +94,24 @@ export default class ScheduleList extends Component {
     for (let i = 1; i <= nDays; i++) {
       daysOfMonth.push(
         <li key={i.toString()}>
-          <div>
+          <details>
             {
+              <summary>
+                {i}/{m}/{y}:{" "}
+              </summary>
+            }
+            <div>
               <span
+                className="AddSchedule"
+                role="img"
+                aria-label="Add appointment"
                 data-day={i}
                 onClick={(e) => {
                   this.clickedOnDay(e.target.dataset.day);
                 }}
               >
-                {i}/{m}/{y}:{" "}
+                &#10133;
               </span>
-            }
-            <div>
-              Appointments:
               {!data
                 ? null
                 : data.map((e) => {
@@ -129,7 +133,7 @@ export default class ScheduleList extends Component {
                     }
                   })}
             </div>
-          </div>
+          </details>
         </li>
       );
     }
