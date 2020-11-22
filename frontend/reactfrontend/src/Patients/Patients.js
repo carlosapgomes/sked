@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PatientSearch from "../PatientSearch/PatientSearch";
-import cl from "./Patients.css";
+import "./Patients.css";
 export default class Patients extends Component {
   constructor(props) {
     super(props);
