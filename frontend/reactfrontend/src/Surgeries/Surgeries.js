@@ -118,108 +118,110 @@ export default class Surgeries extends Component {
     return (
       <div>
         <h1>Surgeries</h1>
-        <form
-          onSubmit={(e) => {
-            this.localSubmitHandler(e);
-          }}
-        >
-          <label>Doctor: </label>
-          {this.props.doctors.length > 0 ? (
-            <div>
-              <select
-                name="doctor"
-                id="doctor"
-                onChange={(e) => {
-                  this.setSelectedDoctor(e);
-                }}
-                value={this.state.selectedDoctorValue}
-              >
-                <option
-                  hidden
-                  disabled
-                  defaultValue
-                  value="selectAnOption"
-                  style={{ display: "none" }}
-                >
-                  {" "}
-                  -- select an option --{" "}
-                </option>
-                {this.props.doctors.map((d) => {
-                  return (
-                    <option key={d.id} value={d.id}>
-                      {d.name}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-          ) : null}
-          <label htmlFor="apptmtdatetime">Date/Time: </label>
-          <div id="apptmtdatetime">
-            <input
-              type="date"
-              id="apptmtdate"
-              name="apptmtdate"
-              value={this.state.selectedDate}
-              onChange={(e) => {
-                this.setDate(e);
-              }}
-            />
-            <input
-              type="time"
-              value={this.state.selectedTime}
-              name="time"
-              id="time"
-              onChange={(e) => {
-                this.setTime(e);
-              }}
-            />
-          </div>
-          <PatientSearch
-            setSelectedPatient={(p) => {
-              this.setSelectedPatient(p);
+        <section>
+          <form
+            onSubmit={(e) => {
+              this.localSubmitHandler(e);
             }}
-          />
-          <div>
-            <label htmlFor="proposedSurgery">Proposed surgery: </label>
-            <input
-              type="text"
-              value={this.state.proposedSurgery}
-              name="proposedSurgery"
-              id="proposedSurgery"
-              onChange={(e) => {
-                this.setProposedSurgery(e.target.value);
+          >
+            <label>Doctor: </label>
+            {this.props.doctors.length > 0 ? (
+              <div>
+                <select
+                  name="doctor"
+                  id="doctor"
+                  onChange={(e) => {
+                    this.setSelectedDoctor(e);
+                  }}
+                  value={this.state.selectedDoctorValue}
+                >
+                  <option
+                    hidden
+                    disabled
+                    defaultValue
+                    value="selectAnOption"
+                    style={{ display: "none" }}
+                  >
+                    {" "}
+                    -- select an option --{" "}
+                  </option>
+                  {this.props.doctors.map((d) => {
+                    return (
+                      <option key={d.id} value={d.id}>
+                        {d.name}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+            ) : null}
+            <label htmlFor="apptmtdatetime">Date/Time: </label>
+            <div id="apptmtdatetime">
+              <input
+                type="date"
+                id="apptmtdate"
+                name="apptmtdate"
+                value={this.state.selectedDate}
+                onChange={(e) => {
+                  this.setDate(e);
+                }}
+              />
+              <input
+                type="time"
+                value={this.state.selectedTime}
+                name="time"
+                id="time"
+                onChange={(e) => {
+                  this.setTime(e);
+                }}
+              />
+            </div>
+            <PatientSearch
+              setSelectedPatient={(p) => {
+                this.setSelectedPatient(p);
               }}
             />
-          </div>
-          <div>
-            <label htmlFor="notes">Notes: </label>
-            <textarea
-              name="notes"
-              id="notes"
-              onChange={(e) => {
-                this.setNotes(e.target.value);
-              }}
-              value={this.state.notes}
-            ></textarea>
-          </div>
-          <div>
-            <button
-              onClick={() => {
-                this.saveSurgery();
-              }}
-            >
-              Save
-            </button>
-            <button
-              onClick={() => {
-                this.clearForm();
-              }}
-            >
-              Clear
-            </button>
-          </div>
-        </form>
+            <div>
+              <label htmlFor="proposedSurgery">Proposed surgery: </label>
+              <input
+                type="text"
+                value={this.state.proposedSurgery}
+                name="proposedSurgery"
+                id="proposedSurgery"
+                onChange={(e) => {
+                  this.setProposedSurgery(e.target.value);
+                }}
+              />
+            </div>
+            <div>
+              <label htmlFor="notes">Notes: </label>
+              <textarea
+                name="notes"
+                id="notes"
+                onChange={(e) => {
+                  this.setNotes(e.target.value);
+                }}
+                value={this.state.notes}
+              ></textarea>
+            </div>
+            <div>
+              <button
+                onClick={() => {
+                  this.saveSurgery();
+                }}
+              >
+                Save
+              </button>
+              <button
+                onClick={() => {
+                  this.clearForm();
+                }}
+              >
+                Clear
+              </button>
+            </div>
+          </form>
+        </section>
       </div>
     );
   }
