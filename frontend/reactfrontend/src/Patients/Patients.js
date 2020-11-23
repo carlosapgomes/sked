@@ -39,12 +39,50 @@ export default class Patients extends Component {
     ajax.send(JSON.stringify(patient));
     ajax.onreadystatechange = () => {
       if (ajax.readyState === 4 && ajax.status === 200) {
-        let data = JSON.parse(ajax.response);
-        if (data) {
+        if (ajax.response) {
+          let data = JSON.parse(ajax.response);
           this.props.updateCurrentPatient({ ...data });
-          console.log(data);
         }
         window.alert("Patient saved");
+        this.clearForm();
+      }
+      if (ajax.readyState === 4 && ajax.status !== 200) {
+        window.alert("Could not complete operation");
+        console.log(ajax.responseText);
+      }
+    };
+  }
+  updatePatient() {
+    if (
+      this.state.id === "" ||
+      this.state.name === "" ||
+      this.state.city === "" ||
+      this.state.phones.length === 0
+    ) {
+      window.alert("Please, fill in at least name, city and phones");
+      return;
+    }
+    let patient = {
+      id: this.state.id,
+      name: this.state.name,
+      address: this.state.address,
+      city: this.state.city,
+      state: this.state.state,
+      phones: [...this.state.phones],
+    };
+    let ajax = new XMLHttpRequest();
+    let url = "https://dev.local/api/patients/" + patient.id;
+    ajax.open("PUT", url, true);
+    ajax.withCredentials = true;
+    ajax.setRequestHeader("Content-type", "application/json");
+    ajax.send(JSON.stringify(patient));
+    ajax.onreadystatechange = () => {
+      if (ajax.readyState === 4 && ajax.status === 200) {
+        if (ajax.response) {
+          let data = JSON.parse(ajax.response);
+          this.props.updateCurrentPatient({ ...data });
+        }
+        window.alert("Patient updated");
         this.clearForm();
       }
       if (ajax.readyState === 4 && ajax.status !== 200) {
