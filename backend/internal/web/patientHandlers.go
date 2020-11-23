@@ -128,7 +128,19 @@ func (app App) updatePatient(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
-	w.WriteHeader(http.StatusOK)
+	// return a full copy of the updated record
+	updatedPatient, err := app.patientService.FindByID(p.ID)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	output, err := json.Marshal(*updatedPatient)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(output)
 }
 func (app App) patientName(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
