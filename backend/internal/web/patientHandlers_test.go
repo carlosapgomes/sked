@@ -538,8 +538,18 @@ func TestFindPatientByID(t *testing.T) {
 		wantBody []byte
 		wantCode int
 	}{
-		{"Valid Search", "85f45ff9-d31c-4ff7-94ac-5afb5a1f0fcd", []byte("Valid Patient"), http.StatusOK},
-		{"Valid Search But Missing Patient", "2e134760-2006-4dc7-a315-025dc1081fb0", nil, http.StatusInternalServerError},
+		{
+			"Valid Search",
+			"85f45ff9-d31c-4ff7-94ac-5afb5a1f0fcd",
+			[]byte("Valid Patient"),
+			http.StatusOK,
+		},
+		{
+			"Valid Search But Missing Patient",
+			"2e134760-2006-4dc7-a315-025dc1081fb0",
+			nil,
+			http.StatusInternalServerError,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
