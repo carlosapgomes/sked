@@ -148,3 +148,5 @@ dist
 .history/
 
 setEnv.sh
+
+ansible_host
