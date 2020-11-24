@@ -123,6 +123,7 @@ export default class Users extends Component {
               >
                 Save
               </button>
+              &nbsp;&nbsp;
               <button
                 onClick={() => {
                   this.clearForm();

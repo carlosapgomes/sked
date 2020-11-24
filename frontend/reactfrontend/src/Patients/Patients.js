@@ -244,6 +244,7 @@ export default class Patients extends Component {
                 >
                   Update
                 </button>
+                &nbsp;&nbsp;
                 <button
                   onClick={() => {
                     this.clearForm();
