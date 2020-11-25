@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import dayjs from "dayjs";
+import "dayjs/locale/pt-br";
 import weekday from "dayjs/plugin/weekday";
 import "./ScheduleList.css";
+import { withTranslation } from "react-i18next";
 import i18n from "i18next";
 dayjs.extend(weekday);
 const getLanguage = () => {
@@ -11,7 +13,7 @@ const getLanguage = () => {
     "en"
   );
 };
-export default class ScheduleList extends Component {
+class ScheduleList extends Component {
   constructor(props) {
     super(props);
 
@@ -288,9 +290,10 @@ export default class ScheduleList extends Component {
     }
   }
   render() {
+    const { t } = this.props;
     return (
       <div>
-        <h1>Schedules</h1>
+        <h1>{t("Schedules")}</h1>
         <section>
           <form>
             <input
@@ -303,7 +306,7 @@ export default class ScheduleList extends Component {
                 this.radioChanged(e);
               }}
             />
-            <label htmlFor="appointments">Appointments</label>
+            <label htmlFor="appointments">{t("Appointments")}</label>
             <br />
             <input
               type="radio"
@@ -315,11 +318,11 @@ export default class ScheduleList extends Component {
                 this.radioChanged(e);
               }}
             />
-            <label htmlFor="surgeries">Surgeries</label>
+            <label htmlFor="surgeries">{t("Surgeries")}</label>
             <hr />
-            <p>Choose Month/Year:</p>
+            <p>{t("ChooseMonthYear")}:</p>
             <span>
-              <label htmlFor="month">Month: </label>
+              <label htmlFor="month">{t("Month")}: </label>
               <select
                 id="month"
                 name="month"
@@ -343,7 +346,7 @@ export default class ScheduleList extends Component {
               </select>
               {"    "}
               {"    "}
-              <label htmlFor="year">Year: </label>
+              <label htmlFor="year">{t("Year")}: </label>
               <select
                 id="year"
                 name="year"
@@ -357,7 +360,9 @@ export default class ScheduleList extends Component {
               </select>
             </span>
             <hr />
-            <p>Days:</p>
+            <p>
+              <b>{t("Days")}:</b>
+            </p>
             <div className="DaysList">
               <ul>
                 {this.state.appSelected
@@ -371,3 +376,5 @@ export default class ScheduleList extends Component {
     );
   }
 }
+
+export default withTranslation()(ScheduleList);
