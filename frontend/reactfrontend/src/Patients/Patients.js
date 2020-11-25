@@ -1,7 +1,8 @@
 import React, { Component } from "react";
+import { withTranslation } from "react-i18next";
 import PatientSearch from "../PatientSearch/PatientSearch";
 import "./Patients.css";
-export default class Patients extends Component {
+class Patients extends Component {
   constructor(props) {
     super(props);
 
@@ -148,9 +149,10 @@ export default class Patients extends Component {
     e.preventDefault();
   }
   render() {
+    const { t } = this.props;
     return (
       <div>
-        <h1>Patients</h1>
+        <h1>{t("Patients")}</h1>
         <section className="PatientsSection">
           <div className="ColumnItem">
             <PatientSearch
@@ -168,7 +170,7 @@ export default class Patients extends Component {
               }}
             >
               <div>
-                <label htmlFor="name">Name: </label>
+                <label htmlFor="name">{t("Name")}: </label>
                 <input
                   type="text"
                   name="name"
@@ -180,7 +182,7 @@ export default class Patients extends Component {
                 />{" "}
               </div>
               <div>
-                <label htmlFor="address">Address: </label>
+                <label htmlFor="address">{t("Address")}: </label>
                 <input
                   type="text"
                   name="address"
@@ -192,7 +194,7 @@ export default class Patients extends Component {
                 />
               </div>
               <div>
-                <label htmlFor="city">City: </label>
+                <label htmlFor="city">{t("City")}: </label>
                 <input
                   type="text"
                   name="city"
@@ -204,7 +206,7 @@ export default class Patients extends Component {
                 />
               </div>
               <div>
-                <label htmlFor="state">State: </label>
+                <label htmlFor="state">{t("State")}: </label>
                 <input
                   type="text"
                   name="state"
@@ -216,7 +218,7 @@ export default class Patients extends Component {
                 />
               </div>
               <div>
-                <label htmlFor="phones">Phones: </label>
+                <label htmlFor="phones">{t("Phones")}: </label>
                 <input
                   type="tel"
                   name="phones"
@@ -234,7 +236,7 @@ export default class Patients extends Component {
                     this.savePatient();
                   }}
                 >
-                  Save
+                  {t("Save")}
                 </button>
                 <button
                   hidden={!this.state.showUpdateButton}
@@ -242,7 +244,7 @@ export default class Patients extends Component {
                     this.updatePatient();
                   }}
                 >
-                  Update
+                  {t("Update")}
                 </button>
                 &nbsp;&nbsp;
                 <button
@@ -250,7 +252,7 @@ export default class Patients extends Component {
                     this.clearForm();
                   }}
                 >
-                  Clear
+                  {t("Clear")}
                 </button>
               </div>
             </form>
@@ -260,3 +262,5 @@ export default class Patients extends Component {
     );
   }
 }
+
+export default withTranslation()(Patients);
