@@ -1,8 +1,9 @@
 import React, { Component } from "react";
+import { withTranslation } from "react-i18next";
 import PatientSearch from "../PatientSearch/PatientSearch";
 import dayjs from "dayjs";
 
-export default class Appointments extends Component {
+class Appointments extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -113,16 +114,17 @@ export default class Appointments extends Component {
     e.preventDefault();
   }
   render() {
+    const { t } = this.props;
     return (
       <div>
-        <h1>Appointments</h1>
+        <h1>{t("Appointments")}</h1>
         <section>
           <form
             onSubmit={(e) => {
               this.localSubmitHandler(e);
             }}
           >
-            <label>Doctor: </label>
+            <label>{t("Doctor")}: </label>
             {this.props.doctors.length > 0 ? (
               <div>
                 <select
@@ -141,7 +143,7 @@ export default class Appointments extends Component {
                     style={{ display: "none" }}
                   >
                     {" "}
-                    -- select an option --{" "}
+                    -- {t("SelectAnOption")} --{" "}
                   </option>
                   {this.props.doctors.map((d) => {
                     return (
@@ -153,7 +155,7 @@ export default class Appointments extends Component {
                 </select>
               </div>
             ) : null}
-            <label htmlFor="apptmtdatetime">Date/Time: </label>
+            <label htmlFor="apptmtdatetime">{t("DateTime")}: </label>
             <div id="apptmtdatetime">
               <input
                 type="date"
@@ -180,7 +182,7 @@ export default class Appointments extends Component {
               }}
             />
             <div>
-              <label htmlFor="notes">Notes: </label>
+              <label htmlFor="notes">{t("Notes")}: </label>
               <textarea
                 name="notes"
                 id="notes"
@@ -196,7 +198,7 @@ export default class Appointments extends Component {
                   this.saveAppointment();
                 }}
               >
-                Save
+                {t("Save")}
               </button>
               &nbsp;&nbsp;
               <button
@@ -204,7 +206,7 @@ export default class Appointments extends Component {
                   this.clearForm();
                 }}
               >
-                Clear
+                {t("Clear")}
               </button>
             </div>
           </form>
@@ -213,3 +215,4 @@ export default class Appointments extends Component {
     );
   }
 }
+export default withTranslation()(Appointments);
