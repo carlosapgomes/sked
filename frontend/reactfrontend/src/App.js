@@ -182,18 +182,18 @@ class App extends Component {
                 </li>
                 <li>
                   <Link hidden={!this.state.loggedIn} to="/Surgeries">
-                    Surgeries
+                    {t("Surgeries")}
                   </Link>
                 </li>
                 <li>
                   <Link hidden={!this.state.loggedIn} to="/Patients">
-                    Patients
+                    {t("Patients")}
                   </Link>
                 </li>
                 {this.isAdminOrClerk() && (
                   <li>
                     <Link hidden={!this.state.loggedIn} to="/Users">
-                      Users
+                      {t("Users")}
                     </Link>
                   </li>
                 )}
