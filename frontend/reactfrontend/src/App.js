@@ -7,6 +7,8 @@ import Surgeries from "./Surgeries/Surgeries";
 import Patients from "./Patients/Patients";
 import Users from "./Users/Users";
 import ScheduleList from "./ScheduleList/ScheduleList";
+import { withTranslation } from "react-i18next";
+// loading component for suspense fallback
 class App extends Component {
   constructor(props) {
     super(props);
@@ -163,6 +165,7 @@ class App extends Component {
     }
   }
   render() {
+    const { t } = this.props;
     return (
       <Router>
         <div className="App">
@@ -174,7 +177,7 @@ class App extends Component {
               <ul>
                 <li>
                   <Link hidden={!this.state.loggedIn} to="/Appointments">
-                    Appointments
+                    {t("Appointments")}
                   </Link>
                 </li>
                 <li>
@@ -268,4 +271,4 @@ class App extends Component {
     );
   }
 }
-export default App;
+export default withTranslation()(App);

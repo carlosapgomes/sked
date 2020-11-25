@@ -1,14 +1,21 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
-
+import React, { Suspense } from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
+import * as serviceWorker from "./serviceWorker";
+import "./i18n";
+const Loader = () => (
+  <div className="App">
+    <div>loading...</div>
+  </div>
+);
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Suspense fallback={<Loader />}>
+      <App />
+    </Suspense>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want your app to work offline and load faster, you can change
