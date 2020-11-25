@@ -1,3 +1,10 @@
 {
-      "Appointments": "Appointments"
+      "Appointments": "Appointments",
+      "Surgeries": "Surgeries",
+      "Patients":"Patients",
+      "Users":"Users",
+      "Schedules": "Schedules",
+      "Month":"Month",
+      "Year":"Year",
+      "Days":"Days"
 }

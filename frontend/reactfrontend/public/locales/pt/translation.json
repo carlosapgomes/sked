@@ -1,3 +1,12 @@
 {
-      "Appointments": "Consultas"
+      "Appointments": "Consultas",
+      "Surgeries": "Cirurgias",
+      "Patients":"Pacientes",
+      "Users":"Usuários",
+      "Schedules": "Agendas",
+      "Month":"Mês",
+      "Year":"Ano",
+      "Days":"Dias",
+      "ChooseMonthYear":"Escolhar o Mês/Ano"
+
 }
