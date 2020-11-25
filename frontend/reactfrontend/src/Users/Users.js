@@ -1,6 +1,7 @@
 import React, { Component } from "react";
+import { withTranslation } from "react-i18next";
 
-export default class Users extends Component {
+class Users extends Component {
   constructor(props) {
     super(props);
 
@@ -69,9 +70,10 @@ export default class Users extends Component {
     e.preventDefault();
   }
   render() {
+    const { t } = this.props;
     return (
       <div>
-        <h1>New User</h1>
+        <h1>{t("NewUser")}</h1>
         <section>
           <form
             acceptCharset="utf-8"
@@ -80,7 +82,7 @@ export default class Users extends Component {
             }}
           >
             <div>
-              <label htmlFor="name">Name: </label>
+              <label htmlFor="name">{t("Name")}: </label>
               <input
                 type="text"
                 value={this.state.name}
@@ -92,7 +94,7 @@ export default class Users extends Component {
               />
             </div>
             <div>
-              <label htmlFor="email">Email: </label>
+              <label htmlFor="email">{t("Email")}: </label>
               <input
                 type="email"
                 value={this.state.email}
@@ -104,7 +106,7 @@ export default class Users extends Component {
               />
             </div>
             <div>
-              <label htmlFor="phone">Phone: </label>
+              <label htmlFor="phone">{t("Phone")}: </label>
               <input
                 type="tel"
                 value={this.state.phone}
@@ -121,7 +123,7 @@ export default class Users extends Component {
                   this.saveUser();
                 }}
               >
-                Save
+                {t("Save")}
               </button>
               &nbsp;&nbsp;
               <button
@@ -129,7 +131,7 @@ export default class Users extends Component {
                   this.clearForm();
                 }}
               >
-                Clear
+                {t("Clear")}
               </button>
             </div>
           </form>
@@ -138,3 +140,5 @@ export default class Users extends Component {
     );
   }
 }
+
+export default withTranslation()(Users);

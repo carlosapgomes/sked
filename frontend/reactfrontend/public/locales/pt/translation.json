@@ -1,12 +1,28 @@
 {
       "Appointments": "Consultas",
       "Surgeries": "Cirurgias",
+      "ProposedSurgery":"Cirurgia Proposta",
+      "Notes": "Notas",
       "Patients":"Pacientes",
+      "Patient":"Paciente",
       "Users":"Usuários",
+      "NewUser":"Novo Usuário",
       "Schedules": "Agendas",
       "Month":"Mês",
       "Year":"Ano",
       "Days":"Dias",
-      "ChooseMonthYear":"Escolhar o Mês/Ano"
-
+      "DateTime":"Dia/Hora",
+      "ChooseMonthYear":"Escolha o Mês/Ano",
+      "SelectAnOption":"Selecione uma opção",
+      "Doctor":"Médico",
+      "Save":"Gravar",
+      "Clear":"Limpar",
+      "Search":"Buscar",
+      "Name":"Nome",
+      "Address":"Endereço",
+      "City":"Cidade",
+      "State":"Estado",
+      "Phones":"Telefones",
+      "Phone":"Telefone",
+      "Email":"Email"
 }
