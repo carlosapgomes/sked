@@ -208,7 +208,7 @@ export default class ScheduleList extends Component {
                 className="AddSchedule"
                 role="img"
                 aria-label="Add appointment"
-                data-day={i}
+                data-day={i + 1}
                 onClick={(e) => {
                   this.clickedOnDay(e.target.dataset.day);
                 }}
@@ -223,7 +223,7 @@ export default class ScheduleList extends Component {
                         key={e.id}
                         data-id={e.id}
                         onClick={(e) => {
-                          this.clickedOnAppt(e.target.dataset.id);
+                          this.clickedOnSurg(e.target.dataset.id);
                         }}
                       >
                         {e.doctorName} : {e.patientName}
