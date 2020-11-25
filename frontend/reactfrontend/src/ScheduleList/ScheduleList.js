@@ -2,7 +2,15 @@ import React, { Component } from "react";
 import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import "./ScheduleList.css";
+import i18n from "i18next";
 dayjs.extend(weekday);
+const getLanguage = () => {
+  return (
+    i18n.language ||
+    (typeof window !== "undefined" && window.localStorage.i18nextLng) ||
+    "en"
+  );
+};
 export default class ScheduleList extends Component {
   constructor(props) {
     super(props);
@@ -18,6 +26,7 @@ export default class ScheduleList extends Component {
     };
   }
   componentDidMount() {
+    dayjs.locale(getLanguage().toString().toLowerCase());
     const m = dayjs().month();
     const y = dayjs().year();
     this.setState({
@@ -27,6 +36,7 @@ export default class ScheduleList extends Component {
     });
     this.updateAppointmtsAndSurgsData(m, y);
   }
+
   getAllAppointmentsInAMonth(m, y) {
     let month = Number(m) + 1;
     let ajax = new XMLHttpRequest();
