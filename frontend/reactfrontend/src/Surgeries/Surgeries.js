@@ -212,6 +212,7 @@ export default class Surgeries extends Component {
               >
                 Save
               </button>
+              &nbsp;&nbsp;
               <button
                 onClick={() => {
                   this.clearForm();

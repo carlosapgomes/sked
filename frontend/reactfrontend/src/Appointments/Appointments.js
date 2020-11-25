@@ -198,6 +198,7 @@ export default class Appointments extends Component {
               >
                 Save
               </button>
+              &nbsp;&nbsp;
               <button
                 onClick={() => {
                   this.clearForm();
