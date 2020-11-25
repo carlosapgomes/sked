@@ -17,6 +17,7 @@ class ScheduleList extends Component {
     super(props);
 
     this.state = {
+      lang: "",
       currentMonth: "",
       currentYear: "",
       appointments: [],
@@ -33,6 +34,9 @@ class ScheduleList extends Component {
         await import("dayjs/locale/pt-br.js");
       }
       dayjs.locale(lang);
+      this.setState({
+        lang: lang,
+      });
     })();
     const m = dayjs().month();
     const y = dayjs().year();
