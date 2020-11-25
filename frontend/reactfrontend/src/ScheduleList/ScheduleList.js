@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import dayjs from "dayjs";
-import "dayjs/locale/pt-br";
 import weekday from "dayjs/plugin/weekday";
 import "./ScheduleList.css";
 import { withTranslation } from "react-i18next";
@@ -28,7 +27,13 @@ class ScheduleList extends Component {
     };
   }
   componentDidMount() {
-    dayjs.locale(getLanguage().toString().toLowerCase());
+    const lang = getLanguage().toString().toLowerCase();
+    (async () => {
+      if (lang === "pt-br") {
+        await import("dayjs/locale/pt-br.js");
+      }
+      dayjs.locale(lang);
+    })();
     const m = dayjs().month();
     const y = dayjs().year();
     this.setState({
