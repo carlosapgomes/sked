@@ -98,6 +98,7 @@ export default class ScheduleList extends Component {
     console.log(s);
   }
   updateAppSchedulesList(m, y, data) {
+    // next month day zero corresponds to last day of the current month
     const nDays = new Date(y, Number(m) + 1, 0).getDate();
     let daysOfMonth = [];
     for (let i = 0; i < nDays; i++) {
@@ -136,7 +137,7 @@ export default class ScheduleList extends Component {
                 className="AddSchedule"
                 role="img"
                 aria-label="Add appointment"
-                data-day={i}
+                data-day={i + 1}
                 onClick={(e) => {
                   this.clickedOnDay(e.target.dataset.day);
                 }}
@@ -146,6 +147,7 @@ export default class ScheduleList extends Component {
               {!daysOfMonth[i].schedules
                 ? null
                 : daysOfMonth[i].schedules.map((e) => {
+                    console.log(e);
                     return (
                       <div
                         key={e.id}
@@ -154,9 +156,7 @@ export default class ScheduleList extends Component {
                           this.clickedOnAppt(e.target.dataset.id);
                         }}
                       >
-                        <p>
-                          {e.doctorName} : {e.patientName}
-                        </p>
+                        {e.doctorName} : {e.patientName}
                       </div>
                     );
                   })}
