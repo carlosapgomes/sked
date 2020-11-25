@@ -1,6 +1,7 @@
 import React, { Component } from "react";
+import { withTranslation } from "react-i18next";
 
-export default class PatientSearch extends Component {
+class PatientSearch extends Component {
   constructor(props) {
     super(props);
 
@@ -69,9 +70,10 @@ export default class PatientSearch extends Component {
     };
   }
   render() {
+    const { t } = this.props;
     return (
       <div>
-        <label htmlFor="pctsearch">Patient: </label>
+        <label htmlFor="pctsearch">{t("Patient")}: </label>
         <input
           type="text"
           value={this.state.searchField}
@@ -86,7 +88,7 @@ export default class PatientSearch extends Component {
             this.searchPatient();
           }}
         >
-          Search
+          {t("Search")}
         </button>
         <div hidden={this.state.patientSearchResult.length <= 0}>
           <select
@@ -120,3 +122,4 @@ export default class PatientSearch extends Component {
     );
   }
 }
+export default withTranslation()(PatientSearch);
