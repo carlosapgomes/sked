@@ -147,7 +147,6 @@ export default class ScheduleList extends Component {
               {!daysOfMonth[i].schedules
                 ? null
                 : daysOfMonth[i].schedules.map((e) => {
-                    console.log(e);
                     return (
                       <div
                         key={e.id}
