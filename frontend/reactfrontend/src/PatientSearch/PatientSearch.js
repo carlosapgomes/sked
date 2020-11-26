@@ -107,7 +107,7 @@ class PatientSearch extends Component {
               style={{ display: "none" }}
             >
               {" "}
-              -- select an option --{" "}
+              -- {t("SelectAnOption")} --{" "}
             </option>
             {this.state.patientSearchResult.map((p) => {
               return (
