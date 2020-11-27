@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
-import PatientSearch from "../PatientSearch/PatientSearch";
 import "./PatientSearchOrNew.css";
 class PatientSearchOrNew extends Component {
   constructor(props) {
@@ -14,6 +13,10 @@ class PatientSearchOrNew extends Component {
       state: "",
       phones: [],
       showUpdateButton: false,
+      searchField: "",
+      patientSearchResult: [],
+      selectedPatientValue: "selectAnOption",
+      selectedPatient: null,
     };
   }
   savePatient() {
@@ -155,11 +158,51 @@ class PatientSearchOrNew extends Component {
         <h1>{t("Patients")}</h1>
         <section className="PatientsSection">
           <div className="ColumnItem">
-            <PatientSearch
-              setSelectedPatient={(p) => {
-                this.setSelectedPatient(p);
+            <label htmlFor="pctsearch">{t("Patient")}: </label>
+            <input
+              type="text"
+              value={this.state.searchField}
+              onChange={(e) => {
+                this.setSearchField(e.target.value);
               }}
+              id="pctsearch"
+              name="pctsearch"
             />
+            <button
+              onClick={() => {
+                this.searchPatient();
+              }}
+            >
+              {t("Search")}
+            </button>
+            <div hidden={this.state.patientSearchResult.length <= 0}>
+              <select
+                name="searchresult"
+                id="searchresult"
+                onChange={(e) => {
+                  this.setSelectedPatient(e);
+                }}
+                value={this.state.selectedPatientValue}
+              >
+                <option
+                  hidden
+                  disabled
+                  defaultValue
+                  value="selectAnOption"
+                  style={{ display: "none" }}
+                >
+                  {" "}
+                  -- {t("SelectAnOption")} --{" "}
+                </option>
+                {this.state.patientSearchResult.map((p) => {
+                  return (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
           </div>
           <br />
           <div className="ColumnItem">
