@@ -104,7 +104,69 @@ class PatientSearchOrNew extends Component {
       state: "",
       phones: [],
       showUpdateButton: false,
+      searchField: "",
+      patientSearchResult: [],
+      selectedPatientValue: "selectAnOption",
+      selectedPatient: null,
     });
+  }
+  setSelectedPatient(e) {
+    let idx = e.target.selectedIndex - 1;
+    this.setState({
+      selectedPatientValue: this.state.patientSearchResult[idx].id,
+      selectedPatient: { ...this.state.patientSearchResult[idx] },
+      searchField: "",
+    });
+    this.setState({
+      id: this.state.patientSearchResult[idx].id,
+      name: this.state.patientSearchResult[idx].name,
+      address: this.state.patientSearchResult[idx].address,
+      city: this.state.patientSearchResult[idx].city,
+      state: this.state.patientSearchResult[idx].state,
+      phones: [...this.state.patientSearchResult[idx].phones],
+      showUpdateButton: true,
+    });
+    // update selectedPatient on parent component
+    //this.props.setSelectedPatient({ ...this.state.patientSearchResult[idx] });
+  }
+  setSearchField(s) {
+    this.setState({
+      searchField: s,
+    });
+  }
+  searchPatient() {
+    if (!this.state.searchField || this.state.searchField.length < 3) {
+      return;
+    }
+    let str = this.state.searchField.trim().split(/\s+/).join(" ");
+    if (str.length < 3) {
+      return;
+    }
+    let ajax = new XMLHttpRequest();
+    let url = "https://dev.local/api/patients?name=" + str;
+    ajax.open("GET", url, true);
+    ajax.withCredentials = true;
+    ajax.setRequestHeader("Content-type", "application/json");
+    ajax.send();
+    ajax.onreadystatechange = () => {
+      if (ajax.readyState === 4 && ajax.status === 200) {
+        if (!ajax.responseText) {
+          window.alert("Could not find any patient");
+        } else {
+          let data = JSON.parse(ajax.responseText);
+          if (data) {
+            this.setState({
+              patientSearchResult: [...data],
+              selectedPatientValue: "selectAnOption",
+            });
+          }
+        }
+      }
+      if (ajax.readyState === 4 && ajax.status !== 200) {
+        window.alert("Could not complete the operation");
+        console.log(ajax.responseText);
+      }
+    };
   }
   setName(s) {
     this.setState({
@@ -133,7 +195,7 @@ class PatientSearchOrNew extends Component {
       phones: [...phones],
     });
   }
-  setSelectedPatient(p) {
+  OrigSetSelectedPatient(p) {
     if (!p) {
       this.clearForm();
     } else {
