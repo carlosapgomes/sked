@@ -374,7 +374,6 @@ func TestCreateAppointment(t *testing.T) {
 		doctorName  string
 		doctorID    string
 		notes       string
-		createdBy   string
 		wantBody    []byte
 		wantCode    int
 	}{
@@ -385,7 +384,6 @@ func TestCreateAppointment(t *testing.T) {
 			"Dr House",
 			"f06244b9-97e5-4f1a-bae0-3b6da7a0b604",
 			"some notes",
-			"896d45e7-b544-41da-aa3f-f59a321fcdb9",
 			[]byte("John Doe"), http.StatusOK},
 	}
 	type appointmentsData struct {
@@ -395,7 +393,6 @@ func TestCreateAppointment(t *testing.T) {
 		DoctorName  string `json:"doctorName"`
 		DoctorID    string `json:"doctorID"`
 		Notes       string `json:"notes"`
-		CreatedBy   string `json:"createdBy"`
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -406,7 +403,6 @@ func TestCreateAppointment(t *testing.T) {
 				DoctorName:  tt.doctorName,
 				DoctorID:    tt.doctorID,
 				Notes:       tt.notes,
-				CreatedBy:   tt.createdBy,
 			}
 			body, err := json.Marshal(reqBody)
 			if err != nil {
