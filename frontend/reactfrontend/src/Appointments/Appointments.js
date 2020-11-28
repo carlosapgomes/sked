@@ -76,7 +76,7 @@ class Appointments extends Component {
       });
     }
   }
-  setSelectedPatient(p) {
+  updateCurrentPatient(p) {
     if (!p) {
       this.setState({
         selectedPatient: null,
@@ -180,9 +180,6 @@ class Appointments extends Component {
               currentPatient={this.state.currentPatient}
               updateCurrentPatient={(p) => {
                 this.updateCurrentPatient(p);
-              }}
-              setSelectedPatient={(p) => {
-                this.setSelectedPatient(p);
               }}
             />
 

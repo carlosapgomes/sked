@@ -129,7 +129,7 @@ class PatientSearchOrNew extends Component {
       showUpdateButton: true,
     });
     // update selectedPatient on parent component
-    //this.props.setSelectedPatient({ ...this.state.patientSearchResult[idx] });
+    this.props.updateCurrentPatient({ ...this.state.patientSearchResult[idx] });
   }
   setSearchField(s) {
     this.setState({
