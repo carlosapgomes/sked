@@ -230,8 +230,7 @@ func (app App) createAppointment(w http.ResponseWriter, r *http.Request) {
 		newAppointmt.PatientID == "" ||
 		newAppointmt.DoctorName == "" ||
 		newAppointmt.DoctorID == "" ||
-		newAppointmt.Notes == "" ||
-		newAppointmt.CreatedBy == "" {
+		newAppointmt.Notes == "" {
 		fmt.Println("some empty field")
 		app.clientError(w, http.StatusBadRequest)
 		return
