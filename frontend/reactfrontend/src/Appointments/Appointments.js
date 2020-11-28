@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
-import PatientSearch from "../PatientSearch/PatientSearch";
+import PatientSearchOrNew from "../PatientSearchOrNew/PatientSearchOrNew";
 import dayjs from "dayjs";
 
 class Appointments extends Component {
@@ -176,11 +176,16 @@ class Appointments extends Component {
                 }}
               />
             </div>
-            <PatientSearch
+            <PatientSearchOrNew
+              currentPatient={this.state.currentPatient}
+              updateCurrentPatient={(p) => {
+                this.updateCurrentPatient(p);
+              }}
               setSelectedPatient={(p) => {
                 this.setSelectedPatient(p);
               }}
             />
+
             <div>
               <label htmlFor="notes">{t("Notes")}: </label>
               <textarea

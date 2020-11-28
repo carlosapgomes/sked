@@ -17,6 +17,7 @@ class PatientSearchOrNew extends Component {
       patientSearchResult: [],
       selectedPatientValue: "selectAnOption",
       selectedPatient: null,
+      showNewPatientForm: false,
     };
   }
   savePatient() {
@@ -108,6 +109,7 @@ class PatientSearchOrNew extends Component {
       patientSearchResult: [],
       selectedPatientValue: "selectAnOption",
       selectedPatient: null,
+      showNewPatientForm: false,
     });
   }
   setSelectedPatient(e) {
@@ -213,59 +215,17 @@ class PatientSearchOrNew extends Component {
   localSubmitHandler(e) {
     e.preventDefault();
   }
+  toggleNewPatientForm() {
+    this.setState({
+      showNewPatientForm: !this.state.showNewPatientForm,
+    });
+  }
   render() {
     const { t } = this.props;
     return (
       <div>
-        <h1>{t("Patients")}</h1>
+        <label>{t("Patient")}:</label>
         <section className="PatientsSection">
-          <div className="ColumnItem">
-            <label htmlFor="pctsearch">{t("Patient")}: </label>
-            <input
-              type="text"
-              value={this.state.searchField}
-              onChange={(e) => {
-                this.setSearchField(e.target.value);
-              }}
-              id="pctsearch"
-              name="pctsearch"
-            />
-            <button
-              onClick={() => {
-                this.searchPatient();
-              }}
-            >
-              {t("Search")}
-            </button>
-            <div hidden={this.state.patientSearchResult.length <= 0}>
-              <select
-                name="searchresult"
-                id="searchresult"
-                onChange={(e) => {
-                  this.setSelectedPatient(e);
-                }}
-                value={this.state.selectedPatientValue}
-              >
-                <option
-                  hidden
-                  disabled
-                  defaultValue
-                  value="selectAnOption"
-                  style={{ display: "none" }}
-                >
-                  {" "}
-                  -- {t("SelectAnOption")} --{" "}
-                </option>
-                {this.state.patientSearchResult.map((p) => {
-                  return (
-                    <option key={p.id} value={p.id}>
-                      {p.name}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-          </div>
           <br />
           <div className="ColumnItem">
             <form
@@ -275,90 +235,151 @@ class PatientSearchOrNew extends Component {
               }}
             >
               <div>
-                <label htmlFor="name">{t("Name")}: </label>
                 <input
                   type="text"
-                  name="name"
-                  id="name"
-                  value={this.state.name}
+                  placeholder={t("Name")}
+                  value={this.state.searchField}
                   onChange={(e) => {
-                    this.setName(e.target.value);
+                    this.setSearchField(e.target.value);
                   }}
-                />{" "}
-              </div>
-              <div>
-                <label htmlFor="address">{t("Address")}: </label>
-                <input
-                  type="text"
-                  name="address"
-                  id="address"
-                  value={this.state.address}
-                  onChange={(e) => {
-                    this.setAddress(e.target.value);
-                  }}
+                  id="pctsearch"
+                  name="pctsearch"
                 />
-              </div>
-              <div>
-                <label htmlFor="city">{t("City")}: </label>
-                <input
-                  type="text"
-                  name="city"
-                  id="city"
-                  value={this.state.city}
-                  onChange={(e) => {
-                    this.setCity(e.target.value);
-                  }}
-                />
-              </div>
-              <div>
-                <label htmlFor="state">{t("State")}: </label>
-                <input
-                  type="text"
-                  name="state"
-                  id="state"
-                  value={this.state.state}
-                  onChange={(e) => {
-                    this.setSt(e.target.value);
-                  }}
-                />
-              </div>
-              <div>
-                <label htmlFor="phones">{t("Phones")}: </label>
-                <input
-                  type="tel"
-                  name="phones"
-                  id="phones"
-                  value={this.state.phones.toString()}
-                  onChange={(e) => {
-                    this.setPhones(e.target.value);
-                  }}
-                />
-              </div>
-              <div>
                 <button
-                  hidden={this.state.showUpdateButton}
                   onClick={() => {
-                    this.savePatient();
+                    this.searchPatient();
                   }}
                 >
-                  {t("Save")}
-                </button>
-                <button
-                  hidden={!this.state.showUpdateButton}
-                  onClick={() => {
-                    this.updatePatient();
-                  }}
-                >
-                  {t("Update")}
+                  {t("Search")}
                 </button>
                 &nbsp;&nbsp;
                 <button
                   onClick={() => {
-                    this.clearForm();
+                    this.toggleNewPatientForm();
                   }}
                 >
-                  {t("Clear")}
+                  {t("New")}
                 </button>
+                <div hidden={this.state.patientSearchResult.length <= 0}>
+                  <select
+                    name="searchresult"
+                    id="searchresult"
+                    onChange={(e) => {
+                      this.setSelectedPatient(e);
+                    }}
+                    value={this.state.selectedPatientValue}
+                  >
+                    <option
+                      hidden
+                      disabled
+                      defaultValue
+                      value="selectAnOption"
+                      style={{ display: "none" }}
+                    >
+                      {" "}
+                      -- {t("SelectAnOption")} --{" "}
+                    </option>
+                    {this.state.patientSearchResult.map((p) => {
+                      return (
+                        <option key={p.id} value={p.id}>
+                          {p.name}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+              </div>{" "}
+              <div
+                style={{
+                  display: this.state.showNewPatientForm ? "block" : "none",
+                }}
+              >
+                <div>
+                  <label htmlFor="name">{t("Name")}: </label>
+                  <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    value={this.state.name}
+                    onChange={(e) => {
+                      this.setName(e.target.value);
+                    }}
+                  />{" "}
+                </div>
+                <div>
+                  <label htmlFor="address">{t("Address")}: </label>
+                  <input
+                    type="text"
+                    name="address"
+                    id="address"
+                    value={this.state.address}
+                    onChange={(e) => {
+                      this.setAddress(e.target.value);
+                    }}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="city">{t("City")}: </label>
+                  <input
+                    type="text"
+                    name="city"
+                    id="city"
+                    value={this.state.city}
+                    onChange={(e) => {
+                      this.setCity(e.target.value);
+                    }}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="state">{t("State")}: </label>
+                  <input
+                    type="text"
+                    name="state"
+                    id="state"
+                    value={this.state.state}
+                    onChange={(e) => {
+                      this.setSt(e.target.value);
+                    }}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="phones">{t("Phones")}: </label>
+                  <input
+                    type="tel"
+                    name="phones"
+                    id="phones"
+                    value={this.state.phones.toString()}
+                    onChange={(e) => {
+                      this.setPhones(e.target.value);
+                    }}
+                  />
+                </div>
+                <div>
+                  <button
+                    hidden={this.state.showUpdateButton}
+                    onClick={() => {
+                      this.savePatient();
+                    }}
+                  >
+                    {t("Save")}
+                  </button>
+                  <button
+                    hidden={!this.state.showUpdateButton}
+                    onClick={() => {
+                      this.updatePatient();
+                    }}
+                  >
+                    {t("Update")}
+                  </button>
+                  &nbsp;&nbsp;
+                  <button
+                    onClick={() => {
+                      this.clearForm();
+                    }}
+                  >
+                    {t("Clear")}
+                  </button>
+                </div>
               </div>
             </form>
           </div>
