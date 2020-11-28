@@ -36,6 +36,7 @@ class PatientSearchOrNew extends Component {
       state: this.state.state,
       phones: [...this.state.phones],
     };
+    console.log(patient);
     let ajax = new XMLHttpRequest();
     let url = "https://dev.local/api/patients";
     ajax.open("POST", url, true);
@@ -224,9 +225,7 @@ class PatientSearchOrNew extends Component {
     const { t } = this.props;
     return (
       <div>
-        <label>{t("Patient")}:</label>
         <section className="PatientsSection">
-          <br />
           <div className="ColumnItem">
             <form
               acceptCharset="utf-8"
@@ -234,6 +233,19 @@ class PatientSearchOrNew extends Component {
                 this.localSubmitHandler(e);
               }}
             >
+              <label>
+                {t("Patient")}:{" "}
+                <span
+                  style={{
+                    display: this.state.selectedPatient ? "block" : "none",
+                  }}
+                >
+                  {this.state.selectedPatient
+                    ? this.state.selectedPatient.name
+                    : ""}
+                </span>{" "}
+              </label>
+              <br />
               <div>
                 <input
                   type="text"
