@@ -374,14 +374,13 @@ func TestCreateSurgery(t *testing.T) {
 		doctorID        string
 		notes           string
 		proposedSurgery string
-		createdBy       string
 		wantBody        []byte
 		wantCode        int
 	}{
 		{"Valid Surgery", "2020-04-02T08:02:17-05:00",
 			"John Doe", "c753a381-7642-4709-876f-57b16a5c6a6c", "Dr House",
 			"f06244b9-97e5-4f1a-bae0-3b6da7a0b604", "some notes",
-			"saphenectomy", "896d45e7-b544-41da-aa3f-f59a321fcdb9",
+			"saphenectomy",
 			[]byte("John Doe"), http.StatusOK},
 	}
 	type surgeriesData struct {
@@ -392,7 +391,6 @@ func TestCreateSurgery(t *testing.T) {
 		DoctorID        string `json:"doctorID"`
 		Notes           string `json:"notes"`
 		ProposedSurgery string `json:"proposedSurgery"`
-		CreatedBy       string `json:"createdBy"`
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -404,7 +402,6 @@ func TestCreateSurgery(t *testing.T) {
 				DoctorID:        tt.doctorID,
 				Notes:           tt.notes,
 				ProposedSurgery: tt.proposedSurgery,
-				CreatedBy:       tt.createdBy,
 			}
 			body, err := json.Marshal(reqBody)
 			if err != nil {
