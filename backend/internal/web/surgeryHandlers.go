@@ -230,8 +230,7 @@ func (app App) createSurgery(w http.ResponseWriter, r *http.Request) {
 		newSurgery.DoctorName == "" ||
 		newSurgery.DoctorID == "" ||
 		newSurgery.Notes == "" ||
-		newSurgery.ProposedSurgery == "" ||
-		newSurgery.CreatedBy == "" {
+		newSurgery.ProposedSurgery == "" {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
