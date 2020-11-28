@@ -119,6 +119,14 @@ class Appointments extends Component {
       <div>
         <h1>{t("Appointments")}</h1>
         <section>
+          <PatientSearchOrNew
+            currentPatient={this.state.currentPatient}
+            updateCurrentPatient={(p) => {
+              this.updateCurrentPatient(p);
+            }}
+          />
+        </section>
+        <section>
           <form
             onSubmit={(e) => {
               this.localSubmitHandler(e);
@@ -176,13 +184,6 @@ class Appointments extends Component {
                 }}
               />
             </div>
-            <PatientSearchOrNew
-              currentPatient={this.state.currentPatient}
-              updateCurrentPatient={(p) => {
-                this.updateCurrentPatient(p);
-              }}
-            />
-
             <div>
               <label htmlFor="notes">{t("Notes")}: </label>
               <textarea
