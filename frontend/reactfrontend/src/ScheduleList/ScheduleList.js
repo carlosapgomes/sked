@@ -3,15 +3,8 @@ import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import "./ScheduleList.css";
 import { withTranslation } from "react-i18next";
-import i18n from "i18next";
 dayjs.extend(weekday);
-const getLanguage = () => {
-  return (
-    i18n.language ||
-    (typeof window !== "undefined" && window.localStorage.i18nextLng) ||
-    "en"
-  );
-};
+
 class ScheduleList extends Component {
   constructor(props) {
     super(props);
@@ -28,7 +21,7 @@ class ScheduleList extends Component {
     };
   }
   componentDidMount() {
-    const lang = getLanguage().toString().toLowerCase();
+    const lang = this.props.i18n.language.toString().toLowerCase();
     (async () => {
       if (lang === "pt-br") {
         await import("dayjs/locale/pt-br.js");
