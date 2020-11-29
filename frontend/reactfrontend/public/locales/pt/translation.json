@@ -26,5 +26,8 @@
       "State":"Estado",
       "Phones":"Telefones",
       "Phone":"Telefone",
-      "Email":"Email"
+      "Email":"Email",
+      "FillAllFields":"Preencha todos os campos",
+      "AppointmentSaved":"Consulta gravada",
+      "CouldNotCompleteOperation":"Não foi possível completar a operação"
 }

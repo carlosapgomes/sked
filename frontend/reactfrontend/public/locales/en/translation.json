@@ -26,5 +26,8 @@
       "State":"State",
       "Phones":"Phones",
       "Phone":"Phone",
-      "Email":"Email"
+      "Email":"Email",
+      "FillAllFields":"Fill all fields",
+      "AppointmentSaved":"Appointment saved",
+      "CouldNotCompleteOperation":"Could not complete operation"
 }

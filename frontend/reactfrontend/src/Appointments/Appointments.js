@@ -35,7 +35,7 @@ class Appointments extends Component {
       this.state.selectedDate === "" ||
       this.state.selectedTime === ""
     ) {
-      window.alert("Fill all fields");
+      window.alert(this.props.t("FillAllFields"));
       return;
     }
     let dateTime = dayjs(
@@ -57,11 +57,11 @@ class Appointments extends Component {
     ajax.send(JSON.stringify(appointmt));
     ajax.onreadystatechange = () => {
       if (ajax.readyState === 4 && ajax.status === 200) {
-        window.alert("Appointment saved");
+        window.alert(this.props.t("AppointmentSaved"));
         this.clearForm();
       }
       if (ajax.readyState === 4 && ajax.status !== 200) {
-        window.alert("Could not complete operation");
+        window.alert(this.props.t("CouldNotCompleteOperation"));
         console.log(ajax.responseText);
       }
     };
