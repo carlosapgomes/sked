@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import PatientSearch from "../PatientSearch/PatientSearch";
 import dayjs from "dayjs";
+import PatientSearchOrNew from "../PatientSearchOrNew/PatientSearchOrNew";
 import { withTranslation } from "react-i18next";
 
 class Surgeries extends Component {
@@ -9,7 +9,7 @@ class Surgeries extends Component {
     this.state = {
       selectedDoctorValue: "selectAnOption",
       selectedDoctor: null,
-      selectedPatient: null,
+      selectedPatient: props.currentPatient,
       selectedDate: "",
       selectedTime: "08:00",
       notes: "",
@@ -38,7 +38,7 @@ class Surgeries extends Component {
       this.state.selectedTime === "" ||
       this.state.proposedSurgery === ""
     ) {
-      window.alert("Please, fill all fields");
+      window.alert(this.props.t("FillAllFields"));
       return;
     }
     let dateTime = dayjs(
@@ -52,7 +52,6 @@ class Surgeries extends Component {
       doctorID: this.state.selectedDoctor.id,
       notes: this.state.notes,
       proposedSurgery: this.state.proposedSurgery,
-      createdBy: this.props.currentUser.uid,
     };
     let ajax = new XMLHttpRequest();
     let url = "https://dev.local/api/surgeries";
@@ -62,11 +61,11 @@ class Surgeries extends Component {
     ajax.send(JSON.stringify(surgery));
     ajax.onreadystatechange = () => {
       if (ajax.readyState === 4 && ajax.status === 200) {
-        window.alert("Surgery saved");
+        window.alert(this.props.t("SurgerySaved"));
         this.clearForm();
       }
       if (ajax.readyState === 4 && ajax.status !== 200) {
-        window.alert("Could not complete operation");
+        window.alert(this.props.t("CouldNotCompleteOperation"));
         console.log(ajax.responseText);
       }
     };
@@ -80,15 +79,17 @@ class Surgeries extends Component {
       });
     }
   }
-  setSelectedPatient(p) {
+  updateCurrentPatient(p) {
     if (!p) {
       this.setState({
         selectedPatient: null,
       });
+      this.props.updateCurrentPatient(null);
     } else {
       this.setState({
         selectedPatient: { ...p },
       });
+      this.props.updateCurrentPatient({ ...p });
     }
   }
   setTime(e) {
@@ -120,6 +121,14 @@ class Surgeries extends Component {
     return (
       <div>
         <h1>{t("Surgeries")}</h1>
+        <section>
+          <PatientSearchOrNew
+            currentPatient={this.state.currentPatient}
+            updateCurrentPatient={(p) => {
+              this.updateCurrentPatient(p);
+            }}
+          />
+        </section>
         <section>
           <form
             onSubmit={(e) => {
@@ -178,11 +187,6 @@ class Surgeries extends Component {
                 }}
               />
             </div>
-            <PatientSearch
-              setSelectedPatient={(p) => {
-                this.setSelectedPatient(p);
-              }}
-            />
             <div>
               <label htmlFor="proposedSurgery">{t("ProposedSurgery")}: </label>
               <input

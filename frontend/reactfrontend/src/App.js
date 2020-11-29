@@ -239,6 +239,10 @@ class App extends Component {
                 <Route path="/Surgeries">
                   <Surgeries
                     currentUser={this.state.currentUser}
+                    currentPatient={this.state.currentPatient}
+                    updateCurrentPatient={(p) => {
+                      this.updateCurrentPatient(p);
+                    }}
                     doctors={this.state.doctors}
                   />
                 </Route>
