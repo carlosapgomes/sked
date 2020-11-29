@@ -48,7 +48,6 @@ class Appointments extends Component {
       doctorName: this.state.selectedDoctor.name,
       doctorID: this.state.selectedDoctor.id,
       notes: this.state.notes,
-      createdBy: this.props.currentUser.uid,
     };
     let ajax = new XMLHttpRequest();
     let url = "https://dev.local/api/appointments";
