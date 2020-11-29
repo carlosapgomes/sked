@@ -29,5 +29,6 @@
       "Email":"Email",
       "FillAllFields":"Fill all fields",
       "AppointmentSaved":"Appointment saved",
+      "SurgerySaved":"Surgery saved",
       "CouldNotCompleteOperation":"Could not complete operation"
 }
