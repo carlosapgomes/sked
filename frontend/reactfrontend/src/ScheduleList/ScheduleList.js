@@ -298,33 +298,36 @@ class ScheduleList extends Component {
         <h1>{t("Schedules")}</h1>
         <section>
           <form>
-            <input
-              type="radio"
-              value="appointments"
-              name="schedule"
-              id="appointments"
-              checked={this.state.appSelected}
-              onChange={(e) => {
-                this.radioChanged(e);
-              }}
-            />
-            <label htmlFor="appointments">{t("Appointments")}</label>
-            <br />
-            <input
-              type="radio"
-              value="surgeries"
-              name="schedule"
-              id="surgeries"
-              checked={!this.state.appSelected}
-              onChange={(e) => {
-                this.radioChanged(e);
-              }}
-            />
-            <label htmlFor="surgeries">{t("Surgeries")}</label>
+            <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+              <input
+                type="radio"
+                value="appointments"
+                name="schedule"
+                id="appointments"
+                checked={this.state.appSelected}
+                onChange={(e) => {
+                  this.radioChanged(e);
+                }}
+              />
+              <label htmlFor="appointments">{t("Appointments")}</label>
+              &nbsp;&nbsp;
+              <input
+                type="radio"
+                value="surgeries"
+                name="schedule"
+                id="surgeries"
+                checked={!this.state.appSelected}
+                onChange={(e) => {
+                  this.radioChanged(e);
+                }}
+              />
+              <label htmlFor="surgeries">{t("Surgeries")}</label>
+            </div>{" "}
             <hr />
             <p>{t("ChooseMonthYear")}:</p>
-            <span>
+            <div style={{ display: "flex", justifyContent: "space-evenly" }}>
               <label htmlFor="month">{t("Month")}: </label>
+              &nbsp;
               <select
                 id="month"
                 name="month"
@@ -346,9 +349,9 @@ class ScheduleList extends Component {
                 <option value="10">11</option>
                 <option value="11">12</option>
               </select>
-              {"    "}
-              {"    "}
+              &nbsp;&nbsp;
               <label htmlFor="year">{t("Year")}: </label>
+              &nbsp;
               <select
                 id="year"
                 name="year"
@@ -360,7 +363,7 @@ class ScheduleList extends Component {
                 <option value="2020">2020</option>
                 <option value="2021">2021</option>
               </select>
-            </span>
+            </div>
             <hr />
             <p>
               <b>{t("Days")}:</b>
