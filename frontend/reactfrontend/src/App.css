@@ -33,14 +33,23 @@
 .MenuToggleBtn {
   display: none;
 }
+.OpenedMenu {
+  display: none;
+}
+.NavItemOpened {
+  display: none;
+}
 
 @media only screen and (max-width: 768px) {
   .Navigation {
     flex-direction: column;
   }
   .NavItem {
-    margin-left: 0;
+    margin-right: 0;
     display: none;
+  }
+  .NavItemOpened {
+    display: flex;
   }
   .Menu {
     display: none;
@@ -49,9 +58,15 @@
     align-self: flex-start;
     display: initial;
   }
-  .MenuToggleBtn {
+  .MenuToggleBtn,
+  .LoginBtn {
     align-self: flex-end;
     display: initial;
     position: absolute;
+  }
+
+  .OpenedMenu {
+    display: flex;
+    flex-direction: column;
   }
 }

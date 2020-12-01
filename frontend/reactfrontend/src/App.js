@@ -180,10 +180,18 @@ class App extends Component {
               <Link className="Logo" to="/">
                 <img alt="Logo" src="img/sked-new.png" width="70" height="70" />
               </Link>
-              <ul className="Menu">
+              <ul className={this.state.menuOpen ? "OpenedMenu" : "Menu"}>
                 {this.state.loggedIn && (
                   <li>
-                    <Link className="NavItem" to="/Appointments">
+                    <Link
+                      className={
+                        this.state.menuOpen ? "NavItemOpened" : "NavItem"
+                      }
+                      to="/Appointments"
+                      onClick={() => {
+                        this.toggleMenu();
+                      }}
+                    >
                       {t("Appointments")}
                     </Link>
                   </li>
@@ -191,21 +199,45 @@ class App extends Component {
 
                 {this.state.loggedIn && (
                   <li>
-                    <Link className="NavItem" to="/Surgeries">
+                    <Link
+                      className={
+                        this.state.menuOpen ? "NavItemOpened" : "NavItem"
+                      }
+                      to="/Surgeries"
+                      onClick={() => {
+                        this.toggleMenu();
+                      }}
+                    >
                       {t("Surgeries")}
                     </Link>
                   </li>
                 )}
                 {this.state.loggedIn && (
                   <li>
-                    <Link className="NavItem" to="/Patients">
+                    <Link
+                      className={
+                        this.state.menuOpen ? "NavItemOpened" : "NavItem"
+                      }
+                      to="/Patients"
+                      onClick={() => {
+                        this.toggleMenu();
+                      }}
+                    >
                       {t("Patients")}
                     </Link>
                   </li>
                 )}
                 {this.isAdminOrClerk() && this.state.loggedIn && (
                   <li>
-                    <Link className="NavItem" to="/Users">
+                    <Link
+                      className={
+                        this.state.menuOpen ? "NavItemOpened" : "NavItem"
+                      }
+                      to="/Users"
+                      onClick={() => {
+                        this.toggleMenu();
+                      }}
+                    >
                       {t("Users")}
                     </Link>
                   </li>
@@ -213,10 +245,13 @@ class App extends Component {
                 {this.state.loggedIn && (
                   <li>
                     <a
-                      className="NavItem"
+                      className={
+                        this.state.menuOpen ? "NavItemOpened" : "NavItem"
+                      }
                       href="#!"
                       onClick={() => {
                         this.logoutHandler();
+                        this.toggleMenu();
                       }}
                     >
                       <em>Logout</em>
@@ -245,9 +280,11 @@ class App extends Component {
                 </button>
               )}
 
-              <a hidden={this.state.loggedIn} href="#!">
-                <em>Login</em>
-              </a>
+              {!this.state.loggedIn && (
+                <a className="LoginBtn" href="#!">
+                  <em>Login</em>
+                </a>
+              )}
             </nav>
           </header>
           <main>
