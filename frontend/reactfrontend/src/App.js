@@ -171,7 +171,7 @@ class App extends Component {
         <div className="App">
           <header>
             <nav id="logout" className="Navigation">
-              <Link to="/">
+              <Link className="Logo" to="/">
                 <img alt="Logo" src="img/sked-new.png" width="70" height="70" />
               </Link>
               <ul className="Menu">
@@ -218,6 +218,9 @@ class App extends Component {
                   </li>
                 )}
               </ul>
+              {this.state.loggedIn && (
+                <button className="MenuButton">Menu</button>
+              )}
               <a hidden={this.state.loggedIn} href="#!">
                 <em>Login</em>
               </a>

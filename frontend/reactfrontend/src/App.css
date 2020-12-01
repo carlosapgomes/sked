@@ -3,8 +3,6 @@
 }
 .Navigation {
   display: flex;
-  overflow-x: auto;
-  align-items: center;
 }
 .Navigation ul {
   list-style: none;
@@ -28,25 +26,14 @@
 .Navigation a:active {
   color: #fa923f;
 }
-.Menuwrap {
-  -webkit-box-sizing: content-box;
-  box-sizing: content-box;
-  overflow-x: scroll;
-  overflow-y: hidden;
-}
-
-/*.Menu {*/
-/*display: -webkit-box;*/
-/*display: flexbox;*/
-/*display: flex;*/
-/*list-style: none;*/
-/*margin: 0;*/
-/*padding: 0;*/
-/*}*/
 
 .NavItem {
   display: flex;
 }
+.MenuButton {
+  display: none;
+}
+
 @media only screen and (max-width: 768px) {
   .Navigation {
     flex-direction: column;
@@ -54,5 +41,14 @@
   .NavItem {
     margin-left: 0;
     display: none;
+  }
+  .Logo {
+    align-self: flex-start;
+    display: initial;
+  }
+  .MenuButton {
+    align-self: flex-end;
+    display: initial;
+    position: absolute;
   }
 }
