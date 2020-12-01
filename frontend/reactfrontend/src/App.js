@@ -174,40 +174,49 @@ class App extends Component {
               <Link to="/">
                 <img alt="Logo" src="img/sked-new.png" width="70" height="70" />
               </Link>
-              <ul>
-                <li>
-                  <Link hidden={!this.state.loggedIn} to="/Appointments">
-                    {t("Appointments")}
-                  </Link>
-                </li>
-                <li>
-                  <Link hidden={!this.state.loggedIn} to="/Surgeries">
-                    {t("Surgeries")}
-                  </Link>
-                </li>
-                <li>
-                  <Link hidden={!this.state.loggedIn} to="/Patients">
-                    {t("Patients")}
-                  </Link>
-                </li>
-                {this.isAdminOrClerk() && (
+              <ul className="Menu">
+                {this.state.loggedIn && (
                   <li>
-                    <Link hidden={!this.state.loggedIn} to="/Users">
+                    <Link className="NavItem" to="/Appointments">
+                      {t("Appointments")}
+                    </Link>
+                  </li>
+                )}
+
+                {this.state.loggedIn && (
+                  <li>
+                    <Link className="NavItem" to="/Surgeries">
+                      {t("Surgeries")}
+                    </Link>
+                  </li>
+                )}
+                {this.state.loggedIn && (
+                  <li>
+                    <Link className="NavItem" to="/Patients">
+                      {t("Patients")}
+                    </Link>
+                  </li>
+                )}
+                {this.isAdminOrClerk() && this.state.loggedIn && (
+                  <li>
+                    <Link className="NavItem" to="/Users">
                       {t("Users")}
                     </Link>
                   </li>
                 )}
-                <li>
-                  <a
-                    hidden={!this.state.loggedIn}
-                    href="#!"
-                    onClick={() => {
-                      this.logoutHandler();
-                    }}
-                  >
-                    <em>Logout</em>
-                  </a>
-                </li>
+                {this.state.loggedIn && (
+                  <li>
+                    <a
+                      className="NavItem"
+                      href="#!"
+                      onClick={() => {
+                        this.logoutHandler();
+                      }}
+                    >
+                      <em>Logout</em>
+                    </a>
+                  </li>
+                )}
               </ul>
               <a hidden={this.state.loggedIn} href="#!">
                 <em>Login</em>
