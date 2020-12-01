@@ -30,7 +30,7 @@
 .NavItem {
   display: flex;
 }
-.MenuButton {
+.MenuToggleBtn {
   display: none;
 }
 
@@ -42,11 +42,14 @@
     margin-left: 0;
     display: none;
   }
+  .Menu {
+    display: none;
+  }
   .Logo {
     align-self: flex-start;
     display: initial;
   }
-  .MenuButton {
+  .MenuToggleBtn {
     align-self: flex-end;
     display: initial;
     position: absolute;

@@ -18,6 +18,7 @@ class App extends Component {
       currentPatient: null,
       currentDoctor: null,
       doctors: [],
+      menuOpen: false,
     };
   }
   componentDidMount() {
@@ -164,6 +165,11 @@ class App extends Component {
       );
     }
   }
+  toggleMenu() {
+    this.setState({
+      menuOpen: !this.state.menuOpen,
+    });
+  }
   render() {
     const { t } = this.props;
     return (
@@ -218,9 +224,27 @@ class App extends Component {
                   </li>
                 )}
               </ul>
-              {this.state.loggedIn && (
-                <button className="MenuButton">Menu</button>
+              {this.state.loggedIn && !this.state.menuOpen && (
+                <button
+                  className="MenuToggleBtn"
+                  onClick={() => {
+                    this.toggleMenu();
+                  }}
+                >
+                  Menu
+                </button>
               )}
+              {this.state.loggedIn && this.state.menuOpen && (
+                <button
+                  className="MenuToggleBtn"
+                  onClick={() => {
+                    this.toggleMenu();
+                  }}
+                >
+                  X
+                </button>
+              )}
+
               <a hidden={this.state.loggedIn} href="#!">
                 <em>Login</em>
               </a>
