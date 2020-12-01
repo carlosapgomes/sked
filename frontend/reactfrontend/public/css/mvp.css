@@ -113,8 +113,11 @@ main header {
 
 header {
   text-align: var(--justify-important);
+  padding-bottom: 0;
 }
-
+main {
+    padding-top:0;
+}
 header a b,
 header a em,
 header a i,
