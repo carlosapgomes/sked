@@ -12,9 +12,14 @@ project root folder so that it is not pushed for the remote git repository
 
 In the inventory file, provide the following environment variables:
 
+- sys_timezone - backend timezone
 - PG_PASSWD - the password to be used by Postgres
 - PG_LC - locale to configure Postgres database
 - SG_API_KEY - Sendgrid key
 - FROM_EMAIL - email address to be used as a sender by the mailer
 - FROM_NAME - defaults to "Sked Manager"
-- TZONE - backend timezone
+
+
+From the current folder (`build`) run:
+
+`ansible-playbook -i ansible_inv.yaml  provisioning/playbook.yaml`

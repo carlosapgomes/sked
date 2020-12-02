@@ -1,0 +1,1 @@
+sys_packages: ["ufw", "lnav"]
