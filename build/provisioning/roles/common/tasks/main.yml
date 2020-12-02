@@ -7,27 +7,6 @@
 - name: Install Prerequisites
   apt: name=aptitude update_cache=yes state=latest force_apt_get=yes
 
-# Sudo Group Setup
-- name: Make sure we have a 'wheel' group
-  group:
-    name: wheel
-    state: present
-
-- name: Allow 'wheel' group to have passwordless sudo
-  lineinfile:
-    path: /etc/sudoers
-    state: present
-    regexp: "^%wheel"
-    line: "%wheel ALL=(ALL) NOPASSWD: ALL"
-    validate: "/usr/sbin/visudo -cf %s"
-
-- name: Disable password authentication for root
-  lineinfile:
-    path: /etc/ssh/sshd_config
-    state: present
-    regexp: "^#?PermitRootLogin"
-    line: "PermitRootLogin prohibit-password"
-
 # Install Packages
 - name: Update apt
   apt: update_cache=yes
@@ -36,31 +15,31 @@
   apt: name={{ sys_packages }} state=latest
 
 # UFW Setup
-- name: UFW - Allow SSH connections
-  ufw:
-    rule: allow
-    name: OpenSSH
+#- name: UFW - Allow SSH connections
+  #ufw:
+    #rule: allow
+    #name: OpenSSH
 
-- name: UFW - Deny all other incoming traffic by default
-  ufw:
-    state: enabled
-    policy: deny
-    direction: incoming
+#- name: UFW - Deny all other incoming traffic by default
+  #ufw:
+    #state: enabled
+    #policy: deny
+    #direction: incoming
 
-- name: 80 is open
-  ufw:
-    rule: allow
-    port: "80"
-    proto: tcp
+#- name: 80 is open
+  #ufw:
+    #rule: allow
+    #port: "80"
+    #proto: tcp
 
-- name: 443 is open
-  ufw:
-    rule: allow
-    port: "443"
-    proto: tcp
+#- name: 443 is open
+  #ufw:
+    #rule: allow
+    #port: "443"
+    #proto: tcp
 
-- name: ssh is open
-  ufw:
-    rule: allow
-    port: "{{ ansible_port }} "
-    proto: tcp
+#- name: ssh is open
+  #ufw:
+    #rule: allow
+    #port: "{{ ansible_port }} "
+    #proto: tcp
