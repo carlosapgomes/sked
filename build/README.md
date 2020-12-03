@@ -19,7 +19,6 @@ In the inventory file, provide the following environment variables:
 - FROM_EMAIL - email address to be used as a sender by the mailer
 - FROM_NAME - defaults to "Sked Manager"
 
-
 From the current folder (`build`) run:
 
-`ansible-playbook -i ansible_inv.yaml  provisioning/playbook.yaml`
+`ansible-playbook -i ansible_inv.yml provisioning/playbook.yml`

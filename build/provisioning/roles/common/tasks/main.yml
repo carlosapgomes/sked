@@ -15,31 +15,34 @@
   apt: name={{ sys_packages }} state=latest
 
 # UFW Setup
-#- name: UFW - Allow SSH connections
-  #ufw:
-    #rule: allow
-    #name: OpenSSH
+- name: UFW - Allow SSH connections
+  ufw:
+    rule: allow
+    port: "{{ ansible_port }}"
+    proto: tcp
 
-#- name: UFW - Deny all other incoming traffic by default
+- name: UFW - 80 is open
+  ufw:
+    rule: allow
+    port: "80"
+    proto: tcp
+
+- name: UFW - 443 is open
+  ufw:
+    rule: allow
+    port: "443"
+    proto: tcp
+
+#- name: UFW - Allow all outgoing traffic by default
   #ufw:
     #state: enabled
-    #policy: deny
-    #direction: incoming
+    #policy: allow
+    #direction: outgoing 
 
-#- name: 80 is open
-  #ufw:
-    #rule: allow
-    #port: "80"
-    #proto: tcp
+- name: UFW - Deny all other incoming traffic by default
+  ufw:
+    state: enabled
+    policy: deny
+    direction: incoming
 
-#- name: 443 is open
-  #ufw:
-    #rule: allow
-    #port: "443"
-    #proto: tcp
 
-#- name: ssh is open
-  #ufw:
-    #rule: allow
-    #port: "{{ ansible_port }} "
-    #proto: tcp

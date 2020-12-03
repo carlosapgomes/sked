@@ -2,7 +2,9 @@
 - hosts: all
   become: true
   vars_files:
-    - vars/default.yaml
+    - vars/default.yml
 
   roles:
+    - role: geerlingguy.firewall
+    - role: geerlingguy.security
     - role: common
