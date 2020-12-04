@@ -30,13 +30,13 @@ security_autoupdate_mail_on_error: true
 security_fail2ban_enabled: true
 
 postgresql_locales:
-  - "pt_BR.UTF-8"
+  - "{{ pg_loc }}"
 postgresql_user: postgres
 postgresql_group: postgres
 postgresql_databases:
   - name: sked # required; the rest are optional
-    lc_collate: pt_BR.UTF-8 # defaults to 'en_US.UTF-8'
-    lc_ctype: pt_BR.UTF-8 # defaults to 'en_US.UTF-8'
+    lc_collate: "{{ pg_loc }}" # defaults to 'en_US.UTF-8'
+    lc_ctype: "{{ pg_loc }}" # defaults to 'en_US.UTF-8'
     encoding: UTF-8 # defaults to 'UTF-8'
     template: template0 # defaults to 'template0'
     port: 5432
