@@ -33,16 +33,4 @@
     port: "443"
     proto: tcp
 
-#- name: UFW - Allow all outgoing traffic by default
-  #ufw:
-    #state: enabled
-    #policy: allow
-    #direction: outgoing 
-
-#- name: UFW - Deny all other incoming traffic by default
-  #ufw:
-    #state: enabled
-    #policy: deny
-    #direction: incoming
-
 
