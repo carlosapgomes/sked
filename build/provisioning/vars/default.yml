@@ -25,8 +25,25 @@ security_ssh_restart_handler_state: restarted
 security_autoupdate_enabled: true
 security_autoupdate_reboot: true
 security_autoupdate_reboot_time: "03:00"
-security_autoupdate_mail_to: "{{  admin_email  }}"
+security_autoupdate_mail_to: "{{ admin_email }}"
 security_autoupdate_mail_on_error: true
 security_fail2ban_enabled: true
 
+postgresql_locales:
+  - "pt_BR.UTF-8"
+postgresql_user: postgres
+postgresql_group: postgres
+postgresql_databases:
+  - name: sked # required; the rest are optional
+    lc_collate: pt_BR.UTF-8 # defaults to 'en_US.UTF-8'
+    lc_ctype: pt_BR.UTF-8 # defaults to 'en_US.UTF-8'
+    encoding: UTF-8 # defaults to 'UTF-8'
+    template: template0 # defaults to 'template0'
+    port: 5432
+    state: present # defaults to 'present'
+postgresql_users:
+  - name: sked #required; the rest are optional
+    password: "{{ pg_passwd }}" # defaults to not set
+postgres_users_no_log: false
+nginx_debug_output: false
 
