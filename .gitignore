@@ -149,4 +149,4 @@ dist
 
 setEnv.sh
 
-ansible_inv.yaml
+ansible_inv.yml
