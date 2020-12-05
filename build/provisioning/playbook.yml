@@ -9,4 +9,3 @@
     - role: geerlingguy.security
     - role: common
     - role: geerlingguy.postgresql
-    - role: nginxinc.nginx
