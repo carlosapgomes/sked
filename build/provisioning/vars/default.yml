@@ -1,5 +1,5 @@
 # common packages
-sys_packages: ["vim", "ufw", "lnav"]
+sys_packages: ["vim", "ufw", "lnav","python3-psycopg2"]
 
 # geerlingguy.firewall vars
 firewall_state: started
@@ -44,4 +44,4 @@ postgresql_databases:
 postgresql_users:
   - name: sked #required; the rest are optional
     password: "{{ pg_passwd }}" # defaults to not set
-
+postgresql_python_library: python3-psycopg2
