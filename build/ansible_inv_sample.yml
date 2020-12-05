@@ -8,3 +8,8 @@ all:
       sys_timezone: "Region/Zone"
       pg_passwd: "postgres_secret_password_for_user_sked"
       pg_loc:"xx_ZZ-UTF-8"
+      sg_api_key: "sendgrid_api_key"
+      from_email: "bob@example.com" 
+      from_name: "Sked Manager"
+
+
