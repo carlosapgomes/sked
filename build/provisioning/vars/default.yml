@@ -44,6 +44,4 @@ postgresql_databases:
 postgresql_users:
   - name: sked #required; the rest are optional
     password: "{{ pg_passwd }}" # defaults to not set
-postgres_users_no_log: false
-nginx_debug_output: false
 
