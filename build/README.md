@@ -4,7 +4,10 @@ Scripts and configurations for building and deploying the system.
 
 ## Ansible
 
-Configure a VM to be used by Ansible
+Configure a VM to be used by Ansible (I suggest using a Debian VM, because
+some vars are specific to this distribution - `ansible_python_interpreter `
+and `postgresql_python_library` are used by `geerlingguy.postgresql` role).
+
 Create an inventory file in the current `build` folder, for example
 `ansible_inv.yml`, and add a new entry in the `.gitignore` file on this
 project root folder so that it is not pushed for the remote git repository
