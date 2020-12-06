@@ -130,7 +130,7 @@ Tables:
 - ~~create a new endpoint for Appointments and Surgeries to return the schedules
   for a whole month~~
 - ~~Add update patient on Patient component~~
-- add create patient inside Appointments and Surgeries components
+- ~~add create patient inside Appointments and Surgeries components~~
 - create utility component to abstract ajax communications and backend
   configuration
 - add ansible script to deploy the system
