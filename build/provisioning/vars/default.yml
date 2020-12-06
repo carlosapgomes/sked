@@ -44,4 +44,6 @@ postgresql_databases:
 postgresql_users:
   - name: sked #required; the rest are optional
     password: "{{ pg_passwd }}" # defaults to not set
+# debian 10 path to python3
+ansible_python_interpreter: "/usr/bin/python3" 
 postgresql_python_library: python3-psycopg2
