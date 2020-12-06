@@ -11,5 +11,5 @@ all:
       sg_api_key: "sendgrid_api_key"
       from_email: "bob@example.com" 
       from_name: "Sked Manager"
-
+      admin_email: "carlos@apgomes.com"
 
