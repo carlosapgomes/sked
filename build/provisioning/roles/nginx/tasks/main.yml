@@ -1,0 +1,15 @@
+---
+# tasks file for nginx
+- name: Install package
+  package:
+    name: nginx
+    state: latest
+
+- name: Add base NGINX configuration file
+  copy: 
+    dest: /etc/nginx/nginx.conf
+    src: etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: Reload NGINX
