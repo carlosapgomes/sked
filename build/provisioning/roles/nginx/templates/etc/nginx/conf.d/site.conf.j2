@@ -1,0 +1,30 @@
+#
+server {
+	listen 80;
+	listen [::]:80;
+
+	# SSL configuration
+	#
+    listen 443 ssl;
+    listen [::]:443 ssl;
+	#
+	# Note: You should disable gzip for SSL traffic.
+	# See: https://bugs.debian.org/773332
+	#
+	# Read up on ssl_ciphers to ensure a secure configuration.
+	# See: https://bugs.debian.org/765782
+
+	root {{ item.root }};
+
+	index index.html;
+
+	server_name {{ item.name }};
+
+	location / {
+		# First attempt to serve request as file, then
+		# as directory, then fall back to displaying a 404.
+		try_files $uri $uri/ =404;
+	}
+
+}
+

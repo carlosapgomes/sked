@@ -13,3 +13,22 @@
     group: root
     mode: 0644
   notify: Reload NGINX
+
+- name: Add server block
+  template:
+    src: etc/nginx/conf.d/site.conf.j2
+    dest: "/etc/nginx/conf.d/{{item.name}}.conf"
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ webserver_static_sites }}"
+  notify: Reload NGINX
+
+- name: Copy site content
+  copy:
+    dest: "{{ item.root }}"
+    src: "var/www/{{ item.name }}/html/"
+    owner: root
+    group: root
+    mode: 0755
+  with_items: "{{ webserver_static_sites }}"
