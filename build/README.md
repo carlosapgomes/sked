@@ -19,6 +19,9 @@ In the inventory file, provide the following variables:
 - ansible_port: host_ssh_port
 - ansible_user: host_user_name
 - ansible_ssh_private_key_file: path/to/ssh/key/file
+- webserver_static_sites:
+  -name: site_name
+  root: /var/www/site_name/html
 - sys_timezone - backend timezone
 - admin_email - host admin email address
 - pg_passwd - the password for user 'sked' in Postgres
