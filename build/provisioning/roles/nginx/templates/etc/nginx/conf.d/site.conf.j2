@@ -14,11 +14,11 @@ server {
 	# Read up on ssl_ciphers to ensure a secure configuration.
 	# See: https://bugs.debian.org/765782
 
-	root {{ item.root }};
+	root {{ webserver_name }};
 
 	index index.html;
 
-	server_name {{ item.name }};
+	server_name {{ webserver_name }};
 
 	location / {
 		# First attempt to serve request as file, then
