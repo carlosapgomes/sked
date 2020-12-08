@@ -5,9 +5,9 @@
     - vars/default.yml
 
   roles:
-    #- role: geerlingguy.firewall
-    #- role: geerlingguy.security
-    #- role: common
-    #- role: geerlingguy.postgresql
-    #- role: nginx
+    - role: geerlingguy.firewall
+    - role: geerlingguy.security
+    - role: common
+    - role: geerlingguy.postgresql
+    - role: nginx
     - role: geerlingguy.certbot
