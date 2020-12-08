@@ -20,6 +20,9 @@ server {
 
 	server_name {{ webserver_name }};
 
+    ssl_certificate /etc/letsencrypt/live/{{ webserver_name }}/cert.pem; 
+    ssl_certificate_key /etc/letsencrypt/live/{{ webserver_name }}/privkey.pem;    
+                    
 	location / {
 		# First attempt to serve request as file, then
 		# as directory, then fall back to displaying a 404.
