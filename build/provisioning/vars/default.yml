@@ -47,3 +47,16 @@ postgresql_users:
 # debian 10 path to python3
 ansible_python_interpreter: "/usr/bin/python3" 
 postgresql_python_library: python3-psycopg2
+
+# lets encrypt role configuration
+certbot_create_if_missing: true
+certbot_create_method: standalone
+certbot_auto_renew_user: "{{ ansible_user }}"
+certbot_auto_renew_minute: "00"
+certbot_auto_renew_hour: "3"
+certbot_admin_email: "{{ admin_email }}"
+certbot_certs:
+  - domains:
+      - "{{ webserver_name }}"
+certbot_create_standalone_stop_services:
+    - nginx
