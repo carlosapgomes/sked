@@ -29,7 +29,7 @@ web application.
 
 ## Installation
 
-There is an ansible playbook in the build folder that installs and configures
+There is an ansible playbook in the `build` folder that installs and configures
 the system in a Debian server (I did not test it with other distros).
 
 It requires access to the server with a public key authentication.
