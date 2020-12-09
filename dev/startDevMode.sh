@@ -13,9 +13,12 @@
 # following paths:
 # - `/api` -> mapping to the backend server port
 # - `/` -> mapping to the frontend server port
+# See [this blog post](https://carlosapgomes.me/post/localssl/) on
+# how to configure a local development with https.
 
-# set the following environment variables before running
-# this script:
+
+
+# set the following environment variables before running this script:
 # PG_STR
 # SENDGRID_API_KEY
 # FROM_EMAIL

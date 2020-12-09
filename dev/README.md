@@ -1,44 +1,49 @@
 # Dev
 
-This folder contains config files used in development mode:
+This folder contains files used to start up servers in development mode.
 
-- postgres docker image startup script
-- db configuration scripts
+## Prerequisites
 
-To run the compiled server binary, make sure to provide at least the
-following command line parameters:
+### A reverse proxy
 
-- pgstr (connection string to postgres)
-- sgKey (Sendgrid API key)
-- from email address
+It needs a pre configured basic reverse proxy to map a TLS enabled local
+development DNS entry with the following paths:
 
-And set up a local dns entry and an HTTPS reverse proxy to pass connections
-to `localhost:9000` as described
-[here](https://carlosapgomes.me/post/localssl/).
+- `/api` -> mapping to the backend server address/port
+- `/` -> mapping to the frontend http server address/port
 
-## Example
+See [this blog post](https://carlosapgomes.me/post/localssl/) on how to
+configure a local development nginx reverse proxy with HTTPS.
+
+### Environment Variables
+
+Create a shell script named `setEnv.sh` containing the code below (provide
+a valid sendgrid api key and a valid email address):
 
 ```sh
 
-# start the database
-./startPg.sh
+#!/bin/sh
+echo "Setting environment variables"
+export PG_STR="postgres://sked:sked@localhost:54320/sked?sslmode=disable"
+export SENDGRID_API_KEY="SG.xxxxxxxxxxxxxxxxxx"
+export FROM_EMAIL="a_valid_email@address"
 
-# start sked backend
-skedBackend -pgstr "postgres://user:password@localhost/sked?sslmode=disable" \\
-            -sgKey SG.xxxxxxx \\
-            -from "manager@domain.sked"
 ```
 
-For this dev setup, use
-`postgres://sked:sked@localhost:54320/sked?sslmode=disable` as postgres
-connection string.
+## How to run
 
-Another option is to provide the following environment variables and just
-run the binary:
+From the current folder (`dev`) run the following command:
 
-- PG_STR
-- SENDGRID_API_KEY
-- FROM_EMAIL
+`source ./setEnv.sh && ./startDevMode.sh`
 
-The binary looks for a folder in the current directory called `templates` which
-contain all the templates for the HTML pages and emails.
+And wait until the backend server shows a message like this:
+
+`Starting server on :9000 `
+
+Now, go to the `../frontend/reactfrontend/` folder and start the
+react development server with the command:
+
+`yarn start`
+
+Next, open a new browser tab and access the local development address
+that was configured in the [Prerequisites](#prerequisites) section above.
