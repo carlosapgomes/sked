@@ -27,8 +27,6 @@ This problem could be solved with some cloud-based services, but I needed
 some inspiration for a side project, so I build this full-stack
 web application.
 
-## Demo
-
 ## Installation
 
 There is an ansible playbook in the build folder that installs and configures
@@ -38,11 +36,13 @@ It requires access to the server with a public key authentication.
 
 Create an inventory file with all the required values.
 
+## Demo
+
 If all you want is just test the app, just go to the `dev` folder and follow
 the instructions in the
 [README](https://github.com/carlosapgomes/sked/blob/master/dev/README.md) file
 to start the backend. Then, go to the `frontend/reactfrontend` and type
-`yarn start`. It will open the web app in a browser window. Login in with
+`yarn start`. It will open the web app in a browser window. Login with
 user `bob@example.com` and password `test1234`.
 
 ## Usage
@@ -51,8 +51,9 @@ It is designed to be a web-based application.
 
 ## Contributing
 
-Pull requests are welcome. For major changes, please open an issue first to
-discuss what you would like to change.
+Pull requests are welcome. For major changes, please post a message in the
+[Discussions](https://github.com/carlosapgomes/sked/discussions)
+or open an issue to discuss what you would like to change.
 
 ## License
 
