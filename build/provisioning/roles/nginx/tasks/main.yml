@@ -1,4 +1,4 @@
----
+--
 # tasks file for nginx
 - name: Install package
   package:
@@ -15,6 +15,7 @@
   notify: Reload NGINX
 
 - name: Add server block
+  template:
    src: etc/nginx/conf.d/site.conf.j2
    dest: "/etc/nginx/conf.d/{{webserver_name}}.conf"
    owner: root
@@ -24,7 +25,7 @@
 
 - name: Copy site content
   copy:
-    dest: "{{ webserver_static_sites }}"
+    dest: "{{ webserver_files_root }}"
     src: "var/www/{{ webserver_name }}/html/"
     owner: root
     group: root
