@@ -23,6 +23,12 @@ and the rest in another one that is with the day hospital secretary. The
 main problem that I want to solve is to synchronize those pieces of
 information and let them available to both of us.
 
+This problem could be solved with some cloud-based services, but I needed
+some inspiration for a side project, so I build this full-stack
+web application.
+
+## Demo
+
 ## Installation
 
 There is an ansible playbook in the build folder that installs and configures
@@ -34,7 +40,10 @@ Create an inventory file with all the required values.
 
 If all you want is just test the app, just go to the `dev` folder and follow
 the instructions in the
-[README](https://github.com/carlosapgomes/sked/blob/master/dev/README.md) file.
+[README](https://github.com/carlosapgomes/sked/blob/master/dev/README.md) file
+to start the backend. Then, go to the `frontend/reactfrontend` and type
+`yarn start`. It will open the web app in a browser window. Login in with
+user `bob@example.com` and password `test1234`.
 
 ## Usage
 
