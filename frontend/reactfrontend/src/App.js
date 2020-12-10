@@ -189,7 +189,9 @@ class App extends Component {
                       }
                       to="/Appointments"
                       onClick={() => {
-                        this.toggleMenu();
+                        if (this.state.menuOpen) {
+                          this.toggleMenu();
+                        }
                       }}
                     >
                       {t("Appointments")}
@@ -205,7 +207,9 @@ class App extends Component {
                       }
                       to="/Surgeries"
                       onClick={() => {
-                        this.toggleMenu();
+                        if (this.state.menuOpen) {
+                          this.toggleMenu();
+                        }
                       }}
                     >
                       {t("Surgeries")}
@@ -220,7 +224,9 @@ class App extends Component {
                       }
                       to="/Patients"
                       onClick={() => {
-                        this.toggleMenu();
+                        if (this.state.menuOpen) {
+                          this.toggleMenu();
+                        }
                       }}
                     >
                       {t("Patients")}
@@ -235,7 +241,9 @@ class App extends Component {
                       }
                       to="/Users"
                       onClick={() => {
-                        this.toggleMenu();
+                        if (this.state.menuOpen) {
+                          this.toggleMenu();
+                        }
                       }}
                     >
                       {t("Users")}
@@ -251,7 +259,9 @@ class App extends Component {
                       href="#!"
                       onClick={() => {
                         this.logoutHandler();
-                        this.toggleMenu();
+                        if (this.state.menuOpen) {
+                          this.toggleMenu();
+                        }
                       }}
                     >
                       <em>Logout</em>
@@ -263,7 +273,9 @@ class App extends Component {
                 <button
                   className="MenuToggleBtn"
                   onClick={() => {
-                    this.toggleMenu();
+                    if (this.state.menuOpen) {
+                      this.toggleMenu();
+                    }
                   }}
                 >
                   Menu
@@ -273,7 +285,9 @@ class App extends Component {
                 <button
                   className="MenuToggleBtn"
                   onClick={() => {
-                    this.toggleMenu();
+                    if (this.state.menuOpen) {
+                      this.toggleMenu();
+                    }
                   }}
                 >
                   X
