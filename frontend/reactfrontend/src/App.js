@@ -273,9 +273,7 @@ class App extends Component {
                 <button
                   className="MenuToggleBtn"
                   onClick={() => {
-                    if (this.state.menuOpen) {
-                      this.toggleMenu();
-                    }
+                    this.toggleMenu();
                   }}
                 >
                   Menu
