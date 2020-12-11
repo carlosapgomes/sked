@@ -51,7 +51,7 @@ echo "Moving assets to the temporary folder"
 echo "Sked temporary folder: $SKEDDIR"
 mkdir "$SKEDDIR/templates" || exit 1;
 cp ../backend/internal/web/templates/* "$SKEDDIR/templates" || exit 1;
-echo "starting the frontend"
+echo "starting the backend"
 echo "Waiting postgres to launch..."
 cd $SKEDDIR
 n=0
