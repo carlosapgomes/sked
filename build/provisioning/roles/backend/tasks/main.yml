@@ -1,0 +1,57 @@
+---
+# tasks file for backend
+- name: Add unprivileged system user
+  user:
+    name: "{{ item }}"
+    create_home: no
+    expires: -1
+    generate_ssh_key: no
+    shell: /usr/sbin/nologin
+    system: yes
+    state: present
+  with_items:
+    - skedbackend
+
+- name: create skedbackend home folder
+  file:
+    path: "/opt/{{ item }}"
+    state: directory
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: 0700
+  with_items:
+    - skedbackend
+
+- name: create skedbackend log folder
+  file:
+    path: "/var/log/{{ item }}"
+    state: directory
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: 0700
+  with_items:
+    - skedbackend
+
+- name: Copy skedbackend to guest
+  copy:
+    src: ../files/opt/skedbackend/skedbackend
+    dest: /opt/skedbackend/skedbackend
+    owner: skedbackend
+    group: skedbackend
+    mode: 0700
+
+- name: Copy veryxorp env file to guest
+  copy:
+    src: ../assets/keys/veryxorp.env
+    dest: /opt/veryxorp/.env
+    owner: veryxorp
+    group: veryxorp
+    mode: 0400
+
+- name: Copy veryxorp systemd unit file to guest
+  copy:
+    src: ../assets/systemd_services/veryxorp.service
+    dest: /lib/systemd/system
+    owner: root
+    group: root
+
