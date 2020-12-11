@@ -152,4 +152,4 @@ setEnv.sh
 ansible_inv.yml
 ansible_inv.yaml
 build/provisioning/roles/nginx/files/var/www/
-
+build/provisioning/roles/frontend/files/var/www/
