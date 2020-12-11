@@ -3,7 +3,7 @@
 - name: Copy site content
   copy:
     dest: "{{ webserver_files_root }}"
-    src: "var/www/{{ webserver_name }}/html/"
+    src: "var/www/sked/html/"
     owner: root
     group: root
     mode: 0755
