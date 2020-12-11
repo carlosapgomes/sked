@@ -1,0 +1,9 @@
+--
+# tasks file for frontend
+- name: Copy site content
+  copy:
+    dest: "{{ webserver_files_root }}"
+    src: "var/www/{{ webserver_name }}/html/"
+    owner: root
+    group: root
+    mode: 0755
