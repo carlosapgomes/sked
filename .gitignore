@@ -151,5 +151,6 @@ setEnv.sh
 
 ansible_inv.yml
 ansible_inv.yaml
-**/opt/skedbackend/
+**/opt/skedbackend
 **/files/var/www/
+frontend/reactfrontend/build/
