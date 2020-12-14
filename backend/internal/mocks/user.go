@@ -318,7 +318,8 @@ func NewUserSvc() *UserMockSvc {
 }
 
 // Create mocks new user creation service
-func (s UserMockSvc) Create(name, email, password, phone string) (*string, error) {
+func (s UserMockSvc) Create(name, email, password, phone string,
+	roles []string) (*string, error) {
 	switch email {
 	case "dupe@example.com":
 		return nil, errors.Wrap(user.ErrDuplicateField, "email already in use")
