@@ -29,7 +29,8 @@ func NewUserService(repo user.Repository) user.Service {
 // const UserRole = "user"
 
 // CreateUser creates a new user and returns its uuid
-func (s *userService) Create(name, email, password, phone string) (*string, error) {
+func (s *userService) Create(name, email, password,
+	phone string, roles []string) (*string, error) {
 	// // Create a bcrypt hash of the plain-text password.
 	hashedPw, err := bcrypt.GenerateFromPassword([]byte(password), 12)
 	if err != nil {
@@ -37,7 +38,7 @@ func (s *userService) Create(name, email, password, phone string) (*string, erro
 	}
 	uid := uuid.NewV4()
 	dt := time.Now().UTC()
-	roles := []string{}
+	//roles := []string{}
 	newUser := user.User{
 		ID:                uid.String(),
 		Name:              name,
