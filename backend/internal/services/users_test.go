@@ -23,15 +23,21 @@ func TestUserCreate(t *testing.T) {
 		email     string
 		password  string
 		phone     string
+		roles     []string
 		wantError []byte
 	}{
-		{"Valid user", "New User", "valid@user.com", "secret", "12345", nil},
-		{"Bad uuid", "Bad uuid", "bad@uuid.com", "secret", "12345", []byte("repository ID not equal to new user ID")},
-		{"DB error", "DB error", "db@error.com", "secret", "12345", []byte("DB error")},
+		{"Valid user", "New User", "valid@user.com", "secret", "12345", []string{"Clerk"}, nil},
+		{"Bad uuid", "Bad uuid", "bad@uuid.com", "secret", "12345", []string{"Clerk"}, []byte("repository ID not equal to new user ID")},
+		{"DB error", "DB error", "db@error.com", "secret", "12345", []string{"Clerk"}, []byte("DB error")},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			id, err := svc.Create(tt.username, tt.email, tt.password, tt.phone)
+			id, err := svc.Create(
+				tt.username,
+				tt.email,
+				tt.password,
+				tt.phone,
+				tt.roles)
 
 			if (tt.wantError != nil) && (err != nil) {
 				t.Log("wantError and error != nil")
