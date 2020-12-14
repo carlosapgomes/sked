@@ -25,7 +25,7 @@ type userData struct {
 	Email    string   `json:"Email"`
 	Phone    string   `json:"Phone"`
 	Password string   `json:"Password"`
-	Roles    []string `json:"roles,omitempty"`
+	Roles    []string `json:"Roles,omitempty"`
 }
 
 // validates request user data
