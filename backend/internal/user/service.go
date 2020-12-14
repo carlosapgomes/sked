@@ -2,7 +2,7 @@ package user
 
 // Service interface for user model
 type Service interface {
-	Create(name, email, password, phone string) (*string, error)
+	Create(name, email, password, phone string, roles []string) (*string, error)
 	Authenticate(email, password string) (*string, error)
 	FindByID(id string) (*User, error)
 	FindByEmail(email string) (*User, error)
