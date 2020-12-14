@@ -20,11 +20,12 @@ import (
 )
 
 type userData struct {
-	ID       string `json:"ID,omitempty"`
-	Name     string `json:"Name"`
-	Email    string `json:"Email"`
-	Phone    string `json:"Phone"`
-	Password string `json:"Password"`
+	ID       string   `json:"ID,omitempty"`
+	Name     string   `json:"Name"`
+	Email    string   `json:"Email"`
+	Phone    string   `json:"Phone"`
+	Password string   `json:"Password"`
+	Roles    []string `json:"roles,omitempty"`
 }
 
 // validates request user data
@@ -350,7 +351,12 @@ func (app App) addUser() http.Handler {
 		}
 
 		var uid *string
-		uid, err = app.userService.Create(newUser.Name, newUser.Email, newUser.Password, newUser.Phone)
+		uid, err = app.userService.Create(
+			newUser.Name,
+			newUser.Email,
+			newUser.Password,
+			newUser.Phone,
+			newUser.Roles)
 		if err != nil {
 			if errors.As(err, &user.ErrDuplicateField) {
 				w.Header().Set("Content-type", "application/json")
