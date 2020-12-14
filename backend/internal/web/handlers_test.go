@@ -975,22 +975,85 @@ func TestAddUserByAdmin(t *testing.T) {
 		userEmail    string
 		userPassword string
 		userPhone    string
+		userRoles    []string
 		wantCode     int
 		wantBody     []byte
 	}{
-		{"Valid submission", "Bob", "bob@example.com", "validPa$$word", "12345", http.StatusOK, []byte("bob@example.com")},
-		{"Empty name", "", "bob@example.com", "validPa$$word", "12345", http.StatusBadRequest, []byte("This field cannot be blank")},
-		{"Empty email", "Bob", "", "validPa$$word", "12345", http.StatusBadRequest, []byte("This field cannot be blank")},
-		// {"Empty password", "Bob", "bob@example.com", "", "12345", http.StatusBadRequest, []byte("This field cannot be blank")},
-		// {"Short password", "Bob", "bob@example.com", "pa$$wo", "12345", http.StatusBadRequest, []byte("This field is too short (minimum is 8 characters)")},
-		{"Duplicate email", "Bob", "dupe@example.com", "validPa$$word", "12345", http.StatusBadRequest, []byte("address already in use")},
-		{"Invalid email (incomplete domain)", "Bob", "bob@example.", "validPa$$word", "12345", http.StatusBadRequest, []byte("This field is invalid")},
-		{"Invalid email (missing @)", "Bob", "bobexample.com", "validPa$$word", "12345", http.StatusBadRequest, []byte("This field is invalid")},
-		{"Invalid email (missing local part)", "Bob", "@example.com", "validPa$$word", "12345", http.StatusBadRequest, []byte("This field is invalid")},
+		{
+			"Valid submission",
+			"Bob",
+			"bob@example.com",
+			"validPa$$word",
+			"12345",
+			[]string{"Clerk"},
+			http.StatusOK,
+			[]byte("bob@example.com"),
+		},
+		{
+			"Empty name",
+			"",
+			"bob@example.com",
+			"validPa$$word",
+			"12345",
+			[]string{"Clerk"},
+			http.StatusBadRequest,
+			[]byte("This field cannot be blank"),
+		},
+		{
+			"Empty email",
+			"Bob",
+			"",
+			"validPa$$word",
+			"12345",
+			[]string{"Clerk"},
+			http.StatusBadRequest,
+			[]byte("This field cannot be blank"),
+		},
+		{
+			"Duplicate email",
+			"Bob",
+			"dupe@example.com",
+			"validPa$$word",
+			"12345",
+			[]string{"Clerk"},
+			http.StatusBadRequest,
+			[]byte("address already in use"),
+		},
+		{
+			"Invalid email (incomplete domain)",
+			"Bob",
+			"bob@example.",
+			"validPa$$word",
+			"12345",
+			[]string{"Clerk"},
+			http.StatusBadRequest,
+			[]byte("This field is invalid"),
+		},
+		{
+			"Invalid email (missing @)",
+			"Bob",
+			"bobexample.com",
+			"validPa$$word",
+			"12345",
+			[]string{"Clerk"},
+			http.StatusBadRequest,
+			[]byte("This field is invalid"),
+		},
+		{
+			"Invalid email (missing local part)",
+			"Bob",
+			"@example.com",
+			"validPa$$word",
+			"12345",
+			[]string{"Clerk"},
+			http.StatusBadRequest,
+			[]byte("This field is invalid"),
+		},
 	}
 
 	type postBody struct {
 		Name, Email, Password, Phone string
+		Roles                        []string
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -998,6 +1061,7 @@ func TestAddUserByAdmin(t *testing.T) {
 				Email:    tt.userEmail,
 				Phone:    tt.userPhone,
 				Password: tt.userPassword,
+				Roles:    tt.userRoles,
 			}
 			body, err := json.Marshal(reqBody)
 			if err != nil {
