@@ -32,7 +32,8 @@ class Users extends Component {
     if (
       this.state.name === "" ||
       this.state.email === "" ||
-      this.state.phone === ""
+      this.state.phone === "" ||
+      this.state.roles.length === 0
     ) {
       window.alert("Please, fill the requested data");
       return;
@@ -41,6 +42,7 @@ class Users extends Component {
       Name: this.state.name,
       Email: this.state.email,
       Phone: this.state.phone,
+      Roles: [...this.state.roles],
     };
     console.log(newUser);
     let ajax = new XMLHttpRequest();
@@ -65,6 +67,7 @@ class Users extends Component {
       name: "",
       email: "",
       phone: "",
+      roles: [],
     });
   }
   localSubmitHandler(e) {
@@ -72,6 +75,14 @@ class Users extends Component {
   }
   updateRoles(e) {
     console.log(e.target);
+    if (e.target.checked) {
+      this.state.roles.push(e.target.value);
+    } else {
+      let i = this.state.roles.indexOf(e.target.value);
+      if (i >= 0) {
+        this.state.roles.splice(i, 1);
+      }
+    }
   }
   render() {
     const { t } = this.props;
