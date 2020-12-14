@@ -9,6 +9,7 @@ class Users extends Component {
       name: "",
       email: "",
       phone: "",
+      roles: [],
     };
   }
   setUsername(s) {
@@ -69,6 +70,9 @@ class Users extends Component {
   localSubmitHandler(e) {
     e.preventDefault();
   }
+  updateRoles(e) {
+    console.log(e.target);
+  }
   render() {
     const { t } = this.props;
     return (
@@ -116,6 +120,44 @@ class Users extends Component {
                   this.setPhone(e.target.value);
                 }}
               />
+            </div>
+            <div>
+              <fieldset id="" class="">
+                <legend>{t("Roles")}:</legend>
+                <div>
+                  <label htmlFor="clerk">{t("Clerk")}</label>
+                  <input
+                    type="checkbox"
+                    value="Clerk"
+                    name="clerk"
+                    onChange={(e) => {
+                      this.updateRoles(e);
+                    }}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="clerk">{t("Doctor")}</label>
+                  <input
+                    type="checkbox"
+                    value="Doctor"
+                    name="doctor"
+                    onChange={(e) => {
+                      this.updateRoles(e);
+                    }}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="clerk">{t("Admin")}</label>
+                  <input
+                    type="checkbox"
+                    value="Admin"
+                    name="admin"
+                    onChange={(e) => {
+                      this.updateRoles(e);
+                    }}
+                  />
+                </div>
+              </fieldset>
             </div>
             <div>
               <button
