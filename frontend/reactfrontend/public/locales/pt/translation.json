@@ -30,5 +30,8 @@
       "FillAllFields":"Preencha todos os campos",
       "AppointmentSaved":"Consulta gravada",
       "SurgerySaved":"Cirurgia gravada",
-      "CouldNotCompleteOperation":"Não foi possível completar a operação"
+      "CouldNotCompleteOperation":"Não foi possível completar a operação",
+      "Clerk":"Funcionário",
+      "Admin":"Admin"
+
 }

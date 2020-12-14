@@ -30,5 +30,7 @@
       "FillAllFields":"Fill all fields",
       "AppointmentSaved":"Appointment saved",
       "SurgerySaved":"Surgery saved",
-      "CouldNotCompleteOperation":"Could not complete operation"
+      "CouldNotCompleteOperation":"Could not complete operation",
+      "Clerk":"Clerk",
+      "Admin":"Admin"
 }
