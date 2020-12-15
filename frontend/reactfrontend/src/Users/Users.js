@@ -133,7 +133,7 @@ class Users extends Component {
               />
             </div>
             <div>
-              <fieldset id="" class="">
+              <fieldset>
                 <legend>{t("Roles")}:</legend>
                 <div>
                   <label htmlFor="clerk">{t("Clerk")}</label>
