@@ -44,7 +44,7 @@ class UserSearch extends Component {
       return;
     }
     let ajax = new XMLHttpRequest();
-    let url = "https://dev.local/api/users?email=" + str;
+    let url = "https://dev.local/api/users?name=" + str;
     ajax.open("GET", url, true);
     ajax.withCredentials = true;
     ajax.setRequestHeader("Content-type", "application/json");
@@ -52,7 +52,7 @@ class UserSearch extends Component {
     ajax.onreadystatechange = () => {
       if (ajax.readyState === 4 && ajax.status === 200) {
         if (!ajax.responseText) {
-          window.alert("Could not find any patient");
+          window.alert("Could not find any user");
         } else {
           let data = JSON.parse(ajax.responseText);
           if (data) {
@@ -73,7 +73,7 @@ class UserSearch extends Component {
     const { t } = this.props;
     return (
       <div>
-        <label htmlFor="pctsearch">{t("Patient")}: </label>
+        <label htmlFor="pctsearch">{t("user")}: </label>
         <input
           type="text"
           value={this.state.searchField}
@@ -85,7 +85,7 @@ class UserSearch extends Component {
         />
         <button
           onClick={() => {
-            this.searchPatient();
+            this.searchUser();
           }}
         >
           {t("Search")}
