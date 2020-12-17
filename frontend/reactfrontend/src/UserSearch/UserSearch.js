@@ -44,7 +44,7 @@ class UserSearch extends Component {
       return;
     }
     let ajax = new XMLHttpRequest();
-    let url = "https://dev.local/api/users?name=" + str;
+    let url = "https://dev.local/api/users?email=" + str;
     ajax.open("GET", url, true);
     ajax.withCredentials = true;
     ajax.setRequestHeader("Content-type", "application/json");
