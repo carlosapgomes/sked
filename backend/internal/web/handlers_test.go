@@ -637,6 +637,48 @@ func TestGetUserByEmailByAdmin(t *testing.T) {
 	// })
 }
 
+func TestGetUserByNameByAdminUser(t *testing.T) {
+	handlers := newTestApplication(t)
+	ts := newTestServer(t, handlers.Routes())
+	defer ts.Close()
+	tests := []struct {
+		name     string
+		userName string
+		wantSize int
+		wantCode int
+	}{
+		{"Normal search", "Alice", 1, http.StatusOK},
+		//{"User not found", "test@email.com", http.StatusNotFound, []byte("Not Found")},
+		//{"Bad user request", "test.com", http.StatusBadRequest, []byte("Bad Request")},
+		//{"Empty request", "", http.StatusBadRequest, []byte("Bad Request")},
+		//{"Valid user", "bob@example.com", http.StatusOK, []byte("bob@example.com")},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			query := map[string]string{"name": tt.userName}
+			req, _ := http.NewRequest(http.MethodGet, ts.URL+"/users", nil)
+			q := req.URL.Query()
+			for k, v := range query {
+				q.Add(k, v)
+			}
+			req.URL.RawQuery = q.Encode()
+			cookie := &http.Cookie{
+				Name:  "sid",
+				Value: "4e66a385-c7cd-47de-9e3b-cdfe26eecad4",
+			}
+			req.AddCookie(cookie)
+			code, _, respBody := ts.getQueryReq(t, req)
+			if code != tt.wantCode {
+				t.Errorf("want %d; got %d", tt.wantCode, code)
+			}
+			if !bytes.Contains(respBody, []byte(tt.userName)) {
+				t.Errorf("want body %s to contain %q", respBody, tt.userName)
+			}
+		})
+	}
+
+}
 func TestGetUserByEmailByClerkUser(t *testing.T) {
 	handlers := newTestApplication(t)
 	ts := newTestServer(t, handlers.Routes())
