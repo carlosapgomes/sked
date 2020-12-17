@@ -80,6 +80,9 @@ func (app App) getUsers() http.Handler {
 			case strings.Contains(q, "email"):
 				app.getUserByEmail(w, r)
 				break Loop
+			case strings.Contains(q, "name"):
+				app.getUserByName(w, r)
+				break Loop
 			case strings.Contains(q, "previous"):
 				app.getAllUsers(w, r)
 				break Loop
@@ -760,6 +763,33 @@ func (app App) validateEmail() http.Handler {
 // func (app App) DeleteUser(w http.ResponseWriter, r *http.Request) {
 // 	// w.Write([]byte("removes/deactivates a user account"))
 // }
+// GetUserByName (GET)
+func (app App) getUserByName(w http.ResponseWriter, r *http.Request) {
+	name := r.URL.Query().Get("name")
+	// need a three-letter name at least
+	if len(name) < 3 {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	users, err := app.userService.FindByName(name)
+	if err != nil {
+		if errors.As(err, &user.ErrNoRecord) {
+			w.Header().Set("Content-type", "application/json")
+			app.notFound(w)
+			return
+		}
+		app.serverError(w, err)
+		return
+	}
+	output, err := json.Marshal(users)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(output)
+
+}
 
 // GetUserByEmail (GET)
 func (app App) getUserByEmail(w http.ResponseWriter, r *http.Request) {
