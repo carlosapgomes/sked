@@ -63,6 +63,7 @@ class Users extends Component {
       }
     };
   }
+  updateUser() {}
   clearForm() {
     this.setState({
       name: "",
@@ -194,11 +195,20 @@ class Users extends Component {
             </div>
             <div>
               <button
+                hidden={this.state.showUpdateButton}
                 onClick={() => {
                   this.saveUser();
                 }}
               >
                 {t("Save")}
+              </button>
+              <button
+                hidden={!this.state.showUpdateButton}
+                onClick={() => {
+                  this.updateUser();
+                }}
+              >
+                {t("Update")}
               </button>
               &nbsp;&nbsp;
               <button
