@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
-
+import UserSearch from "../UserSearch/UserSearch";
 class Users extends Component {
   constructor(props) {
     super(props);
@@ -10,6 +10,7 @@ class Users extends Component {
       email: "",
       phone: "",
       roles: [],
+      showUpdateButton: false,
     };
   }
   setUsername(s) {
@@ -84,12 +85,33 @@ class Users extends Component {
       }
     }
   }
+  setSelectedUser(u) {
+    if (!u) {
+      this.clearForm();
+    } else {
+      this.setState({
+        name: u.name,
+        email: u.email,
+        phone: u.phone,
+        roles: [...u.roles],
+        showUpdateButton: true,
+      });
+    }
+  }
   render() {
     const { t } = this.props;
     return (
       <div>
-        <h1>{t("NewUser")}</h1>
+        <h1>{t("Users")}</h1>
         <section>
+          <div className="ColumnItem">
+            <UserSearch
+              setSelectedUser={(u) => {
+                this.setSelectedUser(u);
+              }}
+            />
+          </div>
+          <br />
           <form
             acceptCharset="utf-8"
             onSubmit={(e) => {
