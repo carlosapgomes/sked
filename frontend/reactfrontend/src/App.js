@@ -25,9 +25,7 @@ class App extends Component {
     // try to recover user data in case of a page reload
     if (window.localStorage.getItem("email") !== "") {
       let ajax = new XMLHttpRequest();
-      let url =
-        "https://dev.local/api/users?email=" +
-        window.localStorage.getItem("email");
+      let url = "/api/users?email=" + window.localStorage.getItem("email");
       ajax.open("GET", url, true);
       ajax.withCredentials = true;
       ajax.setRequestHeader("Content-type", "application/json");
@@ -67,7 +65,7 @@ class App extends Component {
   }
   updateDoctorsList() {
     let ajax = new XMLHttpRequest();
-    ajax.open("GET", "https://dev.local/api/doctors", true);
+    ajax.open("GET", "/api/doctors", true);
     ajax.withCredentials = true;
     ajax.setRequestHeader("Content-type", "application/json");
     ajax.send();
@@ -135,7 +133,7 @@ class App extends Component {
   }
   logoutHandler() {
     let ajax = new XMLHttpRequest();
-    let url = "https://dev.local/api/users/logout";
+    let url = "/api/users/logout";
     ajax.open("POST", url, true);
     ajax.withCredentials = true;
     ajax.setRequestHeader("Content-type", "application/json");

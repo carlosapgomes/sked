@@ -6,7 +6,7 @@ const Auth = (props) => {
   const loginHandler = (e) => {
     e.preventDefault();
     let ajax = new XMLHttpRequest();
-    ajax.open("POST", "https://dev.local/api/users/login", true);
+    ajax.open("POST", "/api/users/login", true);
     ajax.setRequestHeader("Content-type", "application/json");
     ajax.send(JSON.stringify({ email: email, password: pword }));
     ajax.onreadystatechange = () => {

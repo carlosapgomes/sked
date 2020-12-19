@@ -38,7 +38,7 @@ class PatientSearchOrNew extends Component {
     };
     console.log(patient);
     let ajax = new XMLHttpRequest();
-    let url = "https://dev.local/api/patients";
+    let url = "/api/patients";
     ajax.open("POST", url, true);
     ajax.withCredentials = true;
     ajax.setRequestHeader("Content-type", "application/json");
@@ -77,7 +77,7 @@ class PatientSearchOrNew extends Component {
       phones: [...this.state.phones],
     };
     let ajax = new XMLHttpRequest();
-    let url = "https://dev.local/api/patients/" + patient.id;
+    let url = "/api/patients/" + patient.id;
     ajax.open("PUT", url, true);
     ajax.withCredentials = true;
     ajax.setRequestHeader("Content-type", "application/json");
@@ -146,7 +146,7 @@ class PatientSearchOrNew extends Component {
       return;
     }
     let ajax = new XMLHttpRequest();
-    let url = "https://dev.local/api/patients?name=" + str;
+    let url = "/api/patients?name=" + str;
     ajax.open("GET", url, true);
     ajax.withCredentials = true;
     ajax.setRequestHeader("Content-type", "application/json");

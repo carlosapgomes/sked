@@ -50,7 +50,7 @@ class Appointments extends Component {
       notes: this.state.notes,
     };
     let ajax = new XMLHttpRequest();
-    let url = "https://dev.local/api/appointments";
+    let url = "/api/appointments";
     ajax.open("POST", url, true);
     ajax.withCredentials = true;
     ajax.setRequestHeader("Content-type", "application/json");

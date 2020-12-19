@@ -44,11 +44,7 @@ class ScheduleList extends Component {
   getAllAppointmentsInAMonth(m, y) {
     let month = Number(m) + 1;
     let ajax = new XMLHttpRequest();
-    let url =
-      "https://dev.local/api/appointments?month=" +
-      String(month) +
-      "&year=" +
-      y;
+    let url = "/api/appointments?month=" + String(month) + "&year=" + y;
     ajax.open("GET", url, true);
     ajax.withCredentials = true;
     ajax.setRequestHeader("Content-type", "application/json");
@@ -76,8 +72,7 @@ class ScheduleList extends Component {
   getAllSurgeriesInAMonth(m, y) {
     let month = Number(m) + 1;
     let ajax = new XMLHttpRequest();
-    let url =
-      "https://dev.local/api/surgeries?month=" + String(month) + "&year=" + y;
+    let url = "/api/surgeries?month=" + String(month) + "&year=" + y;
     ajax.open("GET", url, true);
     ajax.withCredentials = true;
     ajax.setRequestHeader("Content-type", "application/json");

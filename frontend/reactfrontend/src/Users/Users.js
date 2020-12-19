@@ -47,7 +47,7 @@ class Users extends Component {
     };
     console.log(newUser);
     let ajax = new XMLHttpRequest();
-    let url = "https://dev.local/api/users";
+    let url = "/api/users";
     ajax.open("POST", url, true);
     ajax.withCredentials = true;
     ajax.setRequestHeader("Content-type", "application/json");

@@ -54,7 +54,7 @@ class Surgeries extends Component {
       proposedSurgery: this.state.proposedSurgery,
     };
     let ajax = new XMLHttpRequest();
-    let url = "https://dev.local/api/surgeries";
+    let url = "/api/surgeries";
     ajax.open("POST", url, true);
     ajax.withCredentials = true;
     ajax.setRequestHeader("Content-type", "application/json");
