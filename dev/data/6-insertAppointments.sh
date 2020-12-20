@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "sked" <<'EOF'
 INSERT INTO appointments (id, date_time, patient_name, patient_id, doctor_name,

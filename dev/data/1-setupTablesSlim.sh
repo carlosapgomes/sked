@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "sked" <<'EOF'
 CREATE OR REPLACE FUNCTION sked_date_to_char(some_time timestamp with time zone) 
