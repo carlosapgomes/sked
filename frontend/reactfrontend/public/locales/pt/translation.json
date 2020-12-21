@@ -32,6 +32,6 @@
       "SurgerySaved":"Cirurgia gravada",
       "CouldNotCompleteOperation":"Não foi possível completar a operação",
       "Clerk":"Funcionário",
-      "Admin":"Admin"
-
+      "Admin":"Admin",
+      "Roles":"Funções"
 }

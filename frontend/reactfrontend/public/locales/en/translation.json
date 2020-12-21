@@ -32,5 +32,6 @@
       "SurgerySaved":"Surgery saved",
       "CouldNotCompleteOperation":"Could not complete operation",
       "Clerk":"Clerk",
-      "Admin":"Admin"
+      "Admin":"Admin",
+      "Roles":"Roles"
 }
