@@ -8,6 +8,7 @@ import Patients from "./Patients/Patients";
 import Users from "./Users/Users";
 import ScheduleList from "./ScheduleList/ScheduleList";
 import { withTranslation } from "react-i18next";
+
 // loading component for suspense fallback
 class App extends Component {
   constructor(props) {

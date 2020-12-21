@@ -105,14 +105,14 @@ class Users extends Component {
       <div>
         <h1>{t("Users")}</h1>
         <section>
-          <div className="ColumnItem">
-            <UserSearch
-              setSelectedUser={(u) => {
-                this.setSelectedUser(u);
-              }}
-            />
-          </div>
+          <UserSearch
+            setSelectedUser={(u) => {
+              this.setSelectedUser(u);
+            }}
+          />
           <br />
+        </section>
+        <section>
           <form
             acceptCharset="utf-8"
             onSubmit={(e) => {

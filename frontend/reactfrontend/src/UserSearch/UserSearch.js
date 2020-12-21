@@ -69,54 +69,64 @@ class UserSearch extends Component {
       }
     };
   }
+  localSubmitHandler(e) {
+    e.preventDefault();
+  }
   render() {
     const { t } = this.props;
     return (
       <div>
-        <label htmlFor="pctsearch">{t("user")}: </label>
-        <input
-          type="text"
-          value={this.state.searchField}
-          onChange={(e) => {
-            this.setSearchField(e.target.value);
-          }}
-          id="pctsearch"
-          name="pctsearch"
-        />
-        <button
-          onClick={() => {
-            this.searchUser();
-          }}
-        >
-          {t("Search")}
-        </button>
-        <div hidden={this.state.userSearchResult.length <= 0}>
-          <select
-            name="searchresult"
-            id="searchresult"
-            onChange={(e) => {
-              this.setSelectedUser(e);
+        <div className="ColumnItem">
+          <form
+            acceptCharset="utf-8"
+            onSubmit={(e) => {
+              this.localSubmitHandler(e);
             }}
-            value={this.state.selectedUserValue}
           >
-            <option
-              hidden
-              disabled
-              defaultValue
-              value="selectAnOption"
-              style={{ display: "none" }}
+            <input
+              type="text"
+              value={this.state.searchField}
+              onChange={(e) => {
+                this.setSearchField(e.target.value);
+              }}
+              placeholder={t("Name")}
+            />
+            <button
+              onClick={() => {
+                this.searchUser();
+              }}
             >
-              {" "}
-              -- {t("SelectAnOption")} --{" "}
-            </option>
-            {this.state.userSearchResult.map((p) => {
-              return (
-                <option key={p.id} value={p.id}>
-                  {p.name}
+              {t("Search")}
+            </button>
+            <div hidden={this.state.userSearchResult.length <= 0}>
+              <select
+                name="searchresult"
+                id="searchresult"
+                onChange={(e) => {
+                  this.setSelectedUser(e);
+                }}
+                value={this.state.selectedUserValue}
+              >
+                <option
+                  hidden
+                  disabled
+                  defaultValue
+                  value="selectAnOption"
+                  style={{ display: "none" }}
+                >
+                  {" "}
+                  -- {t("SelectAnOption")} --{" "}
                 </option>
-              );
-            })}
-          </select>
+                {this.state.userSearchResult.map((p) => {
+                  return (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+          </form>
         </div>
       </div>
     );
