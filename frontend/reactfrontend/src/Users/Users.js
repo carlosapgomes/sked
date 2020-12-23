@@ -6,6 +6,7 @@ class Users extends Component {
     super(props);
 
     this.state = {
+      id: "",
       name: "",
       email: "",
       phone: "",
@@ -66,6 +67,7 @@ class Users extends Component {
   updateUser() {}
   clearForm() {
     this.setState({
+      id: "",
       name: "",
       email: "",
       phone: "",
@@ -91,6 +93,7 @@ class Users extends Component {
       this.clearForm();
     } else {
       this.setState({
+        id: u.id,
         name: u.name,
         email: u.email,
         phone: u.phone,
