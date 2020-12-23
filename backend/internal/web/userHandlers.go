@@ -244,6 +244,8 @@ func (app App) usersNoPath(w http.ResponseWriter, r *http.Request) {
 		app.requireAdmin(app.getUsers()).ServeHTTP(w, r)
 	case http.MethodPost:
 		app.requireAdmin(app.addUser()).ServeHTTP(w, r)
+	case http.MethodPut:
+		app.requireAdmin(app.updateUser()).ServeHTTP(w, r)
 	default:
 		app.clientError(w, http.StatusMethodNotAllowed)
 	}
@@ -321,6 +323,25 @@ func (app App) getUserName(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(res)
+}
+
+// update User
+func (app App) updateUser() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Read body
+		b, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+		if err != nil {
+			app.clientError(w, http.StatusBadRequest)
+			return
+		}
+		var updatedUser userData
+		err = json.Unmarshal(b, &updatedUser)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+	})
 }
 
 // in case an "/adduser" endpoint is needed
