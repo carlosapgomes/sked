@@ -164,6 +164,7 @@ class Users extends Component {
                 value={this.state.name}
                 name="name"
                 id="name"
+                disabled={this.state.showUpdateButton}
                 onChange={(e) => {
                   this.setUsername(e.target.value);
                 }}
@@ -176,6 +177,7 @@ class Users extends Component {
                 value={this.state.email}
                 name="email"
                 id="email"
+                disabled={this.state.showUpdateButton}
                 onChange={(e) => {
                   this.setEmail(e.target.value);
                 }}
