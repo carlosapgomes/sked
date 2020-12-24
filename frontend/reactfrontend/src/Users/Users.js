@@ -12,6 +12,9 @@ class Users extends Component {
       phone: "",
       roles: [],
       showUpdateButton: false,
+      isAdmin: false,
+      isClerk: false,
+      isDoctor: false,
     };
   }
   setUsername(s) {
@@ -66,7 +69,7 @@ class Users extends Component {
   }
   updateUser() {
     if (
-      this.state.id == "" ||
+      this.state.id === "" ||
       this.state.name === "" ||
       this.state.email === "" ||
       this.state.phone === "" ||
@@ -107,22 +110,48 @@ class Users extends Component {
       email: "",
       phone: "",
       roles: [],
+      isAdmin: false,
+      isClerk: false,
+      isDoctor: false,
     });
   }
   localSubmitHandler(e) {
     e.preventDefault();
   }
-  updateRoles(e) {
-    console.log(e.target);
-    if (e.target.checked) {
-      this.state.roles.push(e.target.value);
+  updateRoles(r) {
+    let roles = [...this.state.roles];
+    let i = roles.indexOf(r);
+    if (i < 0) {
+      roles.push(r);
     } else {
-      let i = this.state.roles.indexOf(e.target.value);
-      if (i >= 0) {
-        this.state.roles.splice(i, 1);
-      }
+      roles.splice(i, 1);
     }
+    this.setState({
+      roles: [...roles],
+    });
+    this.updateRolesCheckBoxes(roles);
   }
+  updateRolesCheckBoxes(roles) {
+    let isClerk,
+      isDoctor,
+      isAdmin = false;
+    if (roles.indexOf("Clerk") > -1) {
+      isClerk = true;
+    }
+
+    if (roles.indexOf("Doctor") > -1) {
+      isDoctor = true;
+    }
+    if (roles.indexOf("Admin") > -1) {
+      isAdmin = true;
+    }
+    this.setState({
+      isClerk: isClerk,
+      isDoctor: isDoctor,
+      isAdmin: isAdmin,
+    });
+  }
+
   setSelectedUser(u) {
     if (!u) {
       this.clearForm();
@@ -136,6 +165,7 @@ class Users extends Component {
         showUpdateButton: true,
       });
     }
+    this.updateRolesCheckBoxes(u.roles);
   }
   render() {
     const { t } = this.props;
@@ -202,10 +232,10 @@ class Users extends Component {
                   <label htmlFor="clerk">{t("Clerk")}</label>
                   <input
                     type="checkbox"
-                    value="Clerk"
                     name="clerk"
-                    onChange={(e) => {
-                      this.updateRoles(e);
+                    checked={this.state.isClerk || false}
+                    onChange={() => {
+                      this.updateRoles("Clerk");
                     }}
                   />
                 </div>
@@ -213,10 +243,10 @@ class Users extends Component {
                   <label htmlFor="clerk">{t("Doctor")}</label>
                   <input
                     type="checkbox"
-                    value="Doctor"
                     name="doctor"
-                    onChange={(e) => {
-                      this.updateRoles(e);
+                    checked={this.state.isDoctor || false}
+                    onChange={() => {
+                      this.updateRoles("Doctor");
                     }}
                   />
                 </div>
@@ -224,10 +254,10 @@ class Users extends Component {
                   <label htmlFor="clerk">{t("Admin")}</label>
                   <input
                     type="checkbox"
-                    value="Admin"
                     name="admin"
-                    onChange={(e) => {
-                      this.updateRoles(e);
+                    checked={this.state.isAdmin || false}
+                    onChange={() => {
+                      this.updateRoles("Admin");
                     }}
                   />
                 </div>
