@@ -64,7 +64,42 @@ class Users extends Component {
       }
     };
   }
-  updateUser() {}
+  updateUser() {
+    if (
+      this.state.id == "" ||
+      this.state.name === "" ||
+      this.state.email === "" ||
+      this.state.phone === "" ||
+      this.state.roles.length === 0
+    ) {
+      window.alert("Please, fill the requested data");
+      return;
+    }
+    let updatedUser = {
+      ID: this.state.id,
+      Name: this.state.name,
+      Email: this.state.email,
+      Phone: this.state.phone,
+      Roles: [...this.state.roles],
+    };
+    console.log(updatedUser);
+    let ajax = new XMLHttpRequest();
+    let url = "/api/users";
+    ajax.open("PUT", url, true);
+    ajax.withCredentials = true;
+    ajax.setRequestHeader("Content-type", "application/json");
+    ajax.send(JSON.stringify(updatedUser));
+    ajax.onreadystatechange = () => {
+      if (ajax.readyState === 4 && ajax.status === 200) {
+        window.alert("User updated");
+        this.clearForm();
+      }
+      if (ajax.readyState === 4 && ajax.status !== 200) {
+        window.alert("Could not complete operation");
+        console.log(ajax.responseText);
+      }
+    };
+  }
   clearForm() {
     this.setState({
       id: "",
