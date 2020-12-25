@@ -325,7 +325,7 @@ func (app App) getUserName(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
-// update User
+// updateUser only updates users' phone and roles for now
 func (app App) updateUser() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Read body
@@ -337,6 +337,18 @@ func (app App) updateUser() http.Handler {
 		}
 		var updatedUser userData
 		err = json.Unmarshal(b, &updatedUser)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+		// update user phone
+		err = app.userService.UpdatePhone(updatedUser.ID, updatedUser.Phone)
+		if err != nil {
+			app.serverError(w, err)
+			return
+		}
+		// update user roles
+		err = app.userService.UpdateRoles(updatedUser.ID, updatedUser.Roles)
 		if err != nil {
 			app.serverError(w, err)
 			return
