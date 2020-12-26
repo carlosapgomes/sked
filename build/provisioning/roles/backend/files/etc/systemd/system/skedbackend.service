@@ -1,0 +1,13 @@
+[Unit]
+Description=SkedBacked service
+After=network.target
+
+[Service]
+Type=simple
+Restart=on-failure
+User=skedbackend
+ExecStart=/opt/skedbackend/skedbackend >> /var/log/skedbackend/app.log 2>&1
+WorkingDirectory=/opt/skedbackend
+
+[Install]
+WantedBy=multi-user.target

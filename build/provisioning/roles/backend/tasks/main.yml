@@ -34,24 +34,38 @@
 
 - name: Copy skedbackend to guest
   copy:
-    src: ../files/opt/skedbackend/skedbackend
+    src: opt/skedbackend/skedbackend
     dest: /opt/skedbackend/skedbackend
     owner: skedbackend
     group: skedbackend
     mode: 0700
 
-- name: Copy veryxorp env file to guest
+- name: Copy skedbackend systemd unit file to guest
   copy:
-    src: ../assets/keys/veryxorp.env
-    dest: /opt/veryxorp/.env
-    owner: veryxorp
-    group: veryxorp
-    mode: 0400
-
-- name: Copy veryxorp systemd unit file to guest
-  copy:
-    src: ../assets/systemd_services/veryxorp.service
-    dest: /lib/systemd/system
+    src: etc/systemd/system/skedbackend.service
+    dest: /etc/systemd/system/skedbackend.service
     owner: root
     group: root
 
+- name: Create skedbackend override folder
+  file:
+    path: /etc/systemd/system/skedbackend.service.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0600
+
+- name: Copy skedbackend systemd unit file override to guest
+  template:
+   src: etc/systemd/system/skedbackend.service.d/override.conf.j2
+   dest: "/etc/systemd/system/skedbackend.service.d/override.conf"
+   owner: root
+   group: root
+   mode: 0600
+  notify: reload systemd
+   
+- name: Enable skedbackend service
+  systemd:
+    name: skedbackend
+    enabled: yes
+    state: started

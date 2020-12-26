@@ -1,4 +1,4 @@
 [Service]
-Environment="PG_STR=postgres://sked:{{ pg_passwd }}@localhost:54320/sked?sslmode=disable"
+Environment="PG_STR=postgres://sked:{{ pg_passwd }}@localhost:5432/sked?sslmode=disable"
 Environment="SENDGRID_API_KEY={{ sg_api_key }}"
 Environment="FROM_EMAIL={{ from_email }}"
