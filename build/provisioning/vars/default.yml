@@ -1,3 +1,6 @@
+# skedbackend defaults
+http_addr: "127.0.0.1:9000"
+
 # common packages
 sys_packages: ["vim", "ufw", "lnav","python3-psycopg2"]
 
