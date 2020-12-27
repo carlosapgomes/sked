@@ -1,4 +1,9 @@
 #
+upstream sked_api_server {
+        server {{ http_addr }};
+        keepalive 32;
+}
+
 server {
 	listen 80;
 	listen [::]:80;
@@ -22,8 +27,13 @@ server {
 
     ssl_certificate /etc/letsencrypt/live/{{ webserver_name }}/cert.pem; 
     ssl_certificate_key /etc/letsencrypt/live/{{ webserver_name }}/privkey.pem;    
-                    
-	location / {
+    location /api {
+        rewrite             ^/api/?(.*) /$1 break;
+        proxy_pass          http://sked_api_server;
+        proxy_redirect      off;
+    }
+	
+    location / {
 		# First attempt to serve request as file, then
 		# as directory, then fall back to displaying a 404.
 		try_files $uri $uri/ =404;
