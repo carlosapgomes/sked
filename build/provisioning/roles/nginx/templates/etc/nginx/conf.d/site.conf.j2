@@ -14,7 +14,7 @@ server {
 	# Read up on ssl_ciphers to ensure a secure configuration.
 	# See: https://bugs.debian.org/765782
 
-	root {{ webserver_name }};
+	root /var/www/{{ webserver_name }}/html;
 
 	index index.html;
 
