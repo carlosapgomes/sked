@@ -22,7 +22,7 @@ func main() {
 	// CLI > ENV > Defaults
 
 	// First, set all the defaults:
-	addr := ":9000"
+	addr := "127.0.0.1:9000"
 	// Postgres connection string
 	// postgres://[user[:password]@][netloc][:port][/dbname][?param1=value1&...]
 	// exemple: "postgres://user:password@localhost/sked?sslmode=disable"
