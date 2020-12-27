@@ -77,7 +77,7 @@ func main() {
 	}
 
 	// Look for all CLI flags, overwriting what was set until now if a flag is provided
-	flag.StringVar(&addr, "addr", addr, "HTTP network address")
+	flag.StringVar(&addr, "addr", addr, "HTTP network address:port")
 	flag.StringVar(&pgstr, "pgstr", pgstr, "Postgres data source name")
 	flag.StringVar(&ckName, "ckname", ckName, "cookie session name (default: 'sid')")
 	flag.StringVar(&ckSameSite, "ckss", ckSameSite, "cookie same site (default: 'strict')")
