@@ -9,6 +9,7 @@
     - role: geerlingguy.security
     - role: common
     - role: geerlingguy.postgresql
+    - role: backend
+    - role: frontend
     - role: nginx
     - role: geerlingguy.certbot
-    - role: backend

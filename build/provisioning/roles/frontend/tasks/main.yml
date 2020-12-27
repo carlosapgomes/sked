@@ -1,4 +1,4 @@
---
+---
 # tasks file for frontend
 - name: Copy site content
   copy:
