@@ -6,7 +6,9 @@ After=network.target
 Type=simple
 Restart=on-failure
 User=skedbackend
-ExecStart=/opt/skedbackend/skedbackend >> /var/log/skedbackend/app.log 2>&1
+ExecStart=/opt/skedbackend/skedbackend
+StandardOutput=append:/var/log/skedbackend/app.log
+StandardError=append:/var/log/skedbackend/error.log
 WorkingDirectory=/opt/skedbackend
 
 [Install]
