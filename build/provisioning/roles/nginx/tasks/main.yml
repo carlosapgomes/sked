@@ -7,11 +7,14 @@
 
 - name: Add base NGINX configuration file
   copy: 
-    dest: /etc/nginx/nginx.conf
-    src: etc/nginx/nginx.conf
+    src: "etc/nginx/{{ item }}"
+    dest: /etc/nginx
     owner: root
     group: root
     mode: 0644
+  with_items:
+    - nginx.conf
+      dhparam
   notify: Reload NGINX
 
 - name: Add server block
