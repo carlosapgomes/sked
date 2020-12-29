@@ -1,0 +1,38 @@
+---
+# initialize database
+- name: Copy script to initialize database tables
+  copy: 
+    src: /tmp/tables.sql
+    dest: /tmp/tables.sql
+
+- name: Execute script
+  shell: "psql -v ON_ERROR_STOP --dbname sked /tmp/tables.sql"
+
+- name: Delete remote script
+  file: 
+    path: "/tmp/tables.sql"
+    state: absent
+
+- name: Get timestamp
+  shell: 'date --utc  +"%F %T %Z"'
+  register: tstamp
+
+- name: Set variable
+  set_fact: 
+  current_datetime: "{{ tstamp }}"
+
+- name: Template for creating first user (admin)
+  template:
+    src: /tmp/addAdmin.sql.d2
+    dest: /tmp/addAdmin.sql
+
+- name: Execute script
+  shell: "psql -v ON_ERROR_STOP --dbname sked /tmp/addAdmin.sql"
+
+- name: Delete remote script
+  file:
+    path: "/tmp/addAdmin.sql"
+    state: absent
+
+    
+
