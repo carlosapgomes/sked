@@ -33,6 +33,3 @@
   file:
     path: "/tmp/addAdmin.sql"
     state: absent
-
-    
-
