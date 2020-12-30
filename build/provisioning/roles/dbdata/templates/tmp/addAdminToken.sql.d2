@@ -1,0 +1,15 @@
+INSERT INTO tokens (
+    id, 
+    userid, 
+    created_at, 
+    expires_at, 
+    kind 
+) VALUES(
+    '{{ token_id }}',
+    '{{ sked_admin_uuid }}',
+    '{{ current_datetime }}',
+    '{{ token_expiration_datetime }}',
+    'ValidateEmail'
+);
+
+
