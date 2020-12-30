@@ -17,9 +17,13 @@
   shell: 'date --utc  +"%F %T %Z"'
   register: tstamp
 
-- name: Set variable
+- name: Set current_datetime variable
   set_fact: 
   current_datetime: "{{ tstamp }}"
+
+- name: Generate uuid for Admin
+  set_fact:
+    sked_admin_uuid:{{ (999999999999999999999 | random | string + (lookup('pipe', 'date +%s%N'))) | to_uuid()  }}
 
 - name: Template for creating first user (admin)
   template:
@@ -33,3 +37,34 @@
   file:
     path: "/tmp/addAdmin.sql"
     state: absent
+
+- name: Set expiration date for admin email confirmation token
+  shell: 'date --utc  +"+1 hours %F %T %Z" -d "+1 hour"'
+  register: texpiration
+
+- name: Set expiration time variable
+  set_fact:
+  token_expiration_datetime: "{{ texpiration }}"
+
+- name: Create a random token id
+  set_fact:
+  token_id: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=40') }}"
+
+- name: Template for adding token for admin email confirmation
+  template:
+    src: /tmp/addAdminToken.sql.d2
+    dest: /tmp/addAdminToken.sql
+
+- name: Execute script
+  shell: "psql -v ON_ERROR_STOP --dbname sked /tmp/addAdminToken.sql"
+
+- name: Delete token sql script
+  file:
+    path: "/tmp/addAdminToken.sql"
+    state: absent
+
+- name: display link to confirm admin email
+  debug:
+    msg:
+      - "Open the following link in your browser:"
+      - "https://{{ webserver_name }}/api/users/validateEmail?token={{ token_id }}"
