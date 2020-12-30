@@ -33,5 +33,12 @@
       "CouldNotCompleteOperation":"Não foi possível completar a operação",
       "Clerk":"Funcionário",
       "Admin":"Admin",
-      "Roles":"Funções"
+      "Roles":"Funções",
+      "Sunday":"Dom",
+      "Monday":"Seg",
+      "Tuesday":"Ter",
+      "Wednesday":"Qua",
+      "Thursday":"Qui",
+      "Friday":"Sex",
+      "Saturday":"Sab"
 }
