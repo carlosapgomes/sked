@@ -3,6 +3,8 @@ import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday";
 import "./ScheduleList.css";
 import { withTranslation } from "react-i18next";
+import calendarize from "calendarize";
+import Calendar from "../Calendar/Calendar";
 dayjs.extend(weekday);
 
 class ScheduleList extends Component {
@@ -18,6 +20,7 @@ class ScheduleList extends Component {
       appSelected: false,
       surgeries: [],
       surgSchedules: [],
+      calendarView: [],
     };
   }
   componentDidMount() {
@@ -259,6 +262,8 @@ class ScheduleList extends Component {
       Number(m),
       Number(this.state.currentYear)
     );
+    let view = calendarize(new Date(this.state.currentYear + "-" + m + "-01"));
+    this.setState({ calendarView: [...view] });
   }
   updateAppointmtsAndSurgsData(m, y) {
     this.getAllSurgeriesInAMonth(m, y);
@@ -363,6 +368,7 @@ class ScheduleList extends Component {
             <p>
               <b>{t("Days")}:</b>
             </p>
+            <Calendar view={this.state.calendarView}></Calendar>
             <div className="DaysList">
               <ul>
                 {this.state.appSelected
