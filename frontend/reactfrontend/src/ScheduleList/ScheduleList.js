@@ -262,12 +262,13 @@ class ScheduleList extends Component {
       Number(m),
       Number(this.state.currentYear)
     );
-    let view = calendarize(new Date(this.state.currentYear + "-" + m + "-01"));
-    this.setState({ calendarView: [...view] });
   }
   updateAppointmtsAndSurgsData(m, y) {
     this.getAllSurgeriesInAMonth(m, y);
     this.getAllAppointmentsInAMonth(m, y);
+    const date = new Date(Number(y), Number(m), 1);
+    let view = calendarize(date);
+    this.setState({ calendarView: [...view] });
   }
   setCurrentYear(y) {
     this.setState({
@@ -364,20 +365,21 @@ class ScheduleList extends Component {
                 <option value="2021">2021</option>
               </select>
             </div>
-            <hr />
-            <p>
-              <b>{t("Days")}:</b>
-            </p>
             <Calendar view={this.state.calendarView}></Calendar>
-            <div className="DaysList">
-              <ul>
-                {this.state.appSelected
-                  ? this.state.appSchedules
-                  : this.state.surgSchedules}
-              </ul>
-            </div>
           </form>
         </section>
+        <section>
+          <p>
+            <b>{t("Days")}:</b>
+          </p>
+          <div className="DaysList">
+            <ul>
+              {this.state.appSelected
+                ? this.state.appSchedules
+                : this.state.surgSchedules}
+            </ul>
+          </div>
+        </section>{" "}
       </div>
     );
   }
