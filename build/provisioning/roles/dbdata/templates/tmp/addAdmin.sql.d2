@@ -10,15 +10,15 @@ INSERT INTO users (
     email_was_validated, 
     roles
 ) VALUES(
-    '{{ db_admin_uuid }}',
-    '{{db_admin_name }}',
-    '{{ db_admin_email }}',
-    '{{ db_admin_phone }}',
-    '{{ db_admin_hashed_pw }}',
+    '{{ sked_admin_uuid }}',
+    '{{ sked_admin_name }}',
+    '{{ sked_admin_email }}',
+    '{{ sked_admin_phone }}',
+    ' ',
     '{{ current_datetime }}',
     '{{ current_datetime }}',
     TRUE,
-    TRUE,
+    FALSE,
     '{"Clerk"}'
 );
 
