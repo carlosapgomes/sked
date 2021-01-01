@@ -111,7 +111,6 @@ class ScheduleList extends Component {
       // show appointments for day d
       this.state.parsedAppointments.forEach((e) => {
         if (e.day === d) {
-          console.log(e);
           e.schedules.forEach((s) => {
             schedsInSelectedDay.push({
               id: s.id,
@@ -123,11 +122,24 @@ class ScheduleList extends Component {
       });
     } else {
       // show surgeries for day d
+      this.state.parsedSurgeries.forEach((e) => {
+        if (e.day === d) {
+          e.schedules.forEach((s) => {
+            schedsInSelectedDay.push({
+              id: s.id,
+              doctorName: s.doctorName,
+              patientName: s.patientName,
+            });
+          });
+        }
+      });
     }
     this.setState({
       schedsInSelectedDay: [...schedsInSelectedDay],
     });
-    this.myRef.current.scrollIntoView({ behavior: "smooth" });
+    if (window.screen.width < 768) {
+      this.myRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   }
   clickedOnAppt(a) {
     console.log(a);
@@ -333,7 +345,7 @@ class ScheduleList extends Component {
   render() {
     const { t } = this.props;
     return (
-      <div>
+      <div className="SchedulesList">
         <h1>{t("Schedules")}</h1>
         <section>
           <form>

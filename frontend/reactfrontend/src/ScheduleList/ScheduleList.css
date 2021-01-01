@@ -11,3 +11,11 @@ ul {
 .AddSchedule {
   cursor: pointer;
 }
+
+@media only screen and (min-width: 768px) {
+  .SchedulesList {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-evenly;
+  }
+}
