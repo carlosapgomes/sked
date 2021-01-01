@@ -25,6 +25,7 @@ class ScheduleList extends Component {
       calendarView: [],
       schedsInSelectedDay: [],
     };
+    this.myRef = React.createRef();
   }
   componentDidMount() {
     const lang = this.props.i18n.language.toString().toLowerCase();
@@ -126,6 +127,7 @@ class ScheduleList extends Component {
     this.setState({
       schedsInSelectedDay: [...schedsInSelectedDay],
     });
+    this.myRef.current.scrollIntoView({ behavior: "smooth" });
   }
   clickedOnAppt(a) {
     console.log(a);
@@ -407,11 +409,11 @@ class ScheduleList extends Component {
             ></Calendar>
           </form>
         </section>
-        <section>
+        <section className="DayListSection">
           <p>
-            <b>{t("Schedules")}</b>
+            <b ref={this.myRef}>{t("Schedules")}</b>
           </p>
-          <div className="DaysList">
+          <div>
             <ul>
               {this.state.schedsInSelectedDay.map((e) => {
                 return (
