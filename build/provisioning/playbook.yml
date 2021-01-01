@@ -13,3 +13,4 @@
     - role: frontend
     - role: nginx
     - role: geerlingguy.certbot
+    - role: dbdata

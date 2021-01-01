@@ -2,11 +2,13 @@
 # initialize database
 - name: Copy script to initialize database tables
   copy: 
-    src: /tmp/tables.sql
+    src: tmp/tables.sql
     dest: /tmp/tables.sql
+    owner: postgres
+    group: postgres
 
 - name: Execute script
-  shell: "psql -v ON_ERROR_STOP --dbname sked /tmp/tables.sql"
+  shell: "sudo -u postgres psql -v ON_ERROR_STOP -d sked -f /tmp/tables.sql"
 
 - name: Delete remote script
   file: 
@@ -17,21 +19,28 @@
   shell: 'date --utc  +"%F %T %Z"'
   register: tstamp
 
-- name: Set current_datetime variable
+- name: Set current datetime variable
   set_fact: 
-  current_datetime: "{{ tstamp }}"
+    current_datetime: "{{ tstamp }}"
 
 - name: Generate uuid for Admin
   set_fact:
-    sked_admin_uuid:{{ (999999999999999999999 | random | string + (lookup('pipe', 'date +%s%N'))) | to_uuid()  }}
+    sked_admin_uuid: "{{ (999999999999999999999 | random | string + ansible_date_time.iso8601_micro) | to_uuid()  }}"
+
+- name: admin uuid
+  debug:
+    msg:
+      - "{{ sked_admin_uuid }}" 
 
 - name: Template for creating first user (admin)
   template:
-    src: /tmp/addAdmin.sql.d2
+    src: tmp/addAdmin.sql.d2
     dest: /tmp/addAdmin.sql
+    owner: postgres
+    group: postgres
 
 - name: Execute script
-  shell: "psql -v ON_ERROR_STOP --dbname sked /tmp/addAdmin.sql"
+  shell: "sudo -u postgres psql -v ON_ERROR_STOP -d sked -f /tmp/addAdmin.sql"
 
 - name: Delete remote script
   file:
@@ -44,19 +53,26 @@
 
 - name: Set expiration time variable
   set_fact:
-  token_expiration_datetime: "{{ texpiration }}"
+    token_expiration_datetime: "{{ texpiration }}"
 
 - name: Create a random token id
   set_fact:
-  token_id: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=40') }}"
+    token_id: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=40') }}"
+
+- name: random token id
+  debug: 
+    msg:
+      - "{{ token_id }}"
 
 - name: Template for adding token for admin email confirmation
   template:
-    src: /tmp/addAdminToken.sql.d2
+    src: tmp/addAdminToken.sql.d2
     dest: /tmp/addAdminToken.sql
+    owner: postgres
+    group: postgres
 
 - name: Execute script
-  shell: "psql -v ON_ERROR_STOP --dbname sked /tmp/addAdminToken.sql"
+  shell: "sudo -u postgres psql -v ON_ERROR_STOP -d sked -f /tmp/addAdminToken.sql"
 
 - name: Delete token sql script
   file:
