@@ -14,7 +14,7 @@
     mode: 0644
   with_items:
     - nginx.conf
-      dhparam
+    - dhparam
   notify: Reload NGINX
 
 - name: Add server block
