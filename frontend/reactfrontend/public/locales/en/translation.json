@@ -40,5 +40,7 @@
       "Wednesday":"Wed",
       "Thursday":"Thu",
       "Friday":"Fri",
-      "Saturday":"Sat"
+      "Saturday":"Sat",
+      "Day":"Day"
+
 }
