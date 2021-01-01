@@ -2,6 +2,7 @@ ul {
   list-style-type: none;
 }
 .DaysList {
+  flex-direction: column;
   overflow-y: scroll;
   height: 350px;
 }

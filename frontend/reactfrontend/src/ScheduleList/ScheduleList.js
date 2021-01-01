@@ -16,11 +16,14 @@ class ScheduleList extends Component {
       currentMonth: "",
       currentYear: "",
       appointments: [],
+      parsedAppointments: [],
       appSchedules: [],
       appSelected: false,
       surgeries: [],
+      parsedSurgeries: [],
       surgSchedules: [],
       calendarView: [],
+      schedsInSelectedDay: [],
     };
   }
   componentDidMount() {
@@ -100,8 +103,29 @@ class ScheduleList extends Component {
       }
     };
   }
-  clickedOnDay(d) {
+  selectCalendarDay(d) {
     console.log(d);
+    let schedsInSelectedDay = [];
+    if (this.state.appSelected) {
+      // show appointments for day d
+      this.state.parsedAppointments.forEach((e) => {
+        if (e.day === d) {
+          console.log(e);
+          e.schedules.forEach((s) => {
+            schedsInSelectedDay.push({
+              id: s.id,
+              doctorName: s.doctorName,
+              patientName: s.patientName,
+            });
+          });
+        }
+      });
+    } else {
+      // show surgeries for day d
+    }
+    this.setState({
+      schedsInSelectedDay: [...schedsInSelectedDay],
+    });
   }
   clickedOnAppt(a) {
     console.log(a);
@@ -134,6 +158,9 @@ class ScheduleList extends Component {
         day: thisDay.format("D"),
       });
     }
+    this.setState({
+      parsedAppointments: [...daysOfMonth],
+    });
     let apptsSchedules = [];
     for (let i = 0; i < nDays; i++) {
       apptsSchedules.push(
@@ -205,6 +232,9 @@ class ScheduleList extends Component {
         day: thisDay.format("D"),
       });
     }
+    this.setState({
+      parsedSurgeries: [...daysOfMonth],
+    });
     let surgsSchedules = [];
     for (let i = 0; i < nDays; i++) {
       surgsSchedules.push(
@@ -258,7 +288,9 @@ class ScheduleList extends Component {
     this.setState({
       currentMonth: m,
       appointments: [],
+      parsedAppointments: [],
       surgeries: [],
+      parsedSurgeries: [],
     });
     this.updateAppointmtsAndSurgsData(
       Number(m),
@@ -276,7 +308,9 @@ class ScheduleList extends Component {
     this.setState({
       currentYear: y,
       appointments: [],
+      parsedAppointments: [],
       surgeries: [],
+      parsedSurgeries: [],
     });
     this.updateAppointmtsAndSurgsData(
       Number(this.state.currentMonth),
@@ -293,9 +327,6 @@ class ScheduleList extends Component {
         appSelected: false,
       });
     }
-  }
-  selectCalendarDay(d) {
-    console.log(d);
   }
   render() {
     const { t } = this.props;
@@ -378,16 +409,20 @@ class ScheduleList extends Component {
         </section>
         <section>
           <p>
-            <b>{t("Days")}:</b>
+            <b>{t("Schedules")}</b>
           </p>
           <div className="DaysList">
             <ul>
-              {this.state.appSelected
-                ? this.state.appSchedules
-                : this.state.surgSchedules}
+              {this.state.schedsInSelectedDay.map((e) => {
+                return (
+                  <li key={e.id}>
+                    {e.doctorName}: {e.patientName}
+                  </li>
+                );
+              })}
             </ul>
           </div>
-        </section>{" "}
+        </section>
       </div>
     );
   }
