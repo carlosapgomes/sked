@@ -1,8 +1,10 @@
 ul {
   list-style-type: none;
 }
-.DaysList {
+.DayListSection {
   flex-direction: column;
+}
+.DaysList {
   overflow-y: scroll;
   height: 350px;
 }
