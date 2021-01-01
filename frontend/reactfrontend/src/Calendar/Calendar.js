@@ -9,6 +9,13 @@ class Calendar extends Component {
     this.state = {};
   }
 
+  selectDay(e) {
+    let day = e.target.innerText;
+    console.log(e.target.innerText);
+    if (day !== "") {
+      this.props.selectCalendarDay(day);
+    }
+  }
   render() {
     const { t } = this.props;
     return (
@@ -26,7 +33,16 @@ class Calendar extends Component {
           {this.props.view.map((w) => {
             let i = 0;
             return w.map((d) => {
-              return <span key={i++}>{d > 0 ? d : ""}</span>;
+              return (
+                <span
+                  key={i++}
+                  onClick={(e) => {
+                    this.selectDay(e);
+                  }}
+                >
+                  {d > 0 ? d : ""}
+                </span>
+              );
             });
           })}
         </div>

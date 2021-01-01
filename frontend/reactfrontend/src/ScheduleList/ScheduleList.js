@@ -131,6 +131,7 @@ class ScheduleList extends Component {
         nOfSchedules: nOfSchedules,
         schedules: [...schedules],
         weekday: thisDay.format("dd"),
+        day: thisDay.format("D"),
       });
     }
     let apptsSchedules = [];
@@ -201,6 +202,7 @@ class ScheduleList extends Component {
         nOfSchedules: nOfSchedules,
         schedules: [...schedules],
         weekday: thisDay.format("dd"),
+        day: thisDay.format("D"),
       });
     }
     let surgsSchedules = [];
@@ -292,6 +294,9 @@ class ScheduleList extends Component {
       });
     }
   }
+  selectCalendarDay(d) {
+    console.log(d);
+  }
   render() {
     const { t } = this.props;
     return (
@@ -365,7 +370,10 @@ class ScheduleList extends Component {
                 <option value="2021">2021</option>
               </select>
             </div>
-            <Calendar view={this.state.calendarView}></Calendar>
+            <Calendar
+              view={this.state.calendarView}
+              selectCalendarDay={(d) => this.selectCalendarDay(d)}
+            ></Calendar>
           </form>
         </section>
         <section>
