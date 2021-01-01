@@ -24,6 +24,7 @@ class ScheduleList extends Component {
       surgSchedules: [],
       calendarView: [],
       schedsInSelectedDay: [],
+      selectedDay: "",
     };
     this.myRef = React.createRef();
   }
@@ -105,7 +106,9 @@ class ScheduleList extends Component {
     };
   }
   selectCalendarDay(d) {
-    console.log(d);
+    this.setState({
+      selectedDay: d,
+    });
     let schedsInSelectedDay = [];
     if (this.state.appSelected) {
       // show appointments for day d
@@ -423,7 +426,9 @@ class ScheduleList extends Component {
         </section>
         <section className="DayListSection">
           <p>
-            <b ref={this.myRef}>{t("Schedules")}</b>
+            <b ref={this.myRef}>
+              {t("Day")}: {this.selectedDay}
+            </b>
           </p>
           <div>
             <ul>
