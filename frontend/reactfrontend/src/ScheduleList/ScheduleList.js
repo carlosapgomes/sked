@@ -349,8 +349,7 @@ class ScheduleList extends Component {
     const { t } = this.props;
     return (
       <div className="SchedulesList">
-        <h1>{t("Schedules")}</h1>
-        <section>
+        <section style={{ display: "flex", flexDirection: "column" }}>
           <form>
             <div style={{ display: "flex", justifyContent: "space-evenly" }}>
               <input
@@ -377,8 +376,6 @@ class ScheduleList extends Component {
               />
               <label htmlFor="surgeries">{t("Surgeries")}</label>
             </div>{" "}
-            <hr />
-            <p>{t("ChooseMonthYear")}:</p>
             <div style={{ display: "flex", justifyContent: "space-evenly" }}>
               <label htmlFor="month">{t("Month")}: </label>
               &nbsp;
@@ -427,7 +424,7 @@ class ScheduleList extends Component {
         <section className="DayListSection">
           <p>
             <b ref={this.myRef}>
-              {t("Day")}: {this.state.selectedDay}
+              {t("Schedule")}: {t("Day")} - {this.state.selectedDay}
             </b>
           </p>
           <div>
