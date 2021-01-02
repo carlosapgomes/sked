@@ -1,6 +1,6 @@
 .Calendar {
   width: 300px;
-  margin: 2rem auto;
+  margin: 0 auto 1rem;
 }
 
 .Labels,
@@ -10,8 +10,9 @@
   text-align: right;
   grid-gap: 4px;
 }
+
 .Dates span {
-  height: 50px;
+  height: 30px;
   font-size: 16px;
   letter-spacing: -1px;
   border: 1px solid #e6e4e4;
