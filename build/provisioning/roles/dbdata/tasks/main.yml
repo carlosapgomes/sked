@@ -19,9 +19,14 @@
   shell: 'date --utc  +"%F %T %Z"'
   register: tstamp
 
+- name: Show timestamp
+  debug:
+    msg:
+      - "{{ tstamp.stdout }}"
+
 - name: Set current datetime variable
   set_fact: 
-    current_datetime: "{{ tstamp }}"
+    current_datetime: "{{ tstamp.stdout }}"
 
 - name: Generate uuid for Admin
   set_fact:
@@ -48,12 +53,17 @@
     state: absent
 
 - name: Set expiration date for admin email confirmation token
-  shell: 'date --utc  +"+1 hours %F %T %Z" -d "+1 hour"'
+  shell: 'date --utc  +"%F %T %Z" -d "+1 hour"'
   register: texpiration
+
+- name: Show expiration date
+  debug:
+    msg:
+      - "{{ texpiration.stdout }}"
 
 - name: Set expiration time variable
   set_fact:
-    token_expiration_datetime: "{{ texpiration }}"
+    token_expiration_datetime: "{{ texpiration.stdout }}"
 
 - name: Create a random token id
   set_fact:
