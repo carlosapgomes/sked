@@ -52,14 +52,16 @@ echo "Sked temporary folder: $SKEDDIR"
 mkdir "$SKEDDIR/templates" || exit 1;
 cp ../backend/internal/web/templates/* "$SKEDDIR/templates" || exit 1;
 echo "starting the backend"
-echo "Waiting postgres to launch..."
 cd $SKEDDIR
 n=0
 until [ "$n" -ge 10 ]
 do
+   echo ""
+   echo "Waiting postgres to launch..."
    ./skedbackend && break  
    n=$((n+1)) 
+   echo "Trying again in 5 seconds..."
    sleep 5 
 done
-
+sigint
 
