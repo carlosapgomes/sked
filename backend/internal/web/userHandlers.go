@@ -223,7 +223,7 @@ func (app App) userPassword(w http.ResponseWriter, r *http.Request) {
 			Email: u.Email,
 			ID:    u.ID,
 		},
-		Link: "",
+		Link: "/",
 	}
 	out, err := app.render("operation-success.gohtml", tplData)
 	if err != nil {
