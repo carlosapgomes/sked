@@ -12,6 +12,7 @@ import (
 	"carlosapgomes.com/sked/internal/services"
 	"carlosapgomes.com/sked/internal/storage"
 	"carlosapgomes.com/sked/internal/web"
+	"golang.org/x/text/language"
 )
 
 func main() {
@@ -141,6 +142,11 @@ func main() {
 		Secure:   ckSecure,
 		SameSite: ckSameSite,
 	}
+	// configure available languages (first in array is the default)
+	langMatcher := language.NewMatcher([]language.Tag{
+		language.BrazilianPortuguese,
+		language.AmericanEnglish,
+	})
 	// Initialize web adapter (driver adapter) injecting the
 	// core services as its dependencies
 	app := web.New(errorLog,
@@ -152,7 +158,8 @@ func main() {
 		tokenService,
 		patientService,
 		appointmentService,
-		surgeryService)
+		surgeryService,
+		langMatcher)
 
 	// Run web adapter
 	srv := &http.Server{
