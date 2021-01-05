@@ -6,17 +6,20 @@
     <title>{{.Title}}</title>
   </head>
   <body>
-  <h3>Olá</h3>
-  <p> Estamos enviando essa mensagem porque você (ou alguma outra pessoa) forneceu esse
-  endereço de email ({{.User.Email}}) em nosso site, solicitando uma mudança de senha.
-  Entretanto, não há conta registrada com esse email em nosso banco de dados.</p>
-  <p>Se você é realmente um de nossos usuários e está tentanto o 'reset' de sua conta conosco, por favor
-  refaça o processo com o endereço de email que usou para se cadastrar.</p>
-  <p>Se você não tem uma conta em nosso site, ignore esse email, provavelmente
-  alguém digitou seu email por engano.<p>
+  <h3>Hello</h3>
+    <p> We sent you this message because you or someone else requested a
+      password reset to the account associated with {{.User.Email}} 
+      at Sked.<p>
+    <p>However, there is no registered account in our site with that 
+       email.</p>   
+    <p>If you really is one of our users and need a password reset, 
+       please request it again with the email address that you used 
+       to create your account.</p>
+    <p>If you don't have an account with us, please dismiss this message.
+       Probably someone typed your email by mistake.<p>
 
   <br/>
   <br/>
-  <p>Até breve!<p/>
+  <p>Bye<p/>
   </body>
 </html>
