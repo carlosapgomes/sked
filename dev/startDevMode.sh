@@ -31,7 +31,9 @@ sigint(){
     exit 0;
 }
 trap 'sigint' INT TERM
+echo
 echo "Starting Postgres with a temporary data folder"
+echo
 DATADIR=`mktemp -d /tmp/skedPgData.XXXXXX` || exit 1
 docker run -d \
         --name pgDevEnv \
@@ -41,25 +43,35 @@ docker run -d \
         -p 54320:5432 \
         postgres || exit 1
 
+echo
 echo "Postgres data folder: $DATADIR"
+echo
 echo "Building the backend binary"
 SKEDDIR=`mktemp -d /tmp/skeddir.XXXXXX` || exit 1
 cd ../backend
 /usr/local/go/bin/go build -o "$SKEDDIR/skedbackend" cmd/main.go;
 cd ../dev
-echo "Moving assets to the temporary folder"
+echo
+echo "Moving assets to temporary folder"
+echo
 echo "Sked temporary folder: $SKEDDIR"
+echo
 mkdir "$SKEDDIR/templates" || exit 1;
 cp ../backend/internal/web/templates/* "$SKEDDIR/templates" || exit 1;
 echo "starting the backend"
-echo "Waiting postgres to launch..."
 cd $SKEDDIR
 n=0
 until [ "$n" -ge 10 ]
 do
+   echo 
+   echo "Waiting postgres to launch..."
+   echo
    ./skedbackend && break  
    n=$((n+1)) 
+   echo
+   echo "Trying again in 5 seconds... (press 'CTRL-C' to abort)"
+   echo 
    sleep 5 
 done
-
+sigint
 

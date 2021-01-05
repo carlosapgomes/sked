@@ -42,5 +42,5 @@ func (app *App) Routes() http.Handler {
 	mux.Handle("/surgeries", app.requireAuthentication(app.surgeries()))
 	// health check route
 	mux.Handle("/healthz", app.Healthz())
-	return app.recoverPanic(app.logRequest(app.authenticate(mux)))
+	return app.recoverPanic(app.logRequest(app.authenticate(app.detectLang(mux))))
 }

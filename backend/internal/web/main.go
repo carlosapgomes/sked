@@ -10,6 +10,7 @@ import (
 	"carlosapgomes.com/sked/internal/surgery"
 	"carlosapgomes.com/sked/internal/token"
 	"carlosapgomes.com/sked/internal/user"
+	"golang.org/x/text/language"
 )
 
 type contextKey string
@@ -46,6 +47,7 @@ type App struct {
 	patientService     patient.Service
 	appointmentService appointment.Service
 	surgeryService     surgery.Service
+	langMatcher        language.Matcher
 }
 
 // New returns a new App object
@@ -58,7 +60,8 @@ func New(errorLog *log.Logger,
 	tokenService token.Service,
 	patientService patient.Service,
 	appointmentService appointment.Service,
-	surgeryService surgery.Service) *App {
+	surgeryService surgery.Service,
+	langMatcher language.Matcher) *App {
 	return &App{
 		errorLog:           errorLog,
 		infoLog:            infoLog,
@@ -70,5 +73,6 @@ func New(errorLog *log.Logger,
 		patientService:     patientService,
 		appointmentService: appointmentService,
 		surgeryService:     surgeryService,
+		langMatcher:        langMatcher,
 	}
 }

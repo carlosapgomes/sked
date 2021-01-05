@@ -11,6 +11,7 @@ https://dev.local
 -L
 -i
 Content-Type: application/json; charset=utf-8
+Accept-Language: en-US 
 POST /api/users/login
 {
   "email":"bob@example.com",
