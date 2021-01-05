@@ -144,14 +144,17 @@ func (app App) getAllDoctors(w http.ResponseWriter, r *http.Request) {
 // userPassword sets a user password (POST)
 func (app App) userPassword(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
+		fmt.Println("wrong http method")
 		app.clientError(w, http.StatusMethodNotAllowed)
 	}
 	uID := app.between(r.URL.Path, "/users/", "/password")
 	if uID == "" {
+		fmt.Println("no uid")
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
 	if !app.isValidUUID(uID) {
+		fmt.Println("invalid uuid")
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
@@ -159,6 +162,7 @@ func (app App) userPassword(w http.ResponseWriter, r *http.Request) {
 	u, ok := r.Context().Value(ContextKeyUser).(*user.User)
 	if !ok {
 		// no ContextKeyUser -> user is not authenticated
+		fmt.Println("no context user")
 		app.clientError(w, http.StatusForbidden)
 		return
 	}
@@ -183,6 +187,7 @@ func (app App) userPassword(w http.ResponseWriter, r *http.Request) {
 	var p pw
 	p.Password = r.FormValue("password")
 	p.Confirm = r.FormValue("confirm_password")
+	fmt.Printf("password: %v\n confirm_password: %v\n", p.Password, p.Confirm)
 	//err = json.Unmarshal(b, &p)
 	//if err != nil {
 	//app.serverError(w, err)
@@ -191,6 +196,7 @@ func (app App) userPassword(w http.ResponseWriter, r *http.Request) {
 	if (p.Password != p.Confirm) ||
 		(p.Password == "") ||
 		(utf8.RuneCountInString(p.Password) < 8) {
+		fmt.Println("pw and confirm are not equal")
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
