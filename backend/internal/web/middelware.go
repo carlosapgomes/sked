@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+
+	"golang.org/x/text/language"
 )
 
 func (app App) authenticate(next http.Handler) http.Handler {
@@ -118,5 +120,15 @@ func (app App) logRequest(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		app.infoLog.Printf("%s - %s %s %s", r.RemoteAddr, r.Proto, r.Method, r.URL.RequestURI())
 		next.ServeHTTP(w, r)
+	})
+}
+
+func (app App) detectLang(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		t, _, _ := language.ParseAcceptLanguage(r.Header.Get("Accept-Language"))
+		// the default language will be selected for t == nil
+		tag, _, _ := app.langMatcher.Match(t...)
+		ctx := context.WithValue(context.Background(), lang, tag)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
