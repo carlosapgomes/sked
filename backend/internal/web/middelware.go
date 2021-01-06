@@ -128,7 +128,7 @@ func (app App) detectLang(next http.Handler) http.Handler {
 		t, _, _ := language.ParseAcceptLanguage(r.Header.Get("Accept-Language"))
 		// the default language will be selected for t == nil
 		tag, _, _ := app.langMatcher.Match(t...)
-		ctx := context.WithValue(context.Background(), lang, tag)
+		ctx := context.WithValue(context.Background(), "lang", tag)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
