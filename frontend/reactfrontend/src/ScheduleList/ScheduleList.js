@@ -17,11 +17,9 @@ class ScheduleList extends Component {
       currentYear: "",
       appointments: [],
       parsedAppointments: [],
-      //appSchedules: [],
       appSelected: false,
       surgeries: [],
       parsedSurgeries: [],
-      //surgSchedules: [],
       calendarView: [],
       schedsInSelectedDay: [],
       selectedDay: "",
@@ -178,52 +176,6 @@ class ScheduleList extends Component {
     this.setState({
       parsedAppointments: [...daysOfMonth],
     });
-    //let apptsSchedules = [];
-    //for (let i = 0; i < nDays; i++) {
-    //apptsSchedules.push(
-    //<li key={(i + 1).toString()}>
-    //<details>
-    //{
-    //<summary>
-    //{daysOfMonth[i].dateStr}: {daysOfMonth[i].weekday} - #&nbsp;
-    //{daysOfMonth[i].nOfSchedules}
-    //</summary>
-    //}
-    //<div>
-    //<span
-    //className="AddSchedule"
-    //role="img"
-    //aria-label="Add appointment"
-    //data-day={i + 1}
-    //onClick={(e) => {
-    //this.clickedOnDay(e.target.dataset.day);
-    //}}
-    //>
-    //&#10133;
-    //</span>
-    //{!daysOfMonth[i].schedules
-    //? null
-    //: daysOfMonth[i].schedules.map((e) => {
-    //return (
-    //<div
-    //key={e.id}
-    //data-id={e.id}
-    //onClick={(e) => {
-    //this.clickedOnAppt(e.target.dataset.id);
-    //}}
-    //>
-    //{e.doctorName} : {e.patientName}
-    //</div>
-    //);
-    //})}
-    //</div>
-    //</details>
-    //</li>
-    //);
-    //}
-    //this.setState({
-    //appSchedules: [...apptsSchedules],
-    //});
   }
   updateSurgSchedulesList(m, y, data) {
     const nDays = new Date(y, Number(m) + 1, 0).getDate();
@@ -252,54 +204,6 @@ class ScheduleList extends Component {
     this.setState({
       parsedSurgeries: [...daysOfMonth],
     });
-    //let surgsSchedules = [];
-    //for (let i = 0; i < nDays; i++) {
-    //surgsSchedules.push(
-    //<li key={(i + 1).toString()}>
-    //<details>
-    //{
-    //<summary>
-    //{daysOfMonth[i].dateStr}: {daysOfMonth[i].weekday} - #&nbsp;
-    //{daysOfMonth[i].nOfSchedules}
-    //</summary>
-    //}
-    //<div>
-    //<span
-    //className="AddSchedule"
-    //role="img"
-    //aria-label="Add appointment"
-    //data-day={i + 1}
-    //onClick={(e) => {
-    //this.clickedOnDay(e.target.dataset.day);
-    //}}
-    //>
-    //&#10133;
-    //</span>
-    //{!daysOfMonth[i].schedules
-    //? null
-    //: daysOfMonth[i].schedules.map((e) => {
-    //return (
-    //<div
-    //key={e.id}
-    //data-id={e.id}
-    //onClick={(e) => {
-    //this.clickedOnSurg(e.target.dataset.id);
-    //}}
-    //>
-    //{e.doctorName} : {e.patientName}
-    //<br />
-    //{e.proposedSurgery}
-    //</div>
-    //);
-    //})}
-    //</div>
-    //</details>
-    //</li>
-    //);
-    //}
-    //this.setState({
-    //surgSchedules: [...surgsSchedules],
-    //});
   }
   setCurrentMonth(m) {
     this.setState({
