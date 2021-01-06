@@ -15,7 +15,7 @@ echo "Moving assets to the temporary folder"
 if [ ! -d  "$SKEDDIR/templates" ]; then
     mkdir "$SKEDDIR/templates" || exit 1
 fi
-cp ../backend/internal/web/templates/* "$SKEDDIR/templates" || exit 1
+cp -r ../backend/internal/web/templates/* "$SKEDDIR/templates" || exit 1
 echo
 echo "Building the frontend"
 cd ../frontend/reactfrontend
