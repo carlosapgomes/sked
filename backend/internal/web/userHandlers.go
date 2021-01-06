@@ -233,8 +233,7 @@ func (app App) userPassword(w http.ResponseWriter, r *http.Request) {
 	}
 	lang, ok := r.Context().Value("lang").(string)
 	if !ok {
-		fmt.Println("no context lang")
-		app.serverError(w, err)
+		app.serverError(w, errors.New("context: no context lang key"))
 		return
 	}
 	file := fmt.Sprintf("%s/%s", lang, "operation-success.gohtml")
@@ -441,8 +440,7 @@ func (app App) addUser() http.Handler {
 		}
 		lang, ok := r.Context().Value("lang").(string)
 		if !ok {
-			fmt.Println("no context lang")
-			app.serverError(w, err)
+			app.serverError(w, errors.New("context: no context lang key"))
 			return
 		}
 		file := fmt.Sprintf("%s/%s", lang, "validate-email.gohtml")
@@ -758,8 +756,7 @@ func (app App) validateEmail() http.Handler {
 		}
 		lang, ok := r.Context().Value("lang").(string)
 		if !ok {
-			fmt.Println("no context lang")
-			app.serverError(w, err)
+			app.serverError(w, errors.New("context: no context lang key"))
 			return
 		}
 		file := fmt.Sprintf("%s/%s", lang, "create-password.gohtml")
@@ -1001,8 +998,7 @@ func (app App) resetPassword() http.Handler {
 
 			lang, ok := r.Context().Value("lang").(string)
 			if !ok {
-				fmt.Println("no context lang")
-				app.serverError(w, err)
+				app.serverError(w, errors.New("context: no context lang key"))
 				return
 			}
 			file := fmt.Sprintf("%s/%s", lang, "reset-password-request.gohtml")
@@ -1042,8 +1038,7 @@ func (app App) resetPasswordNoLocalUser(w http.ResponseWriter,
 	}
 	lang, ok := r.Context().Value("lang").(string)
 	if !ok {
-		fmt.Println("no context lang")
-		app.serverError(w, err)
+		app.serverError(w, errors.New("context: no context lang key"))
 		return
 	}
 	file := fmt.Sprintf("%s/%s", lang, "reset-pw-no-local-user-email.gohtml")
@@ -1075,8 +1070,7 @@ func (app App) redirectToSuccessPageForPwResetRequest(w http.ResponseWriter,
 	}
 	lang, ok := r.Context().Value("lang").(string)
 	if !ok {
-		fmt.Println("no context lang")
-		app.serverError(w, err)
+		app.serverError(w, errors.New("context: no context lang key"))
 		return
 	}
 	file := fmt.Sprintf("%s/%s", lang, "default-reset-password-page.gohtml")
@@ -1200,8 +1194,7 @@ func (app App) verifyResetPw() http.Handler {
 			}
 			lang, ok := r.Context().Value("lang").(string)
 			if !ok {
-				fmt.Println("no context lang")
-				app.serverError(w, err)
+				app.serverError(w, errors.New("context: no context lang key"))
 				return
 			}
 			file := fmt.Sprintf("%s/%s", lang, "change-password.gohtml")
