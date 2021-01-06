@@ -57,7 +57,7 @@ echo
 echo "Sked temporary folder: $SKEDDIR"
 echo
 mkdir "$SKEDDIR/templates" || exit 1;
-cp ../backend/internal/web/templates/* "$SKEDDIR/templates" || exit 1;
+cp -r ../backend/internal/web/templates/* "$SKEDDIR/templates" || exit 1;
 echo "starting the backend"
 cd $SKEDDIR
 n=0
