@@ -231,7 +231,14 @@ func (app App) userPassword(w http.ResponseWriter, r *http.Request) {
 		},
 		Link: "/",
 	}
-	out, err := app.render("operation-success.gohtml", tplData)
+	lang, ok := r.Context().Value("lang").(string)
+	if !ok {
+		fmt.Println("no context lang")
+		app.serverError(w, err)
+		return
+	}
+	file := fmt.Sprintf("%s/%s", lang, "operation-success.gohtml")
+	out, err := app.render(file, tplData)
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -432,7 +439,14 @@ func (app App) addUser() http.Handler {
 			},
 			Link: link,
 		}
-		out, err := app.render("validate-email.gohtml", tplData)
+		lang, ok := r.Context().Value("lang").(string)
+		if !ok {
+			fmt.Println("no context lang")
+			app.serverError(w, err)
+			return
+		}
+		file := fmt.Sprintf("%s/%s", lang, "validate-email.gohtml")
+		out, err := app.render(file, tplData)
 		if err != nil {
 			app.serverError(w, err)
 			return
@@ -742,7 +756,14 @@ func (app App) validateEmail() http.Handler {
 				ID:    u.ID,
 			},
 		}
-		out, err := app.render("create-password.gohtml", tplData)
+		lang, ok := r.Context().Value("lang").(string)
+		if !ok {
+			fmt.Println("no context lang")
+			app.serverError(w, err)
+			return
+		}
+		file := fmt.Sprintf("%s/%s", lang, "create-password.gohtml")
+		out, err := app.render(file, tplData)
 		if err != nil {
 			app.serverError(w, err)
 			return
@@ -927,8 +948,8 @@ func (app App) resetPassword() http.Handler {
 					// there is no such account...
 					// redirect to default page explaining that an email
 					// was sent to such account
-					app.resetPasswordNoLocalUser(w, data.Email)
-					app.redirectToSuccessPageForPwResetRequest(w, data.Email)
+					app.resetPasswordNoLocalUser(w, r, data.Email)
+					app.redirectToSuccessPageForPwResetRequest(w, r, data.Email)
 					return
 				default:
 					app.serverError(w, err)
@@ -978,7 +999,14 @@ func (app App) resetPassword() http.Handler {
 				Link: link,
 			}
 
-			out, err := app.render("reset-password-request.gohtml", tplData)
+			lang, ok := r.Context().Value("lang").(string)
+			if !ok {
+				fmt.Println("no context lang")
+				app.serverError(w, err)
+				return
+			}
+			file := fmt.Sprintf("%s/%s", lang, "reset-password-request.gohtml")
+			out, err := app.render(file, tplData)
 			if err != nil {
 				app.serverError(w, err)
 				return
@@ -995,12 +1023,13 @@ func (app App) resetPassword() http.Handler {
 			}
 
 			// redirect user to page explaining that an email was sent
-			app.redirectToSuccessPageForPwResetRequest(w, u.Email)
+			app.redirectToSuccessPageForPwResetRequest(w, r, u.Email)
 			return
 		})
 }
 
-func (app App) resetPasswordNoLocalUser(w http.ResponseWriter, email string) {
+func (app App) resetPasswordNoLocalUser(w http.ResponseWriter,
+	r *http.Request, email string) {
 	// send msg to the given email address explaining that
 	// someone tried to reset a password in this site, but
 	// there is no such account...
@@ -1011,7 +1040,14 @@ func (app App) resetPasswordNoLocalUser(w http.ResponseWriter, email string) {
 			Email: email,
 		},
 	}
-	out, err := app.render("reset-pw-no-local-user-email.gohtml", tplData)
+	lang, ok := r.Context().Value("lang").(string)
+	if !ok {
+		fmt.Println("no context lang")
+		app.serverError(w, err)
+		return
+	}
+	file := fmt.Sprintf("%s/%s", lang, "reset-pw-no-local-user-email.gohtml")
+	out, err := app.render(file, tplData)
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -1028,7 +1064,8 @@ func (app App) resetPasswordNoLocalUser(w http.ResponseWriter, email string) {
 	}
 }
 
-func (app App) redirectToSuccessPageForPwResetRequest(w http.ResponseWriter, email string) {
+func (app App) redirectToSuccessPageForPwResetRequest(w http.ResponseWriter,
+	r *http.Request, email string) {
 	// redirect user to page explaining that an email was sent
 	tplData := &templateData{
 		Title: "Confirmação de Solicitação",
@@ -1036,7 +1073,14 @@ func (app App) redirectToSuccessPageForPwResetRequest(w http.ResponseWriter, ema
 			Email: email,
 		},
 	}
-	out, err := app.render("default-reset-password-page.gohtml", tplData)
+	lang, ok := r.Context().Value("lang").(string)
+	if !ok {
+		fmt.Println("no context lang")
+		app.serverError(w, err)
+		return
+	}
+	file := fmt.Sprintf("%s/%s", lang, "default-reset-password-page.gohtml")
+	out, err := app.render(file, tplData)
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -1154,7 +1198,14 @@ func (app App) verifyResetPw() http.Handler {
 					ID:    u.ID,
 				},
 			}
-			out, err := app.render("change-password.gohtml", tplData)
+			lang, ok := r.Context().Value("lang").(string)
+			if !ok {
+				fmt.Println("no context lang")
+				app.serverError(w, err)
+				return
+			}
+			file := fmt.Sprintf("%s/%s", lang, "change-password.gohtml")
+			out, err := app.render(file, tplData)
 			if err != nil {
 				app.serverError(w, err)
 				return
