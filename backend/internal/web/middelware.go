@@ -60,7 +60,7 @@ func (app App) authenticate(next http.Handler) http.Handler {
 			next.ServeHTTP(w, r)
 			return
 		}
-		// set context keys for authenticaded, user, sessionID and user.Roles
+		// set context keys for authenticated user, sessionID and user.Roles
 		ctx := context.WithValue(r.Context(), ContextKeyIsAuthenticated, true)
 		ctx = context.WithValue(ctx, ContextKeyUser, user)
 		ctx = context.WithValue(ctx, ContextKeySID, session.ID)
@@ -128,7 +128,7 @@ func (app App) detectLang(next http.Handler) http.Handler {
 		t, _, _ := language.ParseAcceptLanguage(r.Header.Get("Accept-Language"))
 		// the default language will be selected for t == nil
 		tag, _, _ := app.langMatcher.Match(t...)
-		ctx := context.WithValue(context.Background(), "lang", tag)
+		ctx := context.WithValue(r.Context(), ContextKeyLang, tag.String())
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
