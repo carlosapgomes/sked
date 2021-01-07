@@ -144,17 +144,17 @@ func (app App) getAllDoctors(w http.ResponseWriter, r *http.Request) {
 // userPassword sets a user password (POST)
 func (app App) userPassword(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		fmt.Println("wrong http method")
+		app.errorLog.Println("wrong http method")
 		app.clientError(w, http.StatusMethodNotAllowed)
 	}
 	uID := app.between(r.URL.Path, "/users/", "/password")
 	if uID == "" {
-		fmt.Println("no uid")
+		app.errorLog.Println("no uid")
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
 	if !app.isValidUUID(uID) {
-		fmt.Println("invalid uuid")
+		app.errorLog.Println("invalid uuid")
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
@@ -162,7 +162,7 @@ func (app App) userPassword(w http.ResponseWriter, r *http.Request) {
 	u, ok := r.Context().Value(ContextKeyUser).(*user.User)
 	if !ok {
 		// no ContextKeyUser -> user is not authenticated
-		fmt.Println("no context user")
+		app.errorLog.Println("no context user")
 		app.clientError(w, http.StatusForbidden)
 		return
 	}
@@ -174,12 +174,6 @@ func (app App) userPassword(w http.ResponseWriter, r *http.Request) {
 	// get pw from body
 	r.ParseForm()
 
-	//b, err := ioutil.ReadAll(r.Body)
-	//defer r.Body.Close()
-	//if err != nil {
-	//app.clientError(w, http.StatusBadRequest)
-	//return
-	//}
 	type pw struct {
 		Password string `json:"password"`
 		Confirm  string `json:"confirm_password"`
@@ -187,16 +181,10 @@ func (app App) userPassword(w http.ResponseWriter, r *http.Request) {
 	var p pw
 	p.Password = r.FormValue("password")
 	p.Confirm = r.FormValue("confirm_password")
-	fmt.Printf("password: %v\n confirm_password: %v\n", p.Password, p.Confirm)
-	//err = json.Unmarshal(b, &p)
-	//if err != nil {
-	//app.serverError(w, err)
-	//return
-	//}
 	if (p.Password != p.Confirm) ||
 		(p.Password == "") ||
 		(utf8.RuneCountInString(p.Password) < 8) {
-		fmt.Println("pw and confirm are not equal")
+		app.errorLog.Println("'password' and 'confirm_password' are not equal")
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
@@ -222,6 +210,7 @@ func (app App) userPassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// redirect user to operation-success page
+	link := fmt.Sprintf("https://%s", r.Host)
 	tplData := &templateData{
 		Title: "Password updated",
 		User: &user.User{
@@ -229,7 +218,7 @@ func (app App) userPassword(w http.ResponseWriter, r *http.Request) {
 			Email: u.Email,
 			ID:    u.ID,
 		},
-		Link: "/",
+		Link: link,
 	}
 	lang, ok := r.Context().Value(ContextKeyLang).(string)
 	if !ok {
