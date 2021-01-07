@@ -34,8 +34,8 @@
 
 - name: Copy skedbackend to guest
   copy:
-    src: opt/skedbackend/skedbackend
-    dest: /opt/skedbackend/skedbackend
+    src: "opt/skedbackend/"
+    dest: "/opt/skedbackend/"
     owner: skedbackend
     group: skedbackend
     mode: 0700
