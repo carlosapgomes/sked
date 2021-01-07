@@ -231,7 +231,7 @@ func (app App) userPassword(w http.ResponseWriter, r *http.Request) {
 		},
 		Link: "/",
 	}
-	lang, ok := r.Context().Value("lang").(string)
+	lang, ok := r.Context().Value(ContextKeyLang).(string)
 	if !ok {
 		app.serverError(w, errors.New("context: no context lang key"))
 		return
@@ -438,7 +438,7 @@ func (app App) addUser() http.Handler {
 			},
 			Link: link,
 		}
-		lang, ok := r.Context().Value("lang").(string)
+		lang, ok := r.Context().Value(ContextKeyLang).(string)
 		if !ok {
 			app.serverError(w, errors.New("context: no context lang key"))
 			return
@@ -754,7 +754,7 @@ func (app App) validateEmail() http.Handler {
 				ID:    u.ID,
 			},
 		}
-		lang, ok := r.Context().Value("lang").(string)
+		lang, ok := r.Context().Value(ContextKeyLang).(string)
 		if !ok {
 			app.serverError(w, errors.New("context: no context lang key"))
 			return
@@ -996,7 +996,7 @@ func (app App) resetPassword() http.Handler {
 				Link: link,
 			}
 
-			lang, ok := r.Context().Value("lang").(string)
+			lang, ok := r.Context().Value(ContextKeyLang).(string)
 			if !ok {
 				app.serverError(w, errors.New("context: no context lang key"))
 				return
@@ -1036,7 +1036,7 @@ func (app App) resetPasswordNoLocalUser(w http.ResponseWriter,
 			Email: email,
 		},
 	}
-	lang, ok := r.Context().Value("lang").(string)
+	lang, ok := r.Context().Value(ContextKeyLang).(string)
 	if !ok {
 		app.serverError(w, errors.New("context: no context lang key"))
 		return
@@ -1068,7 +1068,7 @@ func (app App) redirectToSuccessPageForPwResetRequest(w http.ResponseWriter,
 			Email: email,
 		},
 	}
-	lang, ok := r.Context().Value("lang").(string)
+	lang, ok := r.Context().Value(ContextKeyLang).(string)
 	if !ok {
 		app.serverError(w, errors.New("context: no context lang key"))
 		return
@@ -1192,7 +1192,7 @@ func (app App) verifyResetPw() http.Handler {
 					ID:    u.ID,
 				},
 			}
-			lang, ok := r.Context().Value("lang").(string)
+			lang, ok := r.Context().Value(ContextKeyLang).(string)
 			if !ok {
 				app.serverError(w, errors.New("context: no context lang key"))
 				return

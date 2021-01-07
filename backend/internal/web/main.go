@@ -27,6 +27,9 @@ const ContextKeyUser = contextKey("User")
 // ContextResourceID holds the ID of the resources been accessed
 const ContextResourceID = contextKey("resourceID")
 
+// ContextLang holds the language tag to be used
+const ContextKeyLang = contextKey("lang")
+
 // CkProps holds configurable cookie properties
 type CkProps struct {
 	Name     string
