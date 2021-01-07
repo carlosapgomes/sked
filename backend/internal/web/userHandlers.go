@@ -668,6 +668,7 @@ func (app App) logout() http.Handler {
 func (app App) validateEmail() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
+			app.errorLog.Println("Validate token: wrong http method")
 			app.clientError(w, http.StatusBadRequest)
 			return
 		}
@@ -677,6 +678,8 @@ func (app App) validateEmail() http.Handler {
 		if err != nil {
 			// no token or DB error
 			// TODO: redirect user to proper page
+			app.errorLog.Println("Validate token: no token or DB error")
+			app.errorLog.Println(err)
 			app.clientError(w, http.StatusBadRequest)
 			return
 		}
@@ -686,11 +689,13 @@ func (app App) validateEmail() http.Handler {
 		if t.ExpiresAt.Before(now) {
 			// token has expired
 			// TODO: redirect user to proper page
+			app.errorLog.Println("Validate token: token has expired")
 			app.clientError(w, http.StatusBadRequest)
 			return
 		}
 		if t.Kind != token.ValidateEmail {
 			// improper token kind
+			app.errorLog.Println("Validate token: improper token kind")
 			// TODO: redirect user to proper page
 			app.clientError(w, http.StatusBadRequest)
 			return
