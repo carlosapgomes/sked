@@ -62,10 +62,13 @@
    owner: root
    group: root
    mode: 0600
-  notify: reload systemd
    
+- name: just force systemd to reread configs (2.4 and above)
+  systemd: 
+    daemon_reload=yes
+
 - name: Enable skedbackend service
   systemd:
     name: skedbackend
     enabled: yes
-    state: started
+    state: restarted
