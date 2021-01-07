@@ -1,18 +1,33 @@
 ---
 # initialize database
-- name: Copy script to initialize database tables
+- name: Copy script to initialize database 
   copy: 
     src: tmp/tables.sql
     dest: /tmp/tables.sql
     owner: postgres
     group: postgres
 
-- name: Execute script
+- name: Execute script to initialize DB tables
   shell: "sudo -u postgres psql -v ON_ERROR_STOP -d sked -f /tmp/tables.sql"
 
 - name: Delete remote script
   file: 
     path: "/tmp/tables.sql"
+    state: absent
+
+- name: Copy script to grant privileges
+  copy: 
+    src: tmp/grant.sql
+    dest: /tmp/grant.sql
+    owner: postgres
+    group: postgres
+
+- name: Execute script to grant privileges
+  shell: "sudo -u postgres psql -v ON_ERROR_STOP -d sked -f /tmp/grant.sql"
+
+- name: Delete remote script
+  file: 
+    path: "/tmp/grant.sql"
     state: absent
 
 - name: Get timestamp
