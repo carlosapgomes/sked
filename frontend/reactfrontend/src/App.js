@@ -1,13 +1,13 @@
-import React, { Component } from "react";
+import React, { Component, Suspense, lazy } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import "./App.css";
 import Auth from "./Auth/Auth";
-import Appointments from "./Appointments/Appointments";
-import Surgeries from "./Surgeries/Surgeries";
-import Patients from "./Patients/Patients";
-import Users from "./Users/Users";
-import ScheduleList from "./ScheduleList/ScheduleList";
 import { withTranslation } from "react-i18next";
+const ScheduleList = lazy(() => import("./ScheduleList/ScheduleList"));
+const Users = lazy(() => import("./Users/Users"));
+const Patients = lazy(() => import("./Patients/Patients"));
+const Surgeries = lazy(() => import("./Surgeries/Surgeries"));
+const Appointments = lazy(() => import("./Appointments/Appointments"));
 
 // loading component for suspense fallback
 class App extends Component {
@@ -306,48 +306,48 @@ class App extends Component {
                 loggedIn={this.state.loggedIn}
               />
             ) : (
-              <Switch>
-                <Route path="/" exact>
-                  <ScheduleList></ScheduleList>
-                </Route>
-                <Route path="/Appointments">
-                  <Appointments
-                    currentUser={this.state.currentUser}
-                    currentPatient={this.state.currentPatient}
-                    updateCurrentPatient={(p) => {
-                      this.updateCurrentPatient(p);
+              <Suspense fallback={<div>Loading...</div>}>
+                <Switch>
+                  <Route path="/" exact component={ScheduleList}></Route>
+                  <Route path="/Appointments">
+                    <Appointments
+                      currentUser={this.state.currentUser}
+                      currentPatient={this.state.currentPatient}
+                      updateCurrentPatient={(p) => {
+                        this.updateCurrentPatient(p);
+                      }}
+                      doctors={this.state.doctors}
+                    />
+                  </Route>
+                  <Route path="/Surgeries">
+                    <Surgeries
+                      currentUser={this.state.currentUser}
+                      currentPatient={this.state.currentPatient}
+                      updateCurrentPatient={(p) => {
+                        this.updateCurrentPatient(p);
+                      }}
+                      doctors={this.state.doctors}
+                    />
+                  </Route>
+                  <Route path="/Patients">
+                    <Patients
+                      currentPatient={this.state.currentPatient}
+                      updateCurrentPatient={(p) => {
+                        this.updateCurrentPatient(p);
+                      }}
+                    />
+                  </Route>
+                  <Route path="/Users">
+                    {() => {
+                      if (this.isAdminOrClerk()) {
+                        return <Users />;
+                      } else {
+                        return null;
+                      }
                     }}
-                    doctors={this.state.doctors}
-                  />
-                </Route>
-                <Route path="/Surgeries">
-                  <Surgeries
-                    currentUser={this.state.currentUser}
-                    currentPatient={this.state.currentPatient}
-                    updateCurrentPatient={(p) => {
-                      this.updateCurrentPatient(p);
-                    }}
-                    doctors={this.state.doctors}
-                  />
-                </Route>
-                <Route path="/Patients">
-                  <Patients
-                    currentPatient={this.state.currentPatient}
-                    updateCurrentPatient={(p) => {
-                      this.updateCurrentPatient(p);
-                    }}
-                  />
-                </Route>
-                <Route path="/Users">
-                  {() => {
-                    if (this.isAdminOrClerk()) {
-                      return <Users />;
-                    } else {
-                      return null;
-                    }
-                  }}
-                </Route>
-              </Switch>
+                  </Route>
+                </Switch>
+              </Suspense>
             )}
           </main>
           <footer>
