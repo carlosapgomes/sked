@@ -8,6 +8,7 @@ const Users = lazy(() => import("./Users/Users"));
 const Patients = lazy(() => import("./Patients/Patients"));
 const Surgeries = lazy(() => import("./Surgeries/Surgeries"));
 const Appointments = lazy(() => import("./Appointments/Appointments"));
+const ResetPassword = lazy(() => import("./ResetPassword/ResetPassword"));
 
 // loading component for suspense fallback
 class App extends Component {
@@ -292,7 +293,7 @@ class App extends Component {
               )}
 
               {!this.state.loggedIn && (
-                <a className="LoginBtn" href="#!">
+                <a className="LoginBtn" href="/">
                   <em>Login</em>
                 </a>
               )}
@@ -300,11 +301,20 @@ class App extends Component {
           </header>
           <main>
             {!this.state.loggedIn ? (
-              <Auth
-                updateLogin={(s) => this.updateLogin(s)}
-                updateUser={(u) => this.updateUser(u)}
-                loggedIn={this.state.loggedIn}
-              />
+              <Switch>
+                <Route
+                  path="/ResetPassword"
+                  exact
+                  component={ResetPassword}
+                ></Route>
+                <Route path="/">
+                  <Auth
+                    updateLogin={(s) => this.updateLogin(s)}
+                    updateUser={(u) => this.updateUser(u)}
+                    loggedIn={this.state.loggedIn}
+                  />{" "}
+                </Route>
+              </Switch>
             ) : (
               <Suspense fallback={<div>Loading...</div>}>
                 <Switch>

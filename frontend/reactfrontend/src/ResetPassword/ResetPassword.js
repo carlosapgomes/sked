@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import "./ResetPassword.css";
 
-const ResetPassword = (props) => {
+const ResetPassword = () => {
   const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const resetPassword = (e) => {
@@ -13,24 +13,13 @@ const ResetPassword = (props) => {
     ajax.send(JSON.stringify({ email: email }));
     ajax.onreadystatechange = () => {
       if (ajax.readyState === 4 && ajax.status === 200) {
-        var data = JSON.parse(ajax.responseText);
-        if (typeof data.name != "undefined") {
-          var user = {
-            name: data.name,
-            email: data.email,
-            uid: data.id,
-            phone: data.phone,
-            roles: data.roles,
-          };
-          props.updateUser(user);
-          props.updateLogin(data.active && data.emailWasValidated);
-        }
-      }
-      if (ajax.readyState === 4 && ajax.status !== 200) {
-        console.log(ajax.responseText);
-        window.alert("Could not login");
+        window.alert("Request sent");
       }
     };
+    if (ajax.readyState === 4 && ajax.status !== 200) {
+      console.log(ajax.responseText);
+      window.alert("Could send request");
+    }
   };
 
   return (
