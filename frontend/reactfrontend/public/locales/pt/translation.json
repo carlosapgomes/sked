@@ -42,5 +42,9 @@
       "Thursday":"Qui",
       "Friday":"Sex",
       "Saturday":"Sab",
-      "Day":"Dia"
+      "Day":"Dia",
+      "ForgottenPw":"Esqueceu a senha?",
+      "ClickHere":"Clique aqui",
+      "ResetPasswordMsg":"Insira seu email para receber um link de reset de senha:",
+      "SendLink":"Enviar"
 }

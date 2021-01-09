@@ -42,6 +42,9 @@
       "Thursday":"Thu",
       "Friday":"Fri",
       "Saturday":"Sat",
-      "Day":"Day"
-
+      "Day":"Day",
+      "ForgottenPw":"Forgotten password?",
+      "ClickHere":"Click here",
+      "ResetPasswordMsg":"Type your email address to receive a reset link:",
+      "SendLink":"Send"
 }
