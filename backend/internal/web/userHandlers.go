@@ -1003,8 +1003,8 @@ func (app App) resetPassword() http.Handler {
 			}
 
 			msg := out.String()
-			s := "Reset de senha"
-			res, err := app.mailerService.Send(u.Name, u.Email, "Reset de senha", msg)
+			s := "Password Reset"
+			res, err := app.mailerService.Send(u.Name, u.Email, "Password Reset", msg)
 			app.infoLog.Printf("Sent %v to %v\nResponse Code: %v\nMsg: %v\n",
 				s, u.Email, res.Code, res.Msg)
 			if err != nil {
@@ -1025,7 +1025,7 @@ func (app App) resetPasswordNoLocalUser(w http.ResponseWriter,
 	// there is no such account...
 
 	tplData := &templateData{
-		Title: "Reset de senha",
+		Title: "Password Reset",
 		User: &user.User{
 			Email: email,
 		},
@@ -1043,7 +1043,7 @@ func (app App) resetPasswordNoLocalUser(w http.ResponseWriter,
 	}
 
 	msg := out.String()
-	s := "Reset de Senha"
+	s := "Password Reset"
 	res, err := app.mailerService.Send("", email, s, msg)
 	app.infoLog.Printf("Sent %v to %v\nResponse Code: %v\nMsg: %v\n",
 		s, email, res.Code, res.Msg)
@@ -1057,7 +1057,7 @@ func (app App) redirectToSuccessPageForPwResetRequest(w http.ResponseWriter,
 	r *http.Request, email string) {
 	// redirect user to page explaining that an email was sent
 	tplData := &templateData{
-		Title: "Confirmação de Solicitação",
+		Title: "Request Confirmation",
 		User: &user.User{
 			Email: email,
 		},
