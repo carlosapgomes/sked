@@ -1,6 +1,10 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import "./Auth.css";
 
 const Auth = (props) => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [pword, setPword] = useState("");
   const loginHandler = (e) => {
@@ -53,6 +57,13 @@ const Auth = (props) => {
             >
               Ok
             </button>
+            <p>
+              {t("ForgottenPw")}
+              <Link className="Link" to="/ResetPassword">
+                &nbsp;
+                {t("ClickHere")}
+              </Link>
+            </p>
           </form>
         </section>
       </div>
