@@ -39,9 +39,11 @@ class ScheduleList extends Component {
     })();
     const m = dayjs().month();
     const y = dayjs().year();
+    const d = dayjs().format("D");
     this.setState({
       currentMonth: String(m),
       currentYear: String(y),
+      selectedDay: String(d),
       appSelected: true,
     });
     this.updateAppointmtsAndSurgsData(m, y);
