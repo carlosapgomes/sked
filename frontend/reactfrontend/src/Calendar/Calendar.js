@@ -11,9 +11,21 @@ class Calendar extends Component {
 
   selectDay(e) {
     let day = e.target.innerText;
-    console.log(e.target.innerText);
+    //console.log(e.target.innerText);
     if (day !== "") {
       this.props.selectCalendarDay(day);
+    }
+  }
+  componentDidUpdate(prevProps, _prevState) {
+    if (this.props.selectedDay !== prevProps.selectedDay) {
+      this.render();
+    }
+  }
+  getDayClass(d) {
+    if (String(this.props.selectedDay) === String(d)) {
+      return "Selected";
+    } else {
+      return "";
     }
   }
   render() {
@@ -39,6 +51,7 @@ class Calendar extends Component {
                   onClick={(e) => {
                     this.selectDay(e);
                   }}
+                  className={this.getDayClass(d)}
                 >
                   {d > 0 ? d : ""}
                 </span>
