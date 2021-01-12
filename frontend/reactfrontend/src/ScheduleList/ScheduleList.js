@@ -324,6 +324,7 @@ class ScheduleList extends Component {
             <Calendar
               view={this.state.calendarView}
               selectCalendarDay={(d) => this.selectCalendarDay(d)}
+              selectedDay={this.state.selectedDay}
             ></Calendar>
           </form>
         </section>
