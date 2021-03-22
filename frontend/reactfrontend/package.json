@@ -12,6 +12,7 @@
     "i18next": "^19.8.4",
     "i18next-browser-languagedetector": "^6.0.1",
     "i18next-http-backend": "^1.0.21",
+    "is-svg": "^4.2.2",
     "lint-staged": "^10.4.0",
     "prettier": "^2.1.2",
     "react": "^16.13.1",
@@ -19,7 +20,8 @@
     "react-i18next": "^11.7.3",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3"
+    "react-scripts": "4.0.3",
+    "ssri": "^8.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
